@@ -181,7 +181,7 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
                       : 'bg-amber-50 text-amber-700 border-amber-200'
                   }`}
                 >
-                  {material.processingStatus.toUpperCase()}
+                  {material.processingStatus === 'ready' ? 'TEXT EXTRACTED' : material.processingStatus.toUpperCase()}
                 </span>
               </div>
               <p className="text-[12px] text-[#75777e] truncate">{material.originalFilename}</p>
@@ -372,7 +372,7 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
               <div className="p-4 rounded-2xl bg-white border border-[#c5c6ce]/30 space-y-3">
                 <div className="flex items-center justify-between">
                   <h4 className="text-[13.5px] font-bold text-[#0b1c30]">Live Semantic Retrieval Test</h4>
-                  <span className="text-[11px] text-[#75777e]">Tests Qdrant vector retrieval with Cosine scoring</span>
+                  <span className="text-[11px] text-[#75777e]">Searches your document using semantic similarity</span>
                 </div>
 
                 <form onSubmit={handleSearch} className="space-y-3">

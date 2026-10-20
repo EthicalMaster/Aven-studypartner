@@ -14,7 +14,7 @@ import { documentProcessingService } from '../services/document-intelligence/pro
 import { documentRepository } from '../repositories/document.repository.js';
 import { quotaService } from '../services/governance/quota.service.js';
 import { embeddingQueueService } from '../services/embedding/embedding-queue.service.js';
-import { vectorRepository } from '../repositories/vector/qdrant.repository.js';
+import { vectorRepository } from '../repositories/vector/postgres.repository.js';
 import { embeddingRepository } from '../repositories/embedding.repository.js';
 import { analyticsRepository } from '../repositories/analytics.repository.js';
 import { notificationService } from '../services/notification.service.js';

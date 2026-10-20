@@ -43,5 +43,5 @@ export interface IVectorRepository {
   deleteByChunkIds(chunkIds: string[]): Promise<void>;
   countByMaterialId(materialId: string): Promise<number>;
   search(params: VectorSearchParams): Promise<VectorSearchResult[]>;
-  isQdrantAvailable(): Promise<boolean>;
+  isAvailable(): Promise<boolean>;
 }

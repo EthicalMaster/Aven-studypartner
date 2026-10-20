@@ -4,7 +4,7 @@
  */
 
 import { embeddingService } from '../embedding/embedding.service.js';
-import { vectorRepository } from '../../repositories/vector/qdrant.repository.js';
+import { vectorRepository } from '../../repositories/vector/postgres.repository.js';
 import { documentRepository } from '../../repositories/document.repository.js';
 import { materialRepository } from '../../repositories/material.repository.js';
 import { quotaService } from '../governance/quota.service.js';

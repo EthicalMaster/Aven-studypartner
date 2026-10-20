@@ -25,7 +25,7 @@ import { pythonEmbeddingRunner } from './server/services/embedding/python-embedd
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT || 3000);
 
   // Global parsing middlewares
   app.use(express.json());

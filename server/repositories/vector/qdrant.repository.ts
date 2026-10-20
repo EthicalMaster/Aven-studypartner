@@ -27,6 +27,8 @@ export class QdrantVectorRepository implements IVectorRepository {
     this.collectionName = collection || process.env.QDRANT_COLLECTION || 'edumate_documents';
   }
 
+  public async isAvailable(): Promise<boolean> { return this.isQdrantAvailable(); }
+
   public async isQdrantAvailable(): Promise<boolean> {
     try {
       const controller = new AbortController();

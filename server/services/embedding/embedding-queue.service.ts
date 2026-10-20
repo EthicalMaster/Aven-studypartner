@@ -5,7 +5,7 @@
 
 import { quotaService } from '../governance/quota.service.js';
 import { embeddingService } from './embedding.service.js';
-import { vectorRepository } from '../../repositories/vector/qdrant.repository.js';
+import { vectorRepository } from '../../repositories/vector/postgres.repository.js';
 import { embeddingRepository } from '../../repositories/embedding.repository.js';
 import { documentRepository } from '../../repositories/document.repository.js';
 import { materialRepository } from '../../repositories/material.repository.js';
@@ -89,6 +89,12 @@ export class EmbeddingQueueService {
       if (!material) {
         throw new Error('Study material not found or inaccessible.');
       }
+
+      if (embeddingService.fallbackAllowed) {
+        throw new Error('Synthetic test embeddings cannot be saved to persistent vector storage.');
+      }
+      await embeddingService.waitUntilReady();
+      await vectorRepository.ensureCollection();
 
       // 3. Stale vector cleanup: Invalidate previous Qdrant vectors and PostgreSQL embedding metadata
       await vectorRepository.deleteByMaterialId(materialId);

@@ -41,10 +41,11 @@ export class LocalBgeEmbeddingService implements IEmbeddingService {
   }
 
   public get fallbackAllowed(): boolean {
+    if (process.env.NODE_ENV === 'production') return false;
     if (this.customAllowFallback !== null) {
       return this.customAllowFallback;
     }
-    return process.env.EMBEDDING_ALLOW_TEST_FALLBACK === 'true';
+    return process.env.NODE_ENV !== 'production' && process.env.EMBEDDING_ALLOW_TEST_FALLBACK === 'true';
   }
 
   public setAllowTestFallback(allow: boolean | null): void {
@@ -112,7 +113,7 @@ export class LocalBgeEmbeddingService implements IEmbeddingService {
       return [];
     }
 
-    if (!this.isRealEngineReady && !this.fallbackAllowed && this.runner.isProcessStarting) {
+    if (!this.isRealEngineReady && !this.fallbackAllowed) {
       try {
         await this.runner.waitUntilReady();
       } catch (err: any) {
@@ -146,7 +147,7 @@ export class LocalBgeEmbeddingService implements IEmbeddingService {
       throw new Error('Query must be a string.');
     }
 
-    if (!this.isRealEngineReady && !this.fallbackAllowed && this.runner.isProcessStarting) {
+    if (!this.isRealEngineReady && !this.fallbackAllowed) {
       try {
         await this.runner.waitUntilReady();
       } catch (err: any) {

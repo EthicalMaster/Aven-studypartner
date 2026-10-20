@@ -32,7 +32,8 @@
     "test:analytics": "tsx server/test/analytics.test.ts",
     "test:runner": "tsx server/test/python-runner.test.ts",
     "test:load": "tsx server/test/load.test.ts",
-    "test:capacity": "tsx server/test/capacity.test.ts"
+    "test:capacity": "tsx server/test/capacity.test.ts",
+    "test:pgvector": "node --import tsx server/test/postgres-vector.test.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
@@ -55,6 +56,8 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.10",
+    "@electric-sql/pglite-pgvector": "^0.0.11",
     "@types/canvas-confetti": "^1.9.0",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^4.17.21",

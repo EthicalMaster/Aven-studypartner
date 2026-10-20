@@ -31,7 +31,7 @@ export class LocalStorageService implements IStorageService {
   private readonly baseDir: string;
 
   constructor(customDir?: string) {
-    this.baseDir = customDir || path.join(process.cwd(), 'uploads', 'materials');
+    this.baseDir = customDir || process.env.UPLOADS_DIR || path.join(process.cwd(), 'uploads', 'materials');
     this.ensureDirectoryExists();
   }
 
