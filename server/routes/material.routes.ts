@@ -39,8 +39,8 @@ function getStudentProfileId(req: Request): string {
 // Multer Configuration & Upload Security
 // ----------------------------------------------------------------------------
 
-// Max file size: 25 Megabytes
-const MAX_FILE_SIZE_BYTES = 25 * 1024 * 1024;
+// Apply the configured limit before buffering the upload in memory.
+const MAX_FILE_SIZE_BYTES = quotaService.getConfig().maxFileSizeBytes;
 
 // Conservative supported extensions and MIME types
 const SUPPORTED_EXTENSIONS = new Set(['.pdf', '.txt', '.md']);
@@ -128,7 +128,7 @@ materialRouter.post(
         if (err.code === 'LIMIT_FILE_SIZE') {
           res.status(400).json({
             error: 'FILE_TOO_LARGE',
-            message: `File size exceeds the 25MB limit. Current limit is 25MB.`,
+            message: `File size exceeds the ${MAX_FILE_SIZE_BYTES / 1024 / 1024}MB limit.`,
           });
           return;
         }
@@ -364,22 +364,13 @@ materialRouter.get('/:id/download', async (req: Request, res: Response): Promise
       return;
     }
 
-    const filePath = storageService.getFilePath(record.storage_key);
-    if (!filePath) {
-      res.status(404).json({
-        error: 'FILE_NOT_FOUND',
-        message: 'The requested file could not be located in storage.',
-      });
-      return;
-    }
-
     res.setHeader('Content-Type', record.mime_type || 'application/octet-stream');
     res.setHeader(
       'Content-Disposition',
       `inline; filename="${encodeURIComponent(record.original_filename)}"`
     );
 
-    const stream = storageService.getStream(record.storage_key);
+    const stream = await storageService.getStream(record.storage_key);
     if (!stream) {
       res.status(404).json({
         error: 'FILE_NOT_FOUND',
@@ -388,6 +379,11 @@ materialRouter.get('/:id/download', async (req: Request, res: Response): Promise
       return;
     }
 
+    stream.on('error', () => {
+      if (!res.headersSent) res.status(500).end();
+      else res.destroy();
+    });
+    res.on('close', () => stream.destroy());
     stream.pipe(res);
   } catch (err: any) {
     console.error('[Material Routes] GET /api/materials/:id/download error:', err);
@@ -407,8 +403,8 @@ materialRouter.delete('/:id', async (req: Request, res: Response): Promise<void>
     const studentId = getStudentProfileId(req);
     const { id } = req.params;
 
-    // Delete database record first, verifying ownership
-    const deletedRecord = await materialRepository.deleteMaterial(id, studentId);
+    // Verify ownership before accessing private object storage.
+    const deletedRecord = await materialRepository.getMaterialById(id, studentId);
     if (!deletedRecord) {
       res.status(404).json({
         error: 'MATERIAL_NOT_FOUND',
@@ -419,10 +415,13 @@ materialRouter.delete('/:id', async (req: Request, res: Response): Promise<void>
 
     // Safely delete file from storage (does not fail if file was already missing)
     if (deletedRecord.storage_key) {
-      await storageService.delete(deletedRecord.storage_key);
+      const removed = await storageService.delete(deletedRecord.storage_key);
+      if (!removed) throw new Error('File could not be removed from storage. Please retry.');
     }
 
-    // Clean up Qdrant vector points and embedding metadata
+    // Keep the record available for retry if object storage failed.
+    await materialRepository.deleteMaterial(id, studentId);
+    // PostgreSQL cascades remove vectors; keep metadata cleanup idempotent.
     await vectorRepository.deleteByMaterialId(id);
     await embeddingRepository.deleteByMaterialId(id);
 

@@ -1,0 +1,18 @@
+# Candidate for small hosts. Validate real workload before production cutover.
+FROM node:22-bookworm-slim
+RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-venv ca-certificates && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+RUN python3 -m venv /opt/embedding
+ENV PATH="/opt/embedding/bin:$PATH" HF_HOME=/opt/model-cache ORT_DISABLE_TELEMETRY=1 HF_HUB_DISABLE_TELEMETRY=1
+COPY requirements-embedding-onnx.txt ./
+RUN pip install --no-cache-dir -r requirements-embedding-onnx.txt
+COPY server/services/embedding/onnx_encoder.py /tmp/onnx_encoder.py
+RUN PYTHONPATH=/tmp python3 -c "from onnx_encoder import OnnxBgeEncoder; OnnxBgeEncoder()"
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build && npm prune --omit=dev && mkdir -p /app/uploads/materials && chown -R node:node /app/uploads /opt/model-cache
+ENV NODE_ENV=production EMBEDDING_BACKEND=onnx EMBEDDING_PYTHON_PATH=/opt/embedding/bin/python3 HF_HUB_OFFLINE=1 EMBEDDING_BATCH_SIZE=1 EMBEDDING_WORKER_CONCURRENCY=1 MAX_FILE_SIZE_MB=5
+USER node
+EXPOSE 3000
+CMD ["npm", "start"]

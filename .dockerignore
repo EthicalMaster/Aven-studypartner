@@ -6,3 +6,8 @@ dist
 !.env.example
 uploads
 *.dump
+
+.venv
+.venv-*
+__pycache__
+*-benchmark.json

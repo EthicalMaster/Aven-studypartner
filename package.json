@@ -33,10 +33,12 @@
     "test:runner": "tsx server/test/python-runner.test.ts",
     "test:load": "tsx server/test/load.test.ts",
     "test:capacity": "tsx server/test/capacity.test.ts",
-    "test:pgvector": "node --import tsx server/test/postgres-vector.test.ts"
+    "test:pgvector": "node --import tsx server/test/postgres-vector.test.ts",
+    "test:storage": "node --import tsx server/test/supabase-storage.test.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
+    "@supabase/supabase-js": "2.118.0",
     "@tailwindcss/vite": "^4.3.3",
     "@types/pdf-parse": "^1.1.5",
     "@vitejs/plugin-react": "^6.1.1",

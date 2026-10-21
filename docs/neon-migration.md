@@ -1,3 +1,5 @@
+> Update: the optional ONNX runtime and private Supabase storage adapter are now available. See [free-hosting-preview.md](free-hosting-preview.md). The original PyTorch Dockerfile remains available.
+
 # Neon retrieval migration
 
 This branch routes application vector operations through PostgreSQL + pgvector. Qdrant is retained only for legacy tests. The new document_vectors table holds real BGE-small-en-v1.5 vectors; source text and ownership remain canonical PostgreSQL records. Storage failure is an error, never a silent in-memory success.
