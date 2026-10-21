@@ -6,6 +6,8 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import { Readable } from 'node:stream';
+import { SupabaseStorageService } from './supabase-storage.service.js';
 
 export interface StorageSaveResult {
   storageKey: string;
@@ -16,7 +18,7 @@ export interface IStorageService {
   save(buffer: Buffer, originalFilename: string, mimeType: string): Promise<StorageSaveResult>;
   get(storageKey: string): Promise<Buffer | null>;
   load(storageKey: string): Promise<Buffer | null>;
-  getStream(storageKey: string): fs.ReadStream | null;
+  getStream(storageKey: string): Readable | null | Promise<Readable | null>;
   delete(storageKey: string): Promise<boolean>;
   exists(storageKey: string): Promise<boolean>;
   getFilePath(storageKey: string): string | null;
@@ -185,4 +187,13 @@ export class LocalStorageService implements IStorageService {
 }
 
 // Global default storage service instance
-export const storageService = new LocalStorageService();
+export function createStorageService(): IStorageService {
+  const provider = process.env.STORAGE_PROVIDER || 'local';
+  if (provider === 'local') return new LocalStorageService();
+  if (provider === 'supabase') return new SupabaseStorageService(
+    process.env.SUPABASE_URL || '', process.env.SUPABASE_SECRET_KEY || '',
+    process.env.SUPABASE_STORAGE_BUCKET || 'aven-materials',
+  );
+  throw new Error('STORAGE_PROVIDER must be local or supabase.');
+}
+export const storageService = createStorageService();

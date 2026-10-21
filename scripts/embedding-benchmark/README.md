@@ -1,7 +1,7 @@
 # Isolated low-memory embedding experiment
 
 This benchmark does not change the application runtime, read .env, connect to Neon,
-or write document vectors. The application still uses its working PyTorch runner.
+or write document vectors. The application defaults to its working PyTorch runner; EMBEDDING_BACKEND=onnx opts into the integrated encoder.
 
 It compares quantized ONNX BGE-small-en-v1.5 against SentenceTransformers, using
 CLS pooling, a 512-token limit, the application's query prefix and unit normalization.
@@ -61,3 +61,6 @@ Sources:
 - https://huggingface.co/Xenova/bge-small-en-v1.5
 - https://github.com/microsoft/onnxruntime/blob/main/docs/Privacy.md
 - https://onnxruntime.ai/docs/api/python/api_summary.html
+
+The subsequent integration uses NumPy 2.3.5 for Python 3.11 Docker compatibility.
+See docs/free-hosting-preview.md for the integrated test results and setup.

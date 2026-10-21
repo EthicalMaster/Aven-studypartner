@@ -66,36 +66,11 @@ def main():
     threading.Thread(target=sample, daemon=True).start()
     started = time.perf_counter()
     if args.backend == 'onnx':
-        import onnxruntime as ort
-        ort.disable_telemetry_events()
-        from huggingface_hub import hf_hub_download
-        from tokenizers import Tokenizer
-        tokenizer = Tokenizer.from_file(hf_hub_download(
-            ONNX_REPO, 'tokenizer.json', revision=ONNX_REVISION))
-        tokenizer.enable_truncation(max_length=512)
-        options = ort.SessionOptions()
-        options.intra_op_num_threads = 1
-        options.inter_op_num_threads = 1
-        options.enable_cpu_mem_arena = False
-        options.enable_mem_pattern = False
-        session = ort.InferenceSession(hf_hub_download(
-            ONNX_REPO, 'onnx/model_quantized.onnx', revision=ONNX_REVISION),
-            sess_options=options, providers=['CPUExecutionProvider'])
-        names = {item.name for item in session.get_inputs()}
-
-        def encode(texts):
-            # One sequence at a time limits temporary attention memory.
-            vectors = []
-            for text in texts:
-                tokens = tokenizer.encode(text)
-                feeds = {'input_ids': np.array([tokens.ids], dtype=np.int64),
-                         'attention_mask': np.array([tokens.attention_mask], dtype=np.int64),
-                         'token_type_ids': np.array([tokens.type_ids], dtype=np.int64)}
-                hidden = session.run(None, {k: v for k, v in feeds.items() if k in names})[0]
-                # BGE uses the CLS token, not mean pooling.
-                vector = hidden[0, 0, :].astype(np.float32)
-                vectors.append(vector / np.linalg.norm(vector))
-            return np.array(vectors)
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'server/services/embedding'))
+        from onnx_encoder import OnnxBgeEncoder
+        model = OnnxBgeEncoder()
+        encode = model.encode
     else:
         from sentence_transformers import SentenceTransformer
         model = SentenceTransformer(MODEL, device='cpu')
