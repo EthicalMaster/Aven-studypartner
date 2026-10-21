@@ -6,3 +6,9 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Local embedding environments, caches, and benchmark output
+.venv/
+.venv-*/
+__pycache__/
+*-benchmark.json

@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-21",
+  "python": "3.12",
+  "results": [
+    {
+      "backend": "torch",
+      "memory_source": "resource peak RSS (Linux); final is also peak",
+      "model": "BAAI/bge-small-en-v1.5",
+      "onnx_revision": "ea104dacec62c0de699686887e3f920caeb4f3e3",
+      "peak_rss_mib": 590.77,
+      "final_rss_mib": 590.77,
+      "load_seconds": 23.52,
+      "inference_seconds": 2.44,
+      "stress_seconds": 2.02,
+      "top1_correct": 8,
+      "cases": 8,
+      "top1_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "backend": "onnx",
+      "memory_source": "resource peak RSS (Linux); final is also peak",
+      "model": "BAAI/bge-small-en-v1.5",
+      "onnx_revision": "ea104dacec62c0de699686887e3f920caeb4f3e3",
+      "peak_rss_mib": 170.41,
+      "final_rss_mib": 170.41,
+      "load_seconds": 0.2,
+      "inference_seconds": 3.86,
+      "stress_seconds": 3.79,
+      "top1_correct": 8,
+      "cases": 8,
+      "top1_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "minimum_vector_cosine_to_reference": 0.9944694599370414,
+      "mixed_runtime_top1_correct": 8
+    }
+  ],
+  "limitations": [
+    "Embedding process only; no full-app or host memory limit test.",
+    "Synthetic eight-question smoke test; not representative PDF evaluation.",
+    "Model load timings depend on cache and network; not comparable cold-start measurements.",
+    "Different CPU thread settings; timings do not establish relative runtime speed."
+  ]
+}
