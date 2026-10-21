@@ -25,7 +25,7 @@ export function getPool(): pg.Pool | null {
     connectionString,
     max: 20, // maximum connection pool size
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 5000,
+    connectionTimeoutMillis: 30000,
   });
   return poolInstance;
 }
