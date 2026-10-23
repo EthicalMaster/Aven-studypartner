@@ -35,3 +35,18 @@
 .rotate-y-180 {
   transform: rotateY(180deg);
 }
+
+/* Keyboard navigation stays visible throughout the study home. */
+.study-home button:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 4px;
+}
+.study-home button { cursor: pointer; }
+.study-home button:disabled { cursor: wait; }
+@media (prefers-reduced-motion: reduce) {
+  .study-home *, .study-home *::before, .study-home *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
