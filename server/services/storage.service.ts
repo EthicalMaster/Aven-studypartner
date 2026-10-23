@@ -191,8 +191,10 @@ export function createStorageService(): IStorageService {
   const provider = process.env.STORAGE_PROVIDER || 'local';
   if (provider === 'local') return new LocalStorageService();
   if (provider === 'supabase') return new SupabaseStorageService(
-    process.env.SUPABASE_URL || '', process.env.SUPABASE_SECRET_KEY || '',
+    process.env.SUPABASE_URL || '', process.env.SUPABASE_PUBLISHABLE_KEY || '',
     process.env.SUPABASE_STORAGE_BUCKET || 'aven-materials',
+    { email: process.env.SUPABASE_STORAGE_EMAIL || '', password: process.env.SUPABASE_STORAGE_PASSWORD || '',
+      userId: process.env.SUPABASE_STORAGE_USER_ID || '' },
   );
   throw new Error('STORAGE_PROVIDER must be local or supabase.');
 }

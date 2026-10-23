@@ -9,8 +9,7 @@
   query prefix, 512-token truncation and normalized 384-dimensional vectors.
 - `Dockerfile.onnx` installs no PyTorch and caches the model during the build.
   Runtime inference is offline. NumPy 2.3.5 supports Debian's Python 3.11.
-- `STORAGE_PROVIDER=supabase` stores uploads in a private bucket. Server-only
-  credentials access objects after existing Aven session/ownership checks.
+- `STORAGE_PROVIDER=supabase` stores uploads in a private bucket. A dedicated Supabase Auth account accesses objects under bucket-specific RLS after existing Aven session/ownership checks.
   Downloads use the storage abstraction rather than requiring a local path.
   Public buckets are rejected; storage outages propagate as errors.
 - Upload memory buffering respects MAX_FILE_SIZE_MB. The candidate image uses 5 MB.
@@ -32,7 +31,10 @@
   The sum (~327 MiB) is a planning estimate, NOT a simultaneous cgroup measurement.
   Development tsx tooling measured much higher and must not run on the small host.
 
-No real Neon credentials, Supabase bucket or Render deployment were used here.
+The initial preview tests used no real services. A later restricted-storage update
+applied and checked RLS in the existing Supabase project; see restricted-storage-setup.md.
+No dedicated password, real file API round-trip, Neon credentials or Render deployment
+were used for these tests.
 Docker is unavailable in this environment, so neither Docker build nor a 512 MiB
 container limit has been validated. Authenticated end-to-end upload/download/search,
 multiple concurrent uploads, large/complex PDFs and host restart remain preview gates.
@@ -77,20 +79,25 @@ Use a Supabase Free project and create a PRIVATE bucket named `aven-materials`.
 Keep public access OFF. Set its upload limit to 5 MB; allow application/pdf,
 text/plain, text/markdown and text/x-markdown if you want all supported formats.
 Do not add anonymous read/write policies. This app uses its own sessions and Neon
-ownership, not Supabase Auth; the backend holds the privileged storage key.
+ownership, not Supabase Auth; the backend signs in as a dedicated storage user, not a portfolio owner.
 
 Set only in `.env` locally and server secret settings on the host:
 
 ```dotenv
 STORAGE_PROVIDER=supabase
 SUPABASE_URL=https://YOUR_PROJECT.supabase.co
-SUPABASE_SECRET_KEY=YOUR_SERVER_SECRET_KEY
+SUPABASE_PUBLISHABLE_KEY=YOUR_PUBLISHABLE_OR_ANON_KEY
+SUPABASE_STORAGE_EMAIL=YOUR_DEDICATED_STORAGE_EMAIL
+SUPABASE_STORAGE_PASSWORD="YOUR_DEDICATED_STORAGE_PASSWORD"
+SUPABASE_STORAGE_USER_ID=7b6b27ad-64a0-42d9-86b1-902fcc31939a
 SUPABASE_STORAGE_BUCKET=aven-materials
 ```
 
-Use the project's secret key (or legacy service_role key), not an anon/publishable
-key. Never prefix it with VITE_, paste it into chat or commit it. The app checks the
-bucket is private on every operation. An administrator must keep it private.
+Use a publishable key or legacy anon key. Project secret/service_role keys are rejected.
+Keep the dedicated password server-only, never prefix it with VITE_, and never commit it.
+The app validates the logged-in UID and renews expiring sessions. The dedicated user
+must NOT be a portfolio owner. The app checks the bucket is private on every operation.
+See restricted-storage-setup.md for the applied policies and local setup.
 
 Existing local PDF files are NOT moved automatically. Re-upload the PDFs you need
 after switching storage. Existing extracted text and vectors remain in Neon.
@@ -101,7 +108,7 @@ not a reservation or global billing limit. Use a dedicated bucket for this app.
 
 Create a Free Docker web service from the updated branch and select
 `Dockerfile.onnx`. Do not deploy the old PyTorch Dockerfile on this memory budget.
-Provide DATABASE_URL (Neon, SSL), the four storage settings above, and set
+Provide DATABASE_URL (Neon, SSL), the storage settings above, and set
 STORAGE_QUOTA_MB=50, MAX_ACTIVE_MATERIALS=10, MAX_FILE_SIZE_MB=5,
 EMBEDDING_BATCH_SIZE=1, EMBEDDING_WORKER_CONCURRENCY=1. Keep the free plan selected.
 Use the built `npm start`; never npm run dev. This image does not run migrations
