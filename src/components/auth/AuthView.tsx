@@ -73,10 +73,10 @@ const STAGES_BY_LEVEL: Record<EducationLevelType, string[]> = {
   ],
 };
 
-export const AuthView: React.FC = () => {
+export const AuthView: React.FC<{ initialMode?: 'login' | 'register' }> = ({ initialMode = 'login' }) => {
   const { login, register, error, clearError, dbConnected } = useAuth();
 
-  const [mode, setMode] = useState<'login' | 'register'>('login');
+  const [mode, setMode] = useState<'login' | 'register'>(initialMode);
   const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
