@@ -12,6 +12,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { AuthView } from './components/auth/AuthView';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
+import { LandingPage } from './components/landing/LandingPage';
 import { UploadModal } from './components/UploadModal';
 import { SummaryModal } from './components/SummaryModal';
 import { OnboardingModal } from './components/onboarding/OnboardingModal';
@@ -260,6 +261,20 @@ function AuthenticatedApp() {
 
 function MainContent() {
   const { status } = useAuth();
+  const [route, setRoute] = useState(window.location.hash);
+  useEffect(() => {
+    const update = () => setRoute(window.location.hash);
+    window.addEventListener('hashchange', update);
+    return () => window.removeEventListener('hashchange', update);
+  }, []);
+  const enteringApp = ['#login', '#signup', '#workspace'].includes(route);
+
+  if (!enteringApp) {
+    return <LandingPage signedIn={status === 'authenticated'} onEnter={(mode) => {
+      window.location.hash = status === 'authenticated' ? 'workspace' : mode === 'register' ? 'signup' : 'login';
+      window.scrollTo(0, 0);
+    }} />;
+  }
 
   if (status === 'loading') {
     return (
@@ -273,7 +288,10 @@ function MainContent() {
   }
 
   if (status === 'unauthenticated') {
-    return <AuthView />;
+    return <>
+      <a href="#" className="fixed top-3 left-4 z-50 rounded-lg bg-white px-3 py-2 text-sm text-slate-800 shadow-sm">← Back to Aven</a>
+      <AuthView key={route} initialMode={route === '#signup' ? 'register' : 'login'} />
+    </>;
   }
 
   return <AuthenticatedApp />;
