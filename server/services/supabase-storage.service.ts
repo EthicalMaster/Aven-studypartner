@@ -7,12 +7,51 @@ import type { IStorageService, StorageSaveResult } from './storage.service.js';
 /** Server-only storage. Routes must check material ownership before calling it. */
 export class SupabaseStorageService implements IStorageService {
   private client: SupabaseClient;
-  constructor(url: string, secret: string, private bucket: string, client?: SupabaseClient) {
-    if (!url || !secret || !bucket) throw new Error('Supabase storage configuration is incomplete.');
-    this.client = client || createClient(url, secret, {
+  private loginPromise: Promise<void> | null = null;
+  private sessionExpiresAt = 0;
+  private retryAfter = 0;
+  constructor(url: string, publishableKey: string, private bucket: string,
+    private account: { email: string; password: string; userId: string }, client?: SupabaseClient) {
+    if (!url || !publishableKey || !bucket || !account.email || !account.password || !account.userId) {
+      throw new Error('Supabase storage configuration is incomplete.');
+    }
+    // Never silently fall back to project-wide elevated credentials.
+    let role = '';
+    try { role = JSON.parse(Buffer.from(publishableKey.split('.')[1] || '', 'base64url').toString()).role; } catch {}
+    if (publishableKey.startsWith('sb_secret_') || role === 'service_role') {
+      throw new Error('Use a Supabase publishable or anon key with the dedicated storage account.');
+    }
+    this.client = client || createClient(url, publishableKey, {
       auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
       global: { fetch: (input, init) => fetch(input, { ...init, signal: AbortSignal.timeout(30000) }) },
     });
+  }
+  private async authenticate(): Promise<void> {
+    if (this.sessionExpiresAt > Date.now() + 60000) return;
+    if (this.loginPromise) return this.loginPromise;
+    if (Date.now() < this.retryAfter) throw new Error('Storage sign-in failed. Check the dedicated account settings.');
+    this.loginPromise = (async () => {
+      try {
+        let result = this.sessionExpiresAt ? await this.client.auth.refreshSession() : null;
+        if (!result || result.error || !result.data.session) {
+          result = await this.client.auth.signInWithPassword({
+            email: this.account.email, password: this.account.password,
+          });
+        }
+        const session = result.data.session;
+        if (result.error || !session || session.user.id !== this.account.userId || session.user.role !== 'authenticated') {
+          this.sessionExpiresAt = 0;
+          throw new Error('Storage account authentication failed.');
+        }
+        this.sessionExpiresAt = (session.expires_at || 0) * 1000;
+        if (this.sessionExpiresAt <= Date.now() + 60000) throw new Error('Storage session expires too soon.');
+      } catch {
+        this.sessionExpiresAt = 0;
+        this.retryAfter = Date.now() + 10000;
+        throw new Error('Storage sign-in failed. Check the dedicated account settings.');
+      }
+    })();
+    try { await this.loginPromise; } finally { this.loginPromise = null; }
   }
   private validate(key: string): void {
     if (!/^[a-zA-Z0-9_.-]+$/.test(key) || key.includes('..')) {
@@ -20,6 +59,7 @@ export class SupabaseStorageService implements IStorageService {
     }
   }
   private async privateBucket(): Promise<void> {
+    await this.authenticate();
     const { data, error } = await this.client.storage.getBucket(this.bucket);
     if (error || !data) throw new Error('Storage bucket is unavailable.');
     if (data.public) throw new Error('Storage bucket must be private.');
