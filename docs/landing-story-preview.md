@@ -1,41 +1,54 @@
-# Landing story preview
+# Landing story — revised preview
 
-A public introduction now appears at the root before authentication. Hash routes
-`#login`, `#signup`, and `#workspace` enter the existing authenticated app. Section
-anchors remain on the public page. Signed-in visitors can choose My workspace.
+## What changed
 
-The new landing page uses warm ivory, navy and blue, system Georgia headings,
-and existing Inter body text. The document and answer scene uses Motion's
-scroll progress with a sticky desktop stage. Mobile and reduced-motion layouts
-use a linear reading flow. Source highlighting and quiz feedback are local,
-deterministic demonstrations and do not call an AI provider or save quiz results.
-The page explicitly identifies the planned tutor as a concept preview.
+The public page uses one coordinated desktop scene: the note settles into a source
+panel, a connected explanation appears, then practice replaces the explanation.
+The paper moves in one direction during forward scrolling and reverses directly
+with backward scrolling. Reading holds separate transitions. There is no scroll
+interception, delayed spring, looping ornament, or autoplaying background.
 
-## Scope
+Instrument Serif (normal/italic) and DM Sans (regular/medium) are locally bundled
+with their OFL licenses in public/fonts. Typography, alignment, chapter indicators,
+and source/answer geometry share the same layout grid. Unrelated spheres, orbital
+rings, the paper-overlapping caption, and animated water have been removed.
 
-Included: landing story, sample source interaction, sample quiz, entry navigation,
-and accurate public metadata. No database, environment, provider, or storage changes.
-The signed-in dashboard and authentication styling are still the previous design;
-the complete visual-system rollout follows review of this prototype.
+Small screens, short windows, and reduced-motion preferences receive a linear
+reading flow. Demo content remains visible even before an entrance transition.
+Inactive desktop chapter controls are inert and excluded from the accessibility
+tree. The source highlight and quiz are illustrative local interactions; they do
+not generate AI answers or save progress.
 
-## Validation
+## Verification performed
 
-TypeScript and production build passed. Existing Vite configuration and chunk-size
-warnings remain. Browser execution was attempted but the browser download failed;
-visual layout, scrolling and runtime interactions still require a local review.
+Tested using headless Chromium with local Vite and mocked unauthenticated API
+responses. No real user accounts, documents, production databases, or AI providers
+were used. Screenshots were visually inspected, not only generated.
 
-Before publishing, check:
+- TypeScript and production build: passed.
+- Screenshots: desktop hero, eight scroll positions, intermediate laptop layout,
+  interactive source view, quiz, phone/tablet layouts, reduced-motion page.
+- Desktop motion: 11 sampled positions at 1440×900, 1024×768, and 1920×1080.
+  Paper movement was monotonic, source/answer/practice stayed within the viewport
+  and clear of navigation/footer, and answer/quiz text never overlapped.
+- Reverse scrolling returns to the original hero state.
+- No horizontal overflow at 320, 390, 768, or 1024 pixels wide.
+- Short-window fallback checked at 1200×600; reduced-motion view shows all chapters.
+- Locally served editorial and body fonts loaded successfully.
+- Source highlight on/off, incorrect/correct quiz answers, and reset: passed.
+- Get started opens registration; Log in opens login; Back to Aven and browser
+  back navigation work. No credentials were submitted.
+- Skip link/keyboard focus checks passed; inactive chapters cannot receive focus.
+- No JavaScript exceptions during the checks.
 
-- Root opens the landing page while logged out.
-- Scroll the full desktop story: document stays visible, rotation and line drawing
-  follow scrolling, text remains readable, no section traps the scroll.
-- Source button highlights and clears the passage; quiz gives correct feedback
-  for each selection; Try again resets it.
-- Get started opens registration; Log in opens login; Back to Aven returns home.
-- Browser back/forward works across landing and authentication.
-- Sign in with an existing account and confirm the dashboard still works.
-- At 390px width there is no horizontal overflow and controls remain usable.
-- With reduced motion enabled, the story is static and fully readable.
-- Tab through navigation, source toggle, radio choices and calls to action.
+Visual verification caught and fixed an overlapping paper caption and invisible
+mobile demo panels. Existing Vite configuration and chunk-size warnings remain.
+These checks cover Chromium and sampled sizes, not every device or a hardware
+frame-rate guarantee. Existing authenticated app styling is unchanged.
 
-Keep this on a preview branch until reviewed. No migration is required.
+## Local review
+
+Fetch the revised bundle, create or update a preview branch, and run npm run dev.
+No dependency installation, migration, or environment change is required for the
+revision. Root shows the public page; #login, #signup and #workspace enter the app.
+Do not merge into the deployment branch until the design is accepted.
