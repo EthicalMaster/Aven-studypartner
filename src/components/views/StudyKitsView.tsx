@@ -165,17 +165,17 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
       {/* Header Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-[24px] font-bold text-[#0b1c30] tracking-tight">
-            Study Materials & Knowledge Base
+          <h2 className="aven-page-title text-[24px] font-bold text-[var(--aven-ink)] tracking-tight">
+            Your library.
           </h2>
-          <p className="text-[13px] text-[#44474d] mt-0.5">
-            Store, organize, and access course documents in your private student repository.
+          <p className="text-[13px] text-[var(--aven-muted)] mt-0.5">
+            Keep your notes together. Pick up an idea where you left off.
           </p>
         </div>
 
         <button
           onClick={onOpenUpload}
-          className="inline-flex items-center gap-2 bg-[#0051d5] hover:bg-[#316bf3] text-white px-4 py-2.5 rounded-xl text-[13px] font-bold shadow-xs transition-all cursor-pointer self-start sm:self-auto"
+          className="inline-flex items-center gap-2 bg-[var(--aven-action)] hover:bg-[var(--aven-action-hover)] text-white px-4 py-2.5 rounded-xl text-[13px] font-bold shadow-xs transition-all cursor-pointer self-start sm:self-auto"
         >
           <span className="material-symbols-outlined text-[20px]">upload_file</span>
           <span>Upload Study Material</span>
@@ -183,20 +183,20 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
       </div>
 
       {/* Sub Navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-[#c5c6ce]/40 pb-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-[var(--aven-border)]/40 pb-2">
         <button
           onClick={() => setActiveSubTab('materials')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-bold transition-all cursor-pointer ${
             activeSubTab === 'materials'
-              ? 'bg-[#0051d5] text-white shadow-xs'
-              : 'text-[#44474d] hover:bg-[#eff4ff] hover:text-[#0b1c30]'
+              ? 'bg-[var(--aven-action)] text-white shadow-xs'
+              : 'text-[var(--aven-muted)] hover:bg-[var(--aven-soft)] hover:text-[var(--aven-ink)]'
           }`}
         >
           <span className="material-symbols-outlined text-[18px]">folder</span>
           <span>My Uploaded Materials</span>
           <span
             className={`text-[11px] px-2 py-0.5 rounded-full font-mono font-bold ${
-              activeSubTab === 'materials' ? 'bg-white/20 text-white' : 'bg-[#eff4ff] text-[#0051d5]'
+              activeSubTab === 'materials' ? 'bg-white/20 text-white' : 'bg-[var(--aven-soft)] text-[var(--aven-action)]'
             }`}
           >
             {materials.length}
@@ -207,15 +207,15 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
           onClick={() => setActiveSubTab('curriculum')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-bold transition-all cursor-pointer ${
             activeSubTab === 'curriculum'
-              ? 'bg-[#0051d5] text-white shadow-xs'
-              : 'text-[#44474d] hover:bg-[#eff4ff] hover:text-[#0b1c30]'
+              ? 'bg-[var(--aven-action)] text-white shadow-xs'
+              : 'text-[var(--aven-muted)] hover:bg-[var(--aven-soft)] hover:text-[var(--aven-ink)]'
           }`}
         >
           <span className="material-symbols-outlined text-[18px]">auto_stories</span>
           <span>Curriculum Modules</span>
           <span
             className={`text-[11px] px-2 py-0.5 rounded-full font-mono font-bold ${
-              activeSubTab === 'curriculum' ? 'bg-white/20 text-white' : 'bg-[#eff4ff] text-[#0051d5]'
+              activeSubTab === 'curriculum' ? 'bg-white/20 text-white' : 'bg-[var(--aven-soft)] text-[var(--aven-action)]'
             }`}
           >
             {availableCurriculumSubjects.length}
@@ -224,7 +224,7 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
       </div>
 
       {/* Filters & Search Row */}
-      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-white p-3.5 rounded-2xl border border-[#c5c6ce]/30 shadow-xs">
+      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-white p-3.5 rounded-2xl border border-[var(--aven-border)]/30 shadow-xs">
         {/* Subject Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
           {subjects.map((sub) => (
@@ -233,8 +233,8 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
               onClick={() => setSelectedSubject(sub)}
               className={`px-3 py-1.5 rounded-xl text-[12px] font-bold transition-all whitespace-nowrap cursor-pointer ${
                 selectedSubject === sub
-                  ? 'bg-[#0051d5] text-white shadow-xs'
-                  : 'text-[#44474d] hover:bg-[#eff4ff]'
+                  ? 'bg-[var(--aven-action)] text-white shadow-xs'
+                  : 'text-[var(--aven-muted)] hover:bg-[var(--aven-soft)]'
               }`}
             >
               {sub}
@@ -243,17 +243,17 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
         </div>
 
         {/* Search */}
-        <div className="flex items-center gap-2 bg-[#eff4ff] px-3.5 py-1.5 rounded-xl md:w-72">
-          <span className="material-symbols-outlined text-[#75777e] text-[18px]">search</span>
+        <div className="flex items-center gap-2 bg-[var(--aven-soft)] px-3.5 py-1.5 rounded-xl md:w-72">
+          <span className="material-symbols-outlined text-[var(--aven-muted)] text-[18px]">search</span>
           <input
             type="text"
             placeholder="Search title, topic, or file..."
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
-            className="bg-transparent border-none outline-none text-[13px] text-[#0b1c30] placeholder:text-[#75777e] w-full"
+            className="bg-transparent border-none outline-none text-[13px] text-[var(--aven-ink)] placeholder:text-[var(--aven-muted)] w-full"
           />
           {searchFilter && (
-            <button onClick={() => setSearchFilter('')} className="text-[#75777e] hover:text-[#0b1c30]">
+            <button onClick={() => setSearchFilter('')} className="text-[var(--aven-muted)] hover:text-[var(--aven-ink)]">
               <span className="material-symbols-outlined text-[16px]">clear</span>
             </button>
           )}
@@ -267,13 +267,13 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
         <div className="space-y-4">
           {/* Resource Governance & Quotas Banner */}
           {quotaUsage && (
-            <div className="bg-white border border-[#c5c6ce]/30 rounded-2xl p-4 shadow-xs space-y-3">
+            <div className="bg-white border border-[var(--aven-border)]/30 rounded-2xl p-4 shadow-xs space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[12px]">
                 <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[18px] text-[#0051d5]">shield</span>
-                  <span className="font-bold text-[#0b1c30]">Resource Governance & Student Quotas</span>
+                  <span className="material-symbols-outlined text-[18px] text-[var(--aven-action)]">shield</span>
+                  <span className="font-bold text-[var(--aven-ink)]">Resource Governance & Student Quotas</span>
                 </div>
-                <span className="text-[#75777e] text-[11.5px]">
+                <span className="text-[var(--aven-muted)] text-[11.5px]">
                   RTX 3050 & 16GB RAM Architecture Guardrails Active
                 </span>
               </div>
@@ -282,8 +282,8 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
                 {/* Storage Quota */}
                 <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/60 space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[#75777e] text-[11px] font-medium">Vault Storage</span>
-                    <span className="font-bold text-[#0b1c30]">
+                    <span className="text-[var(--aven-muted)] text-[11px] font-medium">Vault Storage</span>
+                    <span className="font-bold text-[var(--aven-ink)]">
                       {quotaUsage.storage.usedFormatted} / {quotaUsage.storage.quotaFormatted}
                     </span>
                   </div>
@@ -294,12 +294,12 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
                           ? 'bg-rose-500'
                           : quotaUsage.storage.percentage > 60
                           ? 'bg-amber-500'
-                          : 'bg-[#0051d5]'
+                          : 'bg-[var(--aven-action)]'
                       }`}
                       style={{ width: `${Math.max(2, quotaUsage.storage.percentage)}%` }}
                     />
                   </div>
-                  <span className="text-[10.5px] text-[#75777e] block">
+                  <span className="text-[10.5px] text-[var(--aven-muted)] block">
                     {quotaUsage.storage.percentage}% used (25 MB max per file)
                   </span>
                 </div>
@@ -307,8 +307,8 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
                 {/* Materials Count */}
                 <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/60 space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[#75777e] text-[11px] font-medium">Active Materials</span>
-                    <span className="font-bold text-[#0b1c30]">
+                    <span className="text-[var(--aven-muted)] text-[11px] font-medium">Active Materials</span>
+                    <span className="font-bold text-[var(--aven-ink)]">
                       {quotaUsage.materials.currentCount} / {quotaUsage.materials.maxCount}
                     </span>
                   </div>
@@ -320,7 +320,7 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
                       }}
                     />
                   </div>
-                  <span className="text-[10.5px] text-[#75777e] block">
+                  <span className="text-[10.5px] text-[var(--aven-muted)] block">
                     {quotaUsage.chunks.currentCount} total knowledge chunks indexed
                   </span>
                 </div>
@@ -328,8 +328,8 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
                 {/* Search Rate Limit */}
                 <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/60 space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[#75777e] text-[11px] font-medium">Daily Vector Searches</span>
-                    <span className="font-bold text-[#0051d5]">
+                    <span className="text-[var(--aven-muted)] text-[11px] font-medium">Daily Vector Searches</span>
+                    <span className="font-bold text-[var(--aven-action)]">
                       {quotaUsage.searches.remainingToday} / {quotaUsage.searches.maxDaily} left
                     </span>
                   </div>
@@ -341,7 +341,7 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
                       }}
                     />
                   </div>
-                  <span className="text-[10.5px] text-[#75777e] block">
+                  <span className="text-[10.5px] text-[var(--aven-muted)] block">
                     {quotaUsage.searches.usedToday} searches performed today (resets at 00:00 UTC)
                   </span>
                 </div>
@@ -350,7 +350,7 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
           )}
 
           {/* Quick Metrics & Architecture Notice */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50 border border-[#c5c6ce]/40 px-4 py-3 rounded-2xl text-[12px] text-[#44474d]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50 border border-[var(--aven-border)]/40 px-4 py-3 rounded-2xl text-[12px] text-[var(--aven-muted)]">
             <div className="flex items-center gap-4">
               <span>
                 <strong>{materials.length}</strong> Document{materials.length === 1 ? '' : 's'} Stored
@@ -362,11 +362,11 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
             </div>
             <div className="flex items-center gap-2">
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
-              <span>Tenant-Isolated Semantic Vector Retrieval Active</span>
+              <span>Explore your uploaded notes</span>
               <button
                 onClick={fetchMaterials}
                 title="Refresh library"
-                className="ml-2 text-[#0051d5] hover:text-[#316bf3] p-1 rounded-lg hover:bg-white"
+                className="ml-2 text-[var(--aven-action)] hover:text-[var(--aven-action-hover)] p-1 rounded-lg hover:bg-white"
               >
                 <span className="material-symbols-outlined text-[16px]">refresh</span>
               </button>
@@ -376,8 +376,8 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
           {/* Loading State */}
           {isLoadingMaterials && (
             <div className="py-12 flex flex-col items-center justify-center text-center">
-              <div className="w-10 h-10 border-3 border-[#0051d5] border-t-transparent rounded-full animate-spin mb-3"></div>
-              <p className="text-[13px] text-[#44474d] font-medium">Loading your study repository...</p>
+              <div className="w-10 h-10 border-3 border-[var(--aven-action)] border-t-transparent rounded-full animate-spin mb-3"></div>
+              <p className="text-[13px] text-[var(--aven-muted)] font-medium">Loading your study repository...</p>
             </div>
           )}
 
@@ -397,14 +397,14 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
 
           {/* Empty State */}
           {!isLoadingMaterials && !materialsError && filteredMaterials.length === 0 && (
-            <div className="bg-white rounded-3xl border border-dashed border-[#c5c6ce] p-12 text-center flex flex-col items-center justify-center max-w-lg mx-auto">
-              <div className="w-16 h-16 rounded-3xl bg-[#eff4ff] text-[#0051d5] flex items-center justify-center mb-4 shadow-xs">
+            <div className="bg-white rounded-3xl border border-dashed border-[var(--aven-border)] p-12 text-center flex flex-col items-center justify-center max-w-lg mx-auto">
+              <div className="w-16 h-16 rounded-3xl bg-[var(--aven-soft)] text-[var(--aven-action)] flex items-center justify-center mb-4 shadow-xs">
                 <span className="material-symbols-outlined text-[32px]">folder_open</span>
               </div>
-              <h3 className="text-[17px] font-bold text-[#0b1c30]">
+              <h3 className="text-[17px] font-bold text-[var(--aven-ink)]">
                 {materials.length === 0 ? 'No Study Materials Uploaded Yet' : 'No Matching Documents Found'}
               </h3>
-              <p className="text-[13px] text-[#44474d] mt-1.5 max-w-sm leading-relaxed">
+              <p className="text-[13px] text-[var(--aven-muted)] mt-1.5 max-w-sm leading-relaxed">
                 {materials.length === 0
                   ? 'Upload your lecture notes, past exam papers, textbook chapters, or reference PDFs to build your personal study vault.'
                   : 'Try selecting a different subject or adjusting your search query.'}
@@ -412,7 +412,7 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
               {materials.length === 0 ? (
                 <button
                   onClick={onOpenUpload}
-                  className="mt-5 inline-flex items-center gap-2 bg-[#0051d5] hover:bg-[#316bf3] text-white px-5 py-2.5 rounded-xl text-[13px] font-bold shadow-sm transition-all cursor-pointer"
+                  className="mt-5 inline-flex items-center gap-2 bg-[var(--aven-action)] hover:bg-[var(--aven-action-hover)] text-white px-5 py-2.5 rounded-xl text-[13px] font-bold shadow-sm transition-all cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-[20px]">cloud_upload</span>
                   <span>Upload Your First Document</span>
@@ -424,7 +424,7 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
                     setSelectedStatus('All');
                     setSearchFilter('');
                   }}
-                  className="mt-4 px-4 py-2 rounded-xl text-[12px] font-bold text-[#0051d5] hover:bg-[#eff4ff] cursor-pointer"
+                  className="mt-4 px-4 py-2 rounded-xl text-[12px] font-bold text-[var(--aven-action)] hover:bg-[var(--aven-soft)] cursor-pointer"
                 >
                   Reset Filters
                 </button>
@@ -440,12 +440,12 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
                 return (
                   <div
                     key={mat.id}
-                    className="bg-white rounded-2xl border border-[#c5c6ce]/40 p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
+                    className="bg-white rounded-2xl border border-[var(--aven-border)]/40 p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
                   >
                     <div>
                       {/* Top Row: Subject & Processing Status */}
                       <div className="flex flex-wrap items-center justify-between gap-1.5 mb-3">
-                        <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#eff4ff] text-[#0051d5]">
+                        <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[var(--aven-soft)] text-[var(--aven-action)]">
                           {mat.subject}
                         </span>
 
@@ -457,7 +457,7 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
                               title="BAAI/bge-small-en-v1.5 384d vectors indexed"
                             >
                               <span className="material-symbols-outlined text-[13px]">hub</span>
-                              <span>Vectors Ready</span>
+                              <span>Search ready</span>
                             </span>
                           )}
                           {mat.embeddingStatus === 'processing' && (
@@ -513,29 +513,29 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
                           </span>
                         </div>
                         <div className="min-w-0 flex-1">
-                          <h3 className="text-[15px] font-bold text-[#0b1c30] group-hover:text-[#0051d5] transition-colors line-clamp-1">
+                          <h3 className="text-[15px] font-bold text-[var(--aven-ink)] group-hover:text-[var(--aven-action)] transition-colors line-clamp-1">
                             {mat.title}
                           </h3>
-                          <p className="text-[12px] text-[#75777e] truncate mt-0.5">
+                          <p className="text-[12px] text-[var(--aven-muted)] truncate mt-0.5">
                             {mat.topic || 'General Topic'}
                           </p>
                         </div>
                       </div>
 
                       {/* File Details Box */}
-                      <div className="bg-[#eff4ff]/40 rounded-xl p-3 border border-[#c5c6ce]/20 space-y-1 mt-3 text-[11.5px] text-[#44474d]">
+                      <div className="bg-[var(--aven-soft)]/40 rounded-xl p-3 border border-[var(--aven-border)]/20 space-y-1 mt-3 text-[11.5px] text-[var(--aven-muted)]">
                         <div className="flex items-center justify-between">
-                          <span className="text-[#75777e]">File Name</span>
-                          <span className="font-mono text-[#0b1c30] truncate max-w-[150px]" title={mat.originalFilename}>
+                          <span className="text-[var(--aven-muted)]">File Name</span>
+                          <span className="font-mono text-[var(--aven-ink)] truncate max-w-[150px]" title={mat.originalFilename}>
                             {mat.originalFilename}
                           </span>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-[#75777e]">File Size</span>
+                          <span className="text-[var(--aven-muted)]">File Size</span>
                           <span className="font-semibold">{formatFileSize(mat.fileSizeBytes)}</span>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-[#75777e]">Uploaded</span>
+                          <span className="text-[var(--aven-muted)]">Uploaded</span>
                           <span>{formatDate(mat.createdAt)}</span>
                         </div>
                       </div>
@@ -578,13 +578,13 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
                     </div>
 
                     {/* Actions Bar */}
-                    <div className="pt-3.5 mt-3 border-t border-[#c5c6ce]/20 flex items-center justify-between gap-2">
+                    <div className="pt-3.5 mt-3 border-t border-[var(--aven-border)]/20 flex flex-wrap items-center justify-between gap-2">
                       <div className="flex items-center gap-1">
                         <a
                           href={materialApi.getDownloadUrl(mat.id)}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1 text-[12px] font-bold text-[#0051d5] hover:text-[#316bf3] p-1.5 rounded-lg hover:bg-[#eff4ff] transition-colors"
+                          className="inline-flex items-center gap-1 text-[12px] font-bold text-[var(--aven-action)] hover:text-[var(--aven-action-hover)] p-1.5 rounded-lg hover:bg-[var(--aven-soft)] transition-colors"
                         >
                           <span className="material-symbols-outlined text-[17px]">download</span>
                           <span>Download</span>
@@ -621,7 +621,7 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
                       <button
                         onClick={() => setMaterialToDelete(mat)}
                         title="Delete material"
-                        className="p-2 rounded-xl text-[#75777e] hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                        className="p-2 rounded-xl text-[var(--aven-muted)] hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                       >
                         <span className="material-symbols-outlined text-[18px]">delete</span>
                       </button>
@@ -640,14 +640,14 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
       {activeSubTab === 'curriculum' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredCurriculumSubjects.length === 0 ? (
-            <div className="col-span-full bg-white rounded-3xl border border-dashed border-[#c5c6ce] p-12 text-center flex flex-col items-center justify-center max-w-lg mx-auto">
-              <div className="w-16 h-16 rounded-3xl bg-[#eff4ff] text-[#0051d5] flex items-center justify-center mb-4 shadow-xs">
+            <div className="col-span-full bg-white rounded-3xl border border-dashed border-[var(--aven-border)] p-12 text-center flex flex-col items-center justify-center max-w-lg mx-auto">
+              <div className="w-16 h-16 rounded-3xl bg-[var(--aven-soft)] text-[var(--aven-action)] flex items-center justify-center mb-4 shadow-xs">
                 <span className="material-symbols-outlined text-[32px]">school</span>
               </div>
-              <h3 className="text-[17px] font-bold text-[#0b1c30]">
+              <h3 className="text-[17px] font-bold text-[var(--aven-ink)]">
                 No Matching Curriculum Subjects Found
               </h3>
-              <p className="text-[13px] text-[#44474d] mt-1.5 max-w-sm leading-relaxed">
+              <p className="text-[13px] text-[var(--aven-muted)] mt-1.5 max-w-sm leading-relaxed">
                 Subjects are calibrated to your authenticated academic profile. Try selecting "All" or adjusting your search.
               </p>
             </div>
@@ -663,44 +663,44 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
               return (
                 <div
                   key={sub.name}
-                  className="bg-white rounded-2xl border border-[#c5c6ce]/40 p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
+                  className="bg-white rounded-2xl border border-[var(--aven-border)]/40 p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#eff4ff] text-[#0051d5]">
+                      <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[var(--aven-soft)] text-[var(--aven-action)]">
                         {sub.name} • {sub.topics.length} Topic{sub.topics.length === 1 ? '' : 's'}
                       </span>
-                      <span className="text-[13px] font-bold text-[#0051d5]">
+                      <span className="text-[13px] font-bold text-[var(--aven-action)]">
                         {hasAttempted ? `${accuracy}% Accuracy` : 'Not Started'}
                       </span>
                     </div>
 
-                    <h3 className="text-[17px] font-bold text-[#0b1c30] group-hover:text-[#0051d5] transition-colors line-clamp-1">
+                    <h3 className="text-[17px] font-bold text-[var(--aven-ink)] group-hover:text-[var(--aven-action)] transition-colors line-clamp-1">
                       {sub.name} Curriculum Kit
                     </h3>
-                    <p className="text-[12px] text-[#44474d] mt-1 line-clamp-2 leading-relaxed">
+                    <p className="text-[12px] text-[var(--aven-muted)] mt-1 line-clamp-2 leading-relaxed">
                       Official question bank curriculum calibrated to your academic stage, with {sub.total_questions} exam challenges.
                     </p>
 
-                    <div className="w-full bg-[#eff4ff] h-2 rounded-full overflow-hidden mt-3">
+                    <div className="w-full bg-[var(--aven-soft)] h-2 rounded-full overflow-hidden mt-3">
                       <div
-                        className="bg-[#0051d5] h-full rounded-full transition-all duration-300"
+                        className="bg-[var(--aven-action)] h-full rounded-full transition-all duration-300"
                         style={{ width: `${hasAttempted ? Math.max(5, accuracy) : 0}%` }}
                       ></div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2 py-3 mt-2 border-y border-[#c5c6ce]/20 text-center">
+                    <div className="grid grid-cols-2 gap-2 py-3 mt-2 border-y border-[var(--aven-border)]/20 text-center">
                       <div>
-                        <span className="block text-[14px] font-bold text-[#0b1c30]">
+                        <span className="block text-[14px] font-bold text-[var(--aven-ink)]">
                           {sub.total_questions}
                         </span>
-                        <span className="text-[11px] text-[#75777e]">Questions</span>
+                        <span className="text-[11px] text-[var(--aven-muted)]">Questions</span>
                       </div>
                       <div>
-                        <span className="block text-[14px] font-bold text-[#0b1c30]">
+                        <span className="block text-[14px] font-bold text-[var(--aven-ink)]">
                           {quizzesTaken}
                         </span>
-                        <span className="text-[11px] text-[#75777e]">Quizzes Taken</span>
+                        <span className="text-[11px] text-[var(--aven-muted)]">Quizzes Taken</span>
                       </div>
                     </div>
 
@@ -708,23 +708,23 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
                       {sub.topics.slice(0, 4).map((t, idx) => (
                         <span
                           key={idx}
-                          className="text-[10px] font-semibold text-[#44474d] bg-[#eff4ff] px-2 py-0.5 rounded-md"
+                          className="text-[10px] font-semibold text-[var(--aven-muted)] bg-[var(--aven-soft)] px-2 py-0.5 rounded-md"
                         >
                           #{t}
                         </span>
                       ))}
                       {sub.topics.length > 4 && (
-                        <span className="text-[10px] font-medium text-[#75777e] px-1 py-0.5">
+                        <span className="text-[10px] font-medium text-[var(--aven-muted)] px-1 py-0.5">
                           +{sub.topics.length - 4} more
                         </span>
                       )}
                     </div>
                   </div>
 
-                  <div className="pt-4 mt-3 border-t border-[#c5c6ce]/20 flex items-center justify-between gap-2">
+                  <div className="pt-4 mt-3 border-t border-[var(--aven-border)]/20 flex flex-wrap items-center justify-between gap-2">
                     <button
                       onClick={onOpenSummary}
-                      className="text-[12px] font-bold text-[#0051d5] hover:underline flex items-center gap-1 cursor-pointer"
+                      className="text-[12px] font-bold text-[var(--aven-action)] hover:underline flex items-center gap-1 cursor-pointer"
                     >
                       <span className="material-symbols-outlined text-[16px]">menu_book</span>
                       <span>Summary</span>
@@ -734,14 +734,14 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
                       <button
                         onClick={() => onNavigate('flashcards')}
                         title="Practice Cards"
-                        className="p-2 rounded-xl bg-[#eff4ff] text-[#0051d5] hover:bg-[#dbe1ff] transition-colors cursor-pointer"
+                        className="p-2 rounded-xl bg-[var(--aven-soft)] text-[var(--aven-action)] hover:bg-[var(--aven-blue-soft)] transition-colors cursor-pointer"
                       >
                         <span className="material-symbols-outlined text-[18px]">style</span>
                       </button>
                       <button
                         onClick={() => onNavigate('quizzes')}
                         title="Take Quiz"
-                        className="p-2 rounded-xl bg-[#eff4ff] text-[#0051d5] hover:bg-[#dbe1ff] transition-colors cursor-pointer"
+                        className="p-2 rounded-xl bg-[var(--aven-soft)] text-[var(--aven-action)] hover:bg-[var(--aven-blue-soft)] transition-colors cursor-pointer"
                       >
                         <span className="material-symbols-outlined text-[18px]">quiz</span>
                       </button>
@@ -757,13 +757,13 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
       {/* Delete Confirmation Modal */}
       {materialToDelete && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-[#c5c6ce]/50 animate-in fade-in zoom-in-95">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-[var(--aven-border)]/50 animate-in fade-in zoom-in-95">
             <div className="w-12 h-12 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center mb-4">
               <span className="material-symbols-outlined text-[24px]">delete_forever</span>
             </div>
-            <h3 className="text-[17px] font-bold text-[#0b1c30]">Delete Study Material?</h3>
-            <p className="text-[13px] text-[#44474d] mt-1.5 leading-relaxed">
-              Are you sure you want to delete <strong className="text-[#0b1c30]">"{materialToDelete.title}"</strong>?
+            <h3 className="text-[17px] font-bold text-[var(--aven-ink)]">Delete Study Material?</h3>
+            <p className="text-[13px] text-[var(--aven-muted)] mt-1.5 leading-relaxed">
+              Are you sure you want to delete <strong className="text-[var(--aven-ink)]">"{materialToDelete.title}"</strong>?
               This will permanently remove the record and storage file.
             </p>
 
@@ -772,7 +772,7 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
                 type="button"
                 onClick={() => setMaterialToDelete(null)}
                 disabled={isDeleting}
-                className="px-4 py-2 rounded-xl border border-[#c5c6ce] text-[#44474d] hover:bg-slate-50 text-[13px] font-semibold cursor-pointer"
+                className="px-4 py-2 rounded-xl border border-[var(--aven-border)] text-[var(--aven-muted)] hover:bg-slate-50 text-[13px] font-semibold cursor-pointer"
               >
                 Cancel
               </button>

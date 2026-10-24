@@ -105,19 +105,19 @@ export const AdaptiveModelView: React.FC<AdaptiveModelViewProps> = ({ onNavigate
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-[22px] font-bold text-[#0b1c30] tracking-tight font-['Inter']">
-              AVEN Adaptive Student Model
+            <h2 className="aven-page-title text-[22px] font-bold text-[var(--aven-ink)] tracking-tight ">
+              Your learning insights.
             </h2>
             <button
               onClick={() => setShowFormulaModal(true)}
-              className="text-[#0051d5] hover:text-[#003da5] text-[13px] font-medium flex items-center gap-1 cursor-pointer transition-colors"
+              className="text-[var(--aven-action)] hover:text-[#003da5] text-[13px] font-medium flex items-center gap-1 cursor-pointer transition-colors"
               title="Inspect deterministic mastery formula"
             >
               <span className="material-symbols-outlined text-[16px]">info</span>
               <span>How it works</span>
             </button>
           </div>
-          <p className="text-[13px] text-[#44474d] mt-0.5">
+          <p className="text-[13px] text-[var(--aven-muted)] mt-0.5">
             Deterministic, explainable representation of your knowledge state, retention stability, and difficulty readiness.
           </p>
         </div>
@@ -125,7 +125,7 @@ export const AdaptiveModelView: React.FC<AdaptiveModelViewProps> = ({ onNavigate
         <button
           onClick={handleSync}
           disabled={syncing || loading}
-          className="flex items-center justify-center gap-2 px-4 py-2 bg-[#0051d5] hover:bg-[#0041b0] disabled:opacity-50 text-white rounded-xl text-[13px] font-semibold transition-colors cursor-pointer shadow-xs"
+          className="flex items-center justify-center gap-2 px-4 py-2 bg-[var(--aven-action)] hover:bg-[var(--aven-action-hover)] disabled:opacity-50 text-white rounded-xl text-[13px] font-semibold transition-colors cursor-pointer shadow-xs"
         >
           <span className={`material-symbols-outlined text-[18px] ${syncing ? 'animate-spin' : ''}`}>
             sync
@@ -143,55 +143,55 @@ export const AdaptiveModelView: React.FC<AdaptiveModelViewProps> = ({ onNavigate
       {/* Primary Diagnostic Metrics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {/* Card 1: Overall Mastery */}
-        <div className="bg-white p-5 rounded-2xl border border-[#c5c6ce]/30 shadow-xs flex flex-col justify-between">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--aven-border)]/30 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-[13px] text-[#44474d] font-semibold">Overall Mastery</span>
-              <span className="text-[11px] text-[#75777e] font-medium">Bayesian Shrunk</span>
+              <span className="text-[13px] text-[var(--aven-muted)] font-semibold">Overall Mastery</span>
+              <span className="text-[11px] text-[var(--aven-muted)] font-medium">Bayesian Shrunk</span>
             </div>
             <div className="flex items-baseline gap-2 my-2">
-              <span className="text-[32px] font-bold text-[#0b1c30]">
+              <span className="text-[32px] font-bold text-[var(--aven-ink)]">
                 {loading ? '...' : `${model?.profile?.overall_mastery ?? 0}%`}
               </span>
-              <span className="text-[12px] text-[#75777e]">
+              <span className="text-[12px] text-[var(--aven-muted)]">
                 (raw acc: {model?.profile?.overall_accuracy ?? 0}%)
               </span>
             </div>
           </div>
-          <div className="text-[11px] text-[#75777e]">
+          <div className="text-[11px] text-[var(--aven-muted)]">
             Guards against lucky guesses via statistical prior shrinkage.
           </div>
         </div>
 
         {/* Card 2: Evidence & Confidence */}
-        <div className="bg-white p-5 rounded-2xl border border-[#c5c6ce]/30 shadow-xs flex flex-col justify-between">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--aven-border)]/30 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-[13px] text-[#44474d] font-semibold">Evidence Confidence</span>
-              <span className="text-[11px] text-[#0051d5] font-bold">
+              <span className="text-[13px] text-[var(--aven-muted)] font-semibold">Evidence Confidence</span>
+              <span className="text-[11px] text-[var(--aven-action)] font-bold">
                 {model?.summary?.totalAssessedQuestions ?? 0} Qs Assessed
               </span>
             </div>
             <div className="flex items-baseline gap-2 my-2">
-              <span className="text-[32px] font-bold text-[#0051d5]">
+              <span className="text-[32px] font-bold text-[var(--aven-action)]">
                 {loading ? '...' : `${model?.profile?.overall_confidence ?? 0}%`}
               </span>
-              <span className="text-[12px] text-[#44474d] font-medium">sufficiency</span>
+              <span className="text-[12px] text-[var(--aven-muted)] font-medium">sufficiency</span>
             </div>
           </div>
-          <div className="w-full bg-[#eff4ff] h-2 rounded-full overflow-hidden">
+          <div className="w-full bg-[var(--aven-soft)] h-2 rounded-full overflow-hidden">
             <div
-              className="bg-[#0051d5] h-full rounded-full transition-all duration-300"
+              className="bg-[var(--aven-action)] h-full rounded-full transition-all duration-300"
               style={{ width: `${model?.profile?.overall_confidence ?? 0}%` }}
             ></div>
           </div>
         </div>
 
         {/* Card 3: Learning Consistency */}
-        <div className="bg-white p-5 rounded-2xl border border-[#c5c6ce]/30 shadow-xs flex flex-col justify-between">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--aven-border)]/30 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-[13px] text-[#44474d] font-semibold">Learning Consistency</span>
+              <span className="text-[13px] text-[var(--aven-muted)] font-semibold">Learning Consistency</span>
               <span className="text-[11px] text-amber-600 font-bold">
                 {model?.profile?.metadata?.activeStreakDays ?? 0} Day Streak
               </span>
@@ -200,19 +200,19 @@ export const AdaptiveModelView: React.FC<AdaptiveModelViewProps> = ({ onNavigate
               <span className="text-[32px] font-bold text-amber-600">
                 {loading ? '...' : `${model?.profile?.learning_consistency ?? 0}`}
               </span>
-              <span className="text-[12px] text-[#75777e]">/ 100 Index</span>
+              <span className="text-[12px] text-[var(--aven-muted)]">/ 100 Index</span>
             </div>
           </div>
-          <div className="text-[11px] text-[#75777e]">
+          <div className="text-[11px] text-[var(--aven-muted)]">
             Evaluated from daily study regularity and assessment cadence.
           </div>
         </div>
 
         {/* Card 4: Assessment Totals */}
-        <div className="bg-white p-5 rounded-2xl border border-[#c5c6ce]/30 shadow-xs flex flex-col justify-between">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--aven-border)]/30 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-[13px] text-[#44474d] font-semibold">Assessment Footprint</span>
+              <span className="text-[13px] text-[var(--aven-muted)] font-semibold">Assessment Footprint</span>
               <span className="text-[11px] text-emerald-600 font-bold">Verified Logs</span>
             </div>
             <div className="grid grid-cols-3 gap-2 my-2 text-center">
@@ -236,30 +236,30 @@ export const AdaptiveModelView: React.FC<AdaptiveModelViewProps> = ({ onNavigate
               </div>
             </div>
           </div>
-          <div className="text-[11px] text-[#75777e]">
+          <div className="text-[11px] text-[var(--aven-muted)]">
             {model?.profile?.total_quizzes_completed ?? 0} quizzes completed to date.
           </div>
         </div>
       </div>
 
       {/* Deterministic Learning Recommendations */}
-      <div className="bg-white p-5 lg:p-6 rounded-2xl border border-[#c5c6ce]/30 shadow-xs">
+      <div className="bg-white p-5 lg:p-6 rounded-2xl border border-[var(--aven-border)]/30 shadow-xs">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-[16px] font-bold text-[#0b1c30]">
+            <h3 className="text-[16px] font-bold text-[var(--aven-ink)]">
               Adaptive Learning Recommendations
             </h3>
-            <span className="text-[12px] text-[#75777e]">
+            <span className="text-[12px] text-[var(--aven-muted)]">
               Derived deterministically from current retention decay, conceptual error rates, and difficulty thresholds.
             </span>
           </div>
-          <span className="text-[12px] text-[#0051d5] font-semibold bg-[#eff4ff] px-2.5 py-1 rounded-lg">
+          <span className="text-[12px] text-[var(--aven-action)] font-semibold bg-[var(--aven-soft)] px-2.5 py-1 rounded-lg">
             Rule-Based & Explainable
           </span>
         </div>
 
         {loading ? (
-          <div className="py-8 text-center text-[13px] text-[#75777e]">
+          <div className="py-8 text-center text-[13px] text-[var(--aven-muted)]">
             Synthesizing recommendations from assessment evidence...
           </div>
         ) : model?.recommendations && model.recommendations.length > 0 ? (
@@ -284,38 +284,38 @@ export const AdaptiveModelView: React.FC<AdaptiveModelViewProps> = ({ onNavigate
               return (
                 <div
                   key={rec.id}
-                  className={`p-4 rounded-xl bg-[#eff4ff] border border-[#d3e4fe] flex flex-col justify-between ${priorityBorder}`}
+                  className={`p-4 rounded-xl bg-[var(--aven-soft)] border border-[var(--aven-blue-soft)] flex flex-col justify-between ${priorityBorder}`}
                 >
                   <div>
-                    <div className="flex items-center justify-between text-[11px] text-[#75777e] mb-1">
+                    <div className="flex items-center justify-between text-[11px] text-[var(--aven-muted)] mb-1">
                       <span>{rec.subject}</span>
                       <span className="font-semibold uppercase tracking-wider">{rec.priority} Priority</span>
                     </div>
 
-                    <h4 className="text-[14px] font-bold text-[#0b1c30] flex items-center gap-1.5 mt-1">
-                      <span className="material-symbols-outlined text-[18px] text-[#0051d5]">
+                    <h4 className="text-[14px] font-bold text-[var(--aven-ink)] flex items-center gap-1.5 mt-1">
+                      <span className="material-symbols-outlined text-[18px] text-[var(--aven-action)]">
                         {typeIcon}
                       </span>
                       <span>{rec.title}</span>
                     </h4>
 
-                    <p className="text-[12px] text-[#44474d] mt-2 leading-relaxed">
+                    <p className="text-[12px] text-[var(--aven-muted)] mt-2 leading-relaxed">
                       {rec.description}
                     </p>
 
-                    <div className="mt-3 p-2.5 rounded-lg bg-white/70 border border-[#c5c6ce]/20 text-[11px] text-[#555860] leading-normal">
-                      <strong className="text-[#0b1c30]">Evidence Reason:</strong> {rec.reason}
+                    <div className="mt-3 p-2.5 rounded-lg bg-white/70 border border-[var(--aven-border)]/20 text-[11px] text-[#555860] leading-normal">
+                      <strong className="text-[var(--aven-ink)]">Evidence Reason:</strong> {rec.reason}
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between mt-4 pt-3 border-t border-[#d3e4fe]">
-                    <span className="text-[11px] text-[#44474d] font-medium capitalize">
+                  <div className="flex items-center justify-between mt-4 pt-3 border-t border-[var(--aven-blue-soft)]">
+                    <span className="text-[11px] text-[var(--aven-muted)] font-medium capitalize">
                       Suggested: {rec.recommendedDifficulty} ({rec.suggestedQuestionCount} Qs)
                     </span>
                     <button
                       onClick={() => handleLaunchPractice(rec.topic, rec.subject, rec.recommendedDifficulty)}
                       disabled={launchingTopic === rec.topic}
-                      className="px-3 py-1.5 bg-[#0051d5] hover:bg-[#0041b0] disabled:opacity-50 text-white rounded-lg text-[12px] font-semibold transition-colors cursor-pointer"
+                      className="px-3 py-1.5 bg-[var(--aven-action)] hover:bg-[var(--aven-action-hover)] disabled:opacity-50 text-white rounded-lg text-[12px] font-semibold transition-colors cursor-pointer"
                     >
                       {launchingTopic === rec.topic ? 'Starting...' : 'Practice Now'}
                     </button>
@@ -325,62 +325,62 @@ export const AdaptiveModelView: React.FC<AdaptiveModelViewProps> = ({ onNavigate
             })}
           </div>
         ) : (
-          <div className="p-8 text-center text-[13px] text-[#75777e] bg-[#eff4ff] rounded-xl">
+          <div className="p-8 text-center text-[13px] text-[var(--aven-muted)] bg-[var(--aven-soft)] rounded-xl">
             No recommendations generated. Complete quiz assessments to populate evidence.
           </div>
         )}
       </div>
 
       {/* Subject-Level Readiness Progression */}
-      <div className="bg-white p-5 lg:p-6 rounded-2xl border border-[#c5c6ce]/30 shadow-xs">
-        <h3 className="text-[16px] font-bold text-[#0b1c30] mb-2">Subject Mastery & Readiness</h3>
-        <p className="text-[12px] text-[#75777e] mb-4">
+      <div className="bg-white p-5 lg:p-6 rounded-2xl border border-[var(--aven-border)]/30 shadow-xs">
+        <h3 className="text-[16px] font-bold text-[var(--aven-ink)] mb-2">Subject Mastery & Readiness</h3>
+        <p className="text-[12px] text-[var(--aven-muted)] mb-4">
           Holistic curriculum progression combining all assessed topics within each subject area.
         </p>
 
         {loading ? (
-          <div className="py-8 text-center text-[13px] text-[#75777e]">Loading subject mastery...</div>
+          <div className="py-8 text-center text-[13px] text-[var(--aven-muted)]">Loading subject mastery...</div>
         ) : model?.subjects && model.subjects.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {model.subjects.map((s) => (
-              <div key={s.id} className="p-4 rounded-xl bg-[#eff4ff] border border-[#d3e4fe] flex flex-col justify-between">
+              <div key={s.id} className="p-4 rounded-xl bg-[var(--aven-soft)] border border-[var(--aven-blue-soft)] flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-[14px] text-[#0b1c30]">{s.subject}</span>
-                    <span className="text-[12px] font-bold text-[#0051d5]">{s.mastery_score}%</span>
+                    <span className="font-bold text-[14px] text-[var(--aven-ink)]">{s.subject}</span>
+                    <span className="text-[12px] font-bold text-[var(--aven-action)]">{s.mastery_score}%</span>
                   </div>
-                  <div className="text-[11px] text-[#75777e] mt-0.5">
+                  <div className="text-[11px] text-[var(--aven-muted)] mt-0.5">
                     {s.assessed_question_count} assessed · {s.accuracy}% raw acc
                   </div>
 
-                  <div className="w-full bg-[#d3e4fe] h-2 rounded-full overflow-hidden mt-3">
+                  <div className="w-full bg-[var(--aven-blue-soft)] h-2 rounded-full overflow-hidden mt-3">
                     <div
-                      className="bg-[#0051d5] h-full rounded-full transition-all duration-300"
+                      className="bg-[var(--aven-action)] h-full rounded-full transition-all duration-300"
                       style={{ width: `${s.mastery_score}%` }}
                     ></div>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between mt-4 pt-2 text-[11px] border-t border-[#d3e4fe]">
-                  <span className="text-[#44474d] capitalize font-medium">Readiness: {s.readiness_indicator}</span>
-                  <span className="text-[#75777e] capitalize">Trend: {s.trend.replace('_', ' ')}</span>
+                <div className="flex items-center justify-between mt-4 pt-2 text-[11px] border-t border-[var(--aven-blue-soft)]">
+                  <span className="text-[var(--aven-muted)] capitalize font-medium">Readiness: {s.readiness_indicator}</span>
+                  <span className="text-[var(--aven-muted)] capitalize">Trend: {s.trend.replace('_', ' ')}</span>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="p-8 text-center text-[13px] text-[#75777e] bg-[#eff4ff] rounded-xl">
+          <div className="p-8 text-center text-[13px] text-[var(--aven-muted)] bg-[var(--aven-soft)] rounded-xl">
             No subject assessments recorded yet. Complete quizzes to establish subject mastery.
           </div>
         )}
       </div>
 
       {/* Topic Mastery Matrix with Subject Filter Tabs */}
-      <div className="bg-white p-5 lg:p-6 rounded-2xl border border-[#c5c6ce]/30 shadow-xs">
+      <div className="bg-white p-5 lg:p-6 rounded-2xl border border-[var(--aven-border)]/30 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
           <div>
-            <h3 className="text-[16px] font-bold text-[#0b1c30]">Topic-Level Mastery & Retention Matrix</h3>
-            <span className="text-[12px] text-[#75777e]">
+            <h3 className="text-[16px] font-bold text-[var(--aven-ink)]">Topic-Level Mastery & Retention Matrix</h3>
+            <span className="text-[12px] text-[var(--aven-muted)]">
               Detailed breakdown of every conceptual topic assessed, including retention status and difficulty readiness.
             </span>
           </div>
@@ -420,12 +420,12 @@ export const AdaptiveModelView: React.FC<AdaptiveModelViewProps> = ({ onNavigate
 
         {/* Topic Matrix Table */}
         {loading ? (
-          <div className="py-12 text-center text-[13px] text-[#75777e]">Loading topic mastery matrix...</div>
+          <div className="py-12 text-center text-[13px] text-[var(--aven-muted)]">Loading topic mastery matrix...</div>
         ) : filteredTopics.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-[13px]">
               <thead>
-                <tr className="border-b border-slate-200 text-[#75777e] text-[11px] font-semibold uppercase tracking-wider">
+                <tr className="border-b border-slate-200 text-[var(--aven-muted)] text-[11px] font-semibold uppercase tracking-wider">
                   <th className="py-3 px-3">Subject & Topic</th>
                   <th className="py-3 px-3">Mastery</th>
                   <th className="py-3 px-3">Raw Accuracy</th>
@@ -437,7 +437,7 @@ export const AdaptiveModelView: React.FC<AdaptiveModelViewProps> = ({ onNavigate
                   <th className="py-3 px-3 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-[#0b1c30]">
+              <tbody className="divide-y divide-slate-100 text-[var(--aven-ink)]">
                 {filteredTopics.map((t) => {
                   const retentionColor =
                     t.retention_indicator === 'fresh'
@@ -467,17 +467,17 @@ export const AdaptiveModelView: React.FC<AdaptiveModelViewProps> = ({ onNavigate
                       : 'text-slate-400';
 
                   return (
-                    <tr key={`${t.subject}-${t.topic}`} className="hover:bg-[#eff4ff]/40 transition-colors">
+                    <tr key={`${t.subject}-${t.topic}`} className="hover:bg-[var(--aven-soft)]/40 transition-colors">
                       <td className="py-3 px-3 font-semibold">
                         <div className="flex flex-col">
-                          <span className="text-[13px] text-[#0b1c30]">{t.topic}</span>
-                          <span className="text-[11px] text-[#75777e]">{t.subject}</span>
+                          <span className="text-[13px] text-[var(--aven-ink)]">{t.topic}</span>
+                          <span className="text-[11px] text-[var(--aven-muted)]">{t.subject}</span>
                         </div>
                       </td>
-                      <td className="py-3 px-3 font-bold text-[#0051d5]">
+                      <td className="py-3 px-3 font-bold text-[var(--aven-action)]">
                         {t.mastery_score}%
                       </td>
-                      <td className="py-3 px-3 text-[#44474d]">
+                      <td className="py-3 px-3 text-[var(--aven-muted)]">
                         {t.accuracy}%
                       </td>
                       <td className="py-3 px-3 text-[#555860]">
@@ -488,7 +488,7 @@ export const AdaptiveModelView: React.FC<AdaptiveModelViewProps> = ({ onNavigate
                           <span className="text-[12px] font-medium">{t.confidence_score}%</span>
                           <div className="w-12 bg-slate-100 h-1.5 rounded-full overflow-hidden">
                             <div
-                              className="bg-[#0051d5] h-full rounded-full"
+                              className="bg-[var(--aven-action)] h-full rounded-full"
                               style={{ width: `${t.confidence_score}%` }}
                             ></div>
                           </div>
@@ -514,7 +514,7 @@ export const AdaptiveModelView: React.FC<AdaptiveModelViewProps> = ({ onNavigate
                         <button
                           onClick={() => handleLaunchPractice(t.topic, t.subject, t.recommended_difficulty)}
                           disabled={launchingTopic === t.topic}
-                          className="px-2.5 py-1 text-[12px] font-semibold text-[#0051d5] hover:bg-[#eff4ff] rounded-md transition-colors cursor-pointer"
+                          className="px-2.5 py-1 text-[12px] font-semibold text-[var(--aven-action)] hover:bg-[var(--aven-soft)] rounded-md transition-colors cursor-pointer"
                         >
                           {launchingTopic === t.topic ? '...' : 'Practice'}
                         </button>
@@ -526,7 +526,7 @@ export const AdaptiveModelView: React.FC<AdaptiveModelViewProps> = ({ onNavigate
             </table>
           </div>
         ) : (
-          <div className="p-8 text-center text-[13px] text-[#75777e] bg-[#eff4ff] rounded-xl">
+          <div className="p-8 text-center text-[13px] text-[var(--aven-muted)] bg-[var(--aven-soft)] rounded-xl">
             No topic performance data available for this filter.
           </div>
         )}
@@ -537,8 +537,8 @@ export const AdaptiveModelView: React.FC<AdaptiveModelViewProps> = ({ onNavigate
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-xs">
           <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 flex flex-col gap-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <h3 className="text-[18px] font-bold text-[#0b1c30] flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#0051d5]">functions</span>
+              <h3 className="text-[18px] font-bold text-[var(--aven-ink)] flex items-center gap-2">
+                <span className="material-symbols-outlined text-[var(--aven-action)]">functions</span>
                 <span>Deterministic Mastery Formulation</span>
               </h3>
               <button
@@ -549,9 +549,9 @@ export const AdaptiveModelView: React.FC<AdaptiveModelViewProps> = ({ onNavigate
               </button>
             </div>
 
-            <div className="text-[13px] text-[#44474d] space-y-3 leading-relaxed">
+            <div className="text-[13px] text-[var(--aven-muted)] space-y-3 leading-relaxed">
               <p>
-                The AVEN Adaptive Student Model is completely deterministic, explainable, and grounded in empirical assessment history. It does not use LLMs or random values.
+                The Your learning insights. is completely deterministic, explainable, and grounded in empirical assessment history. It does not use LLMs or random values.
               </p>
 
               <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 font-mono text-[12px]">
@@ -578,7 +578,7 @@ export const AdaptiveModelView: React.FC<AdaptiveModelViewProps> = ({ onNavigate
             <div className="pt-3 border-t border-slate-100 flex justify-end">
               <button
                 onClick={() => setShowFormulaModal(false)}
-                className="px-4 py-2 bg-[#0051d5] text-white rounded-xl text-[13px] font-semibold hover:bg-[#0041b0] cursor-pointer"
+                className="px-4 py-2 bg-[var(--aven-action)] text-white rounded-xl text-[13px] font-semibold hover:bg-[var(--aven-action-hover)] cursor-pointer"
               >
                 Got It
               </button>

@@ -3,35 +3,35 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { ActiveNavTab, StudyMaterial, NotificationItem } from './types';
-import { notificationApi } from './services/notificationApi';
-import { analyticsApi } from './services/analyticsApi';
+import React, { useState, useEffect, useCallback } from "react";
+import { ActiveNavTab, StudyMaterial, NotificationItem } from "./types";
+import { notificationApi } from "./services/notificationApi";
+import { analyticsApi } from "./services/analyticsApi";
 
-import { AuthProvider, useAuth } from './context/AuthContext';
-import { AuthView } from './components/auth/AuthView';
-import { Sidebar } from './components/Sidebar';
-import { Header } from './components/Header';
-import { LandingPage } from './components/landing/LandingPage';
-import { UploadModal } from './components/UploadModal';
-import { SummaryModal } from './components/SummaryModal';
-import { OnboardingModal } from './components/onboarding/OnboardingModal';
+import { AuthProvider, useAuth } from "./context/AuthContext";
+import { AuthView } from "./components/auth/AuthView";
+import { Sidebar } from "./components/Sidebar";
+import { Header } from "./components/Header";
+import { LandingPage } from "./components/landing/LandingPage";
+import { UploadModal } from "./components/UploadModal";
+import { SummaryModal } from "./components/SummaryModal";
+import { OnboardingModal } from "./components/onboarding/OnboardingModal";
 
-import { HomeView } from './components/views/HomeView';
-import { StudyKitsView } from './components/views/StudyKitsView';
-import { FlashcardsView } from './components/views/FlashcardsView';
-import { QuizzesView } from './components/views/QuizzesView';
-import { ProgressView } from './components/views/ProgressView';
-import { AdaptiveModelView } from './components/views/AdaptiveModelView';
-import { WeakTopicsView } from './components/views/WeakTopicsView';
-import { PeerComparisonView } from './components/views/PeerComparisonView';
-import { SettingsView } from './components/views/SettingsView';
+import { HomeView } from "./components/views/HomeView";
+import { StudyKitsView } from "./components/views/StudyKitsView";
+import { FlashcardsView } from "./components/views/FlashcardsView";
+import { QuizzesView } from "./components/views/QuizzesView";
+import { ProgressView } from "./components/views/ProgressView";
+import { AdaptiveModelView } from "./components/views/AdaptiveModelView";
+import { WeakTopicsView } from "./components/views/WeakTopicsView";
+import { PeerComparisonView } from "./components/views/PeerComparisonView";
+import { SettingsView } from "./components/views/SettingsView";
 
 function AuthenticatedApp() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<ActiveNavTab>('home');
+  const [activeTab, setActiveTab] = useState<ActiveNavTab>("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const closeMobileMenu = useCallback(() => setMobileMenuOpen(false), []);
 
   // Authoritative Dashboard & Metric Counts
   const [flashcardsCount, setFlashcardsCount] = useState<number>(0);
@@ -63,7 +63,7 @@ function AuthenticatedApp() {
         setNotifications(notifsRes.notifications || []);
       }
     } catch (err) {
-      console.warn('[App] Real-data synchronization warning:', err);
+      console.warn("[App] Real-data synchronization warning:", err);
     }
   }, []);
 
@@ -73,7 +73,11 @@ function AuthenticatedApp() {
 
   // Prompt onboarding if student hasn't completed it yet
   useEffect(() => {
-    if (user && user.profile && user.profile.has_completed_onboarding === false) {
+    if (
+      user &&
+      user.profile &&
+      user.profile.has_completed_onboarding === false
+    ) {
       setIsOnboardingOpen(true);
     }
   }, [user]);
@@ -93,9 +97,11 @@ function AuthenticatedApp() {
   const handleMarkAllNotificationsRead = async () => {
     try {
       await notificationApi.markAllAsRead();
-      setNotifications((prev) => prev.map((n) => ({ ...n, read: true, isRead: true })));
+      setNotifications((prev) =>
+        prev.map((n) => ({ ...n, read: true, isRead: true })),
+      );
     } catch (err) {
-      console.error('Failed to mark all notifications read:', err);
+      console.error("Failed to mark all notifications read:", err);
     }
   };
 
@@ -104,24 +110,40 @@ function AuthenticatedApp() {
     try {
       await notificationApi.markAsRead(id);
       setNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, read: true, isRead: true } : n))
+        prev.map((n) => (n.id === id ? { ...n, read: true, isRead: true } : n)),
       );
     } catch (err) {
-      console.error('Failed to mark notification read:', err);
+      console.error("Failed to mark notification read:", err);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#f8f9ff] text-[#0b1c30] font-['Inter'] antialiased">
-      {/* Dark persistent Command Rail Sidebar */}
+    <div className="aven-workspace min-h-screen antialiased">
+      <a
+        className="aven-workspace-skip"
+        href="#workspace-content"
+        onClick={(e) => {
+          e.preventDefault();
+          document.getElementById("workspace-content")?.focus();
+        }}
+      >
+        Skip to study content
+      </a>
+      {/* Persistent study navigation */}
       <Sidebar
         activeTab={activeTab}
         onSelectTab={(tab) => {
           setActiveTab(tab);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          window.scrollTo({
+            top: 0,
+            behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
+              .matches
+              ? "auto"
+              : "smooth",
+          });
         }}
         mobileOpen={mobileMenuOpen}
-        onCloseMobile={() => setMobileMenuOpen(false)}
+        onCloseMobile={closeMobileMenu}
         flashcardsCount={flashcardsCount}
         weakTopicsCount={weakTopicsCount}
       />
@@ -131,8 +153,7 @@ function AuthenticatedApp() {
         {/* Top Header */}
         <Header
           onOpenMobileMenu={() => setMobileMenuOpen(true)}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
+          activeTab={activeTab}
           notifications={notifications}
           onMarkAllNotificationsRead={handleMarkAllNotificationsRead}
           onMarkOneNotificationRead={handleMarkOneNotificationRead}
@@ -141,90 +162,154 @@ function AuthenticatedApp() {
         />
 
         {/* Primary Page Viewport */}
-        <main className="flex-1 pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto">
-          {activeTab === 'home' && (
-            <HomeView
-              materialsRefreshTrigger={materialsRefreshTrigger}
-              onNavigate={(tab) => {
-                setActiveTab(tab);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              onOpenUpload={() => setIsUploadOpen(true)}
-              onOpenSummary={() => setIsSummaryOpen(true)}
-            />
-          )}
+        <main
+          id="workspace-content"
+          tabIndex={-1}
+          className="aven-workspace-main"
+        >
+          <div key={activeTab} className="aven-view-enter">
+            {activeTab === "home" && (
+              <HomeView
+                materialsRefreshTrigger={materialsRefreshTrigger}
+                onNavigate={(tab) => {
+                  setActiveTab(tab);
+                  window.scrollTo({
+                    top: 0,
+                    behavior: window.matchMedia(
+                      "(prefers-reduced-motion: reduce)",
+                    ).matches
+                      ? "auto"
+                      : "smooth",
+                  });
+                }}
+                onOpenUpload={() => setIsUploadOpen(true)}
+                onOpenSummary={() => setIsSummaryOpen(true)}
+              />
+            )}
 
-          {activeTab === 'study-kits' && (
-            <StudyKitsView
-              onNavigate={(tab) => {
-                setActiveTab(tab);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              onOpenUpload={() => setIsUploadOpen(true)}
-              onOpenSummary={() => setIsSummaryOpen(true)}
-              materialsRefreshTrigger={materialsRefreshTrigger}
-            />
-          )}
+            {activeTab === "study-kits" && (
+              <StudyKitsView
+                onNavigate={(tab) => {
+                  setActiveTab(tab);
+                  window.scrollTo({
+                    top: 0,
+                    behavior: window.matchMedia(
+                      "(prefers-reduced-motion: reduce)",
+                    ).matches
+                      ? "auto"
+                      : "smooth",
+                  });
+                }}
+                onOpenUpload={() => setIsUploadOpen(true)}
+                onOpenSummary={() => setIsSummaryOpen(true)}
+                materialsRefreshTrigger={materialsRefreshTrigger}
+              />
+            )}
 
-          {activeTab === 'flashcards' && (
-            <FlashcardsView
-              onNavigate={(tab) => {
-                setActiveTab(tab);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            />
-          )}
+            {activeTab === "flashcards" && (
+              <FlashcardsView
+                onNavigate={(tab) => {
+                  setActiveTab(tab);
+                  window.scrollTo({
+                    top: 0,
+                    behavior: window.matchMedia(
+                      "(prefers-reduced-motion: reduce)",
+                    ).matches
+                      ? "auto"
+                      : "smooth",
+                  });
+                }}
+              />
+            )}
 
-          {activeTab === 'quizzes' && (
-            <QuizzesView
-              onNavigate={(tab) => {
-                setActiveTab(tab);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              onRecordQuizCompletion={handleQuizCompleted}
-            />
-          )}
+            {activeTab === "quizzes" && (
+              <QuizzesView
+                onNavigate={(tab) => {
+                  setActiveTab(tab);
+                  window.scrollTo({
+                    top: 0,
+                    behavior: window.matchMedia(
+                      "(prefers-reduced-motion: reduce)",
+                    ).matches
+                      ? "auto"
+                      : "smooth",
+                  });
+                }}
+                onRecordQuizCompletion={handleQuizCompleted}
+              />
+            )}
 
-          {activeTab === 'my-progress' && (
-            <ProgressView
-              onNavigate={(tab) => {
-                setActiveTab(tab);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            />
-          )}
+            {activeTab === "my-progress" && (
+              <ProgressView
+                onNavigate={(tab) => {
+                  setActiveTab(tab);
+                  window.scrollTo({
+                    top: 0,
+                    behavior: window.matchMedia(
+                      "(prefers-reduced-motion: reduce)",
+                    ).matches
+                      ? "auto"
+                      : "smooth",
+                  });
+                }}
+              />
+            )}
 
-          {activeTab === 'adaptive-model' && (
-            <AdaptiveModelView
-              onNavigate={(tab) => {
-                setActiveTab(tab);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            />
-          )}
+            {activeTab === "adaptive-model" && (
+              <AdaptiveModelView
+                onNavigate={(tab) => {
+                  setActiveTab(tab);
+                  window.scrollTo({
+                    top: 0,
+                    behavior: window.matchMedia(
+                      "(prefers-reduced-motion: reduce)",
+                    ).matches
+                      ? "auto"
+                      : "smooth",
+                  });
+                }}
+              />
+            )}
 
-          {activeTab === 'weak-topics' && (
-            <WeakTopicsView
-              onNavigate={(tab) => {
-                setActiveTab(tab);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              onGenerateRemedialKit={() => {}}
-            />
-          )}
+            {activeTab === "weak-topics" && (
+              <WeakTopicsView
+                onNavigate={(tab) => {
+                  setActiveTab(tab);
+                  window.scrollTo({
+                    top: 0,
+                    behavior: window.matchMedia(
+                      "(prefers-reduced-motion: reduce)",
+                    ).matches
+                      ? "auto"
+                      : "smooth",
+                  });
+                }}
+                onGenerateRemedialKit={() => {}}
+              />
+            )}
 
-          {activeTab === 'peer-comparison' && (
-            <PeerComparisonView
-              onNavigate={(tab) => {
-                setActiveTab(tab);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            />
-          )}
+            {activeTab === "peer-comparison" && (
+              <PeerComparisonView
+                onNavigate={(tab) => {
+                  setActiveTab(tab);
+                  window.scrollTo({
+                    top: 0,
+                    behavior: window.matchMedia(
+                      "(prefers-reduced-motion: reduce)",
+                    ).matches
+                      ? "auto"
+                      : "smooth",
+                  });
+                }}
+              />
+            )}
 
-          {activeTab === 'settings' && (
-            <SettingsView onOpenOnboarding={() => setIsOnboardingOpen(true)} />
-          )}
+            {activeTab === "settings" && (
+              <SettingsView
+                onOpenOnboarding={() => setIsOnboardingOpen(true)}
+              />
+            )}
+          </div>
         </main>
       </div>
 
@@ -247,12 +332,24 @@ function AuthenticatedApp() {
         isOpen={isSummaryOpen}
         onClose={() => setIsSummaryOpen(false)}
         onPracticeFlashcards={() => {
-          setActiveTab('flashcards');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          setActiveTab("flashcards");
+          window.scrollTo({
+            top: 0,
+            behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
+              .matches
+              ? "auto"
+              : "smooth",
+          });
         }}
         onStartQuiz={() => {
-          setActiveTab('quizzes');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          setActiveTab("quizzes");
+          window.scrollTo({
+            top: 0,
+            behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
+              .matches
+              ? "auto"
+              : "smooth",
+          });
         }}
       />
     </div>
@@ -264,34 +361,50 @@ function MainContent() {
   const [route, setRoute] = useState(window.location.hash);
   useEffect(() => {
     const update = () => setRoute(window.location.hash);
-    window.addEventListener('hashchange', update);
-    return () => window.removeEventListener('hashchange', update);
+    window.addEventListener("hashchange", update);
+    return () => window.removeEventListener("hashchange", update);
   }, []);
-  const enteringApp = ['#login', '#signup', '#workspace'].includes(route);
+  const enteringApp = ["#login", "#signup", "#workspace"].includes(route);
 
   if (!enteringApp) {
-    return <LandingPage signedIn={status === 'authenticated'} onEnter={(mode) => {
-      window.location.hash = status === 'authenticated' ? 'workspace' : mode === 'register' ? 'signup' : 'login';
-      window.scrollTo(0, 0);
-    }} />;
+    return (
+      <LandingPage
+        signedIn={status === "authenticated"}
+        onEnter={(mode) => {
+          window.location.hash =
+            status === "authenticated"
+              ? "workspace"
+              : mode === "register"
+                ? "signup"
+                : "login";
+          window.scrollTo(0, 0);
+        }}
+      />
+    );
   }
 
-  if (status === 'loading') {
+  if (status === "loading") {
     return (
-      <div className="min-h-screen bg-[#091124] text-white flex flex-col items-center justify-center p-4">
-        <div className="w-12 h-12 rounded-2xl bg-[#0051d5] flex items-center justify-center text-white shadow-lg shadow-blue-500/30 animate-pulse mb-3">
+      <div className="aven-session-loading">
+        <div className="w-12 h-12 rounded-2xl bg-[var(--aven-action)] flex items-center justify-center text-white shadow-lg shadow-blue-500/30 animate-pulse mb-3">
           <span className="material-symbols-outlined text-[28px]">school</span>
         </div>
-        <p className="text-[13px] text-[#93a7cf] font-medium animate-pulse">Verifying secure student session...</p>
+        <p className="text-[13px] text-[var(--aven-muted)] font-medium animate-pulse">
+          Opening your study space…
+        </p>
       </div>
     );
   }
 
-  if (status === 'unauthenticated') {
-    return <>
-      <a href="#" className="fixed top-3 left-4 z-50 rounded-lg bg-white px-3 py-2 text-sm text-slate-800 shadow-sm">← Back to Aven</a>
-      <AuthView key={route} initialMode={route === '#signup' ? 'register' : 'login'} />
-    </>;
+  if (status === "unauthenticated") {
+    return (
+      <>
+        <AuthView
+          key={route}
+          initialMode={route === "#signup" ? "register" : "login"}
+        />
+      </>
+    );
   }
 
   return <AuthenticatedApp />;

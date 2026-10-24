@@ -128,36 +128,36 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl border border-[#c5c6ce]/50 max-h-[88vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">
+      <div className="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl border border-[var(--aven-border)]/50 max-h-[88vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="flex items-start justify-between pb-4 border-b border-[#c5c6ce]/30">
+        <div className="flex items-start justify-between pb-4 border-b border-[var(--aven-border)]/30">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#eff4ff] text-[#0051d5] text-[11px] font-bold mb-1.5">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[var(--aven-soft)] text-[var(--aven-action)] text-[11px] font-bold mb-1.5">
               <span className="material-symbols-outlined text-[15px]">auto_awesome</span>
               <span>Structured Study Takeaways & Summaries</span>
             </div>
-            <h3 className="text-[20px] font-bold text-[#0b1c30]">{title}</h3>
-            <p className="text-[13px] text-[#44474d] mt-0.5">
+            <h3 className="text-[20px] font-bold text-[var(--aven-ink)]">{title}</h3>
+            <p className="text-[13px] text-[var(--aven-muted)] mt-0.5">
               Synthesized directly from your verified course documents and curriculum question bank.
             </p>
           </div>
           <button
             onClick={onClose}
-            className="text-[#75777e] hover:text-[#0b1c30] p-1.5 rounded-xl hover:bg-[#eff4ff] transition-colors"
+            className="text-[var(--aven-muted)] hover:text-[var(--aven-ink)] p-1.5 rounded-xl hover:bg-[var(--aven-soft)] transition-colors"
           >
             <span className="material-symbols-outlined text-[22px]">close</span>
           </button>
         </div>
 
         {/* Source Selector (Materials vs Curriculum) */}
-        <div className="flex flex-wrap items-center justify-between gap-3 mt-4 pb-3 border-b border-[#c5c6ce]/30">
+        <div className="flex flex-wrap items-center justify-between gap-3 mt-4 pb-3 border-b border-[var(--aven-border)]/30">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setSourceType('materials')}
               className={`px-3.5 py-1.5 rounded-xl text-[13px] font-semibold transition-all ${
                 sourceType === 'materials'
-                  ? 'bg-[#0051d5] text-white shadow-xs'
-                  : 'text-[#44474d] hover:bg-[#eff4ff]'
+                  ? 'bg-[var(--aven-action)] text-white shadow-xs'
+                  : 'text-[var(--aven-muted)] hover:bg-[var(--aven-soft)]'
               }`}
             >
               My Documents ({materials.length})
@@ -166,8 +166,8 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
               onClick={() => setSourceType('curriculum')}
               className={`px-3.5 py-1.5 rounded-xl text-[13px] font-semibold transition-all ${
                 sourceType === 'curriculum'
-                  ? 'bg-[#0051d5] text-white shadow-xs'
-                  : 'text-[#44474d] hover:bg-[#eff4ff]'
+                  ? 'bg-[var(--aven-action)] text-white shadow-xs'
+                  : 'text-[var(--aven-muted)] hover:bg-[var(--aven-soft)]'
               }`}
             >
               Academic Curriculum
@@ -179,7 +179,7 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
             <select
               value={selectedMaterialId}
               onChange={(e) => handleMaterialChange(e.target.value)}
-              className="bg-[#eff4ff] border border-[#c5c6ce]/40 rounded-xl px-3 py-1.5 text-[12px] text-[#0b1c30] font-semibold outline-none max-w-xs truncate"
+              className="bg-[var(--aven-soft)] border border-[var(--aven-border)]/40 rounded-xl px-3 py-1.5 text-[12px] text-[var(--aven-ink)] font-semibold outline-none max-w-xs truncate"
             >
               {materials.map((m) => (
                 <option key={m.id} value={m.id}>
@@ -194,7 +194,7 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
               <select
                 value={selectedSubject}
                 onChange={(e) => handleSubjectChange(e.target.value)}
-                className="bg-[#eff4ff] border border-[#c5c6ce]/40 rounded-xl px-3 py-1.5 text-[12px] text-[#0b1c30] font-semibold outline-none"
+                className="bg-[var(--aven-soft)] border border-[var(--aven-border)]/40 rounded-xl px-3 py-1.5 text-[12px] text-[var(--aven-ink)] font-semibold outline-none"
               >
                 {meta.subjects.map((s) => (
                   <option key={s.name} value={s.name}>
@@ -207,7 +207,7 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
                 <select
                   value={selectedTopic}
                   onChange={(e) => setSelectedTopic(e.target.value)}
-                  className="bg-[#eff4ff] border border-[#c5c6ce]/40 rounded-xl px-3 py-1.5 text-[12px] text-[#0b1c30] font-semibold outline-none max-w-[180px] truncate"
+                  className="bg-[var(--aven-soft)] border border-[var(--aven-border)]/40 rounded-xl px-3 py-1.5 text-[12px] text-[var(--aven-ink)] font-semibold outline-none max-w-[180px] truncate"
                 >
                   {activeSubjectObj.topics.map((t) => (
                     <option key={t} value={t}>
@@ -224,22 +224,22 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
         <div className="flex-1 overflow-y-auto py-4 space-y-4 text-[13px] text-[#334155] leading-relaxed pr-2">
           {loading ? (
             <div className="py-12 flex flex-col items-center justify-center text-center">
-              <div className="w-8 h-8 border-3 border-[#0051d5] border-t-transparent rounded-full animate-spin mb-3"></div>
-              <p className="text-[13px] text-[#75777e]">Loading structured study takeaways...</p>
+              <div className="w-8 h-8 border-3 border-[var(--aven-action)] border-t-transparent rounded-full animate-spin mb-3"></div>
+              <p className="text-[13px] text-[var(--aven-muted)]">Loading structured study takeaways...</p>
             </div>
           ) : sourceType === 'materials' ? (
             materials.length === 0 ? (
-              <div className="py-12 text-center flex flex-col items-center justify-center p-6 bg-slate-50 rounded-2xl border border-dashed border-[#c5c6ce]">
-                <span className="material-symbols-outlined text-[32px] text-[#0051d5] mb-2">
+              <div className="py-12 text-center flex flex-col items-center justify-center p-6 bg-slate-50 rounded-2xl border border-dashed border-[var(--aven-border)]">
+                <span className="material-symbols-outlined text-[32px] text-[var(--aven-action)] mb-2">
                   upload_file
                 </span>
-                <p className="font-bold text-[#0b1c30] text-[15px]">No Processed Documents Yet</p>
-                <p className="text-[12px] text-[#75777e] mt-1 max-w-sm">
+                <p className="font-bold text-[var(--aven-ink)] text-[15px]">No Processed Documents Yet</p>
+                <p className="text-[12px] text-[var(--aven-muted)] mt-1 max-w-sm">
                   Upload lecture notes, textbooks, or research papers in the Study Kits tab to extract structured outlines and AI summaries.
                 </p>
               </div>
             ) : loadingSections ? (
-              <div className="py-8 text-center text-[#75777e] text-[13px]">
+              <div className="py-8 text-center text-[var(--aven-muted)] text-[13px]">
                 Loading extracted sections...
               </div>
             ) : sections.length === 0 ? (
@@ -248,8 +248,8 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
               </div>
             ) : (
               sections.map((sec, idx) => (
-                <div key={sec.id || idx} className="bg-[#eff4ff] p-4 rounded-2xl border border-[#dbe1ff]">
-                  <h4 className="font-bold text-[#0051d5] text-[14px] mb-1.5 flex items-center gap-1.5">
+                <div key={sec.id || idx} className="bg-[var(--aven-soft)] p-4 rounded-2xl border border-[var(--aven-blue-soft)]">
+                  <h4 className="font-bold text-[var(--aven-action)] text-[14px] mb-1.5 flex items-center gap-1.5">
                     <span className="material-symbols-outlined text-[18px]">verified</span>
                     {idx + 1}. {sec.title}
                   </h4>
@@ -257,7 +257,7 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
                     {sec.summary || 'Summary generated during document analysis.'}
                   </p>
                   {sec.pageStart && (
-                    <span className="inline-block mt-2 text-[11px] font-semibold text-[#75777e]">
+                    <span className="inline-block mt-2 text-[11px] font-semibold text-[var(--aven-muted)]">
                       Pages {sec.pageStart} - {sec.pageEnd || sec.pageStart}
                     </span>
                   )}
@@ -267,23 +267,23 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
           ) : (
             /* Curriculum Topic View */
             <div className="space-y-4">
-              <div className="bg-[#eff4ff] p-5 rounded-2xl border border-[#dbe1ff]">
+              <div className="bg-[var(--aven-soft)] p-5 rounded-2xl border border-[var(--aven-blue-soft)]">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-white text-[#0051d5] shadow-2xs">
+                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-white text-[var(--aven-action)] shadow-2xs">
                     {selectedSubject}
                   </span>
-                  <span className="text-[12px] font-semibold text-[#0051d5]">
+                  <span className="text-[12px] font-semibold text-[var(--aven-action)]">
                     {activeSubjectObj?.total_questions || 0} Questions Available in Curriculum
                   </span>
                 </div>
-                <h4 className="text-[16px] font-bold text-[#0b1c30]">{selectedTopic || 'Selected Curriculum Topic'}</h4>
-                <p className="text-[13px] text-[#44474d] mt-1">
+                <h4 className="text-[16px] font-bold text-[var(--aven-ink)]">{selectedTopic || 'Selected Curriculum Topic'}</h4>
+                <p className="text-[13px] text-[var(--aven-muted)] mt-1">
                   This core curriculum unit is calibrated to your academic stage. Practice through adaptive quizzes and flashcards to build high-conviction retention.
                 </p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-[12px] text-[#44474d] flex items-center gap-3">
-                <span className="material-symbols-outlined text-[20px] text-[#0051d5]">
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-[12px] text-[var(--aven-muted)] flex items-center gap-3">
+                <span className="material-symbols-outlined text-[20px] text-[var(--aven-action)]">
                   psychology
                 </span>
                 <span>
@@ -295,10 +295,10 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center justify-between pt-4 border-t border-[#c5c6ce]/30">
+        <div className="flex items-center justify-between pt-4 border-t border-[var(--aven-border)]/30">
           <button
             onClick={handleCopy}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#c5c6ce]/60 text-[#44474d] hover:bg-slate-50 text-[12px] font-semibold transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[var(--aven-border)]/60 text-[var(--aven-muted)] hover:bg-slate-50 text-[12px] font-semibold transition-colors cursor-pointer"
           >
             <span className="material-symbols-outlined text-[16px]">
               {copied ? 'check' : 'content_copy'}
@@ -313,7 +313,7 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
                   onClose();
                   onPracticeFlashcards();
                 }}
-                className="px-4 py-2 rounded-xl bg-[#eff4ff] text-[#0051d5] hover:bg-[#dbe1ff] text-[13px] font-bold transition-all cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-[var(--aven-soft)] text-[var(--aven-action)] hover:bg-[var(--aven-blue-soft)] text-[13px] font-bold transition-all cursor-pointer"
               >
                 Practice Flashcards
               </button>
@@ -325,7 +325,7 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
                   onClose();
                   onStartQuiz();
                 }}
-                className="px-4 py-2 rounded-xl bg-[#0051d5] text-white hover:bg-[#316bf3] text-[13px] font-bold transition-all shadow-xs cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-[var(--aven-action)] text-white hover:bg-[var(--aven-action-hover)] text-[13px] font-bold transition-all shadow-xs cursor-pointer"
               >
                 Take Quiz
               </button>

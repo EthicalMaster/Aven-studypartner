@@ -130,16 +130,16 @@ export const UploadModal: React.FC<UploadModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-7 shadow-2xl border border-[#c5c6ce]/50 relative animate-in fade-in zoom-in-95 duration-200">
+      <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-7 shadow-2xl border border-[var(--aven-border)]/50 relative animate-in fade-in zoom-in-95 duration-200">
         {/* Modal Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-[#c5c6ce]/30">
+        <div className="flex items-center justify-between pb-4 border-b border-[var(--aven-border)]/30">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#0051d5] flex items-center justify-center text-white shadow-sm">
+            <div className="w-10 h-10 rounded-2xl bg-[var(--aven-action)] flex items-center justify-center text-white shadow-sm">
               <span className="material-symbols-outlined text-[22px]">upload_file</span>
             </div>
             <div>
-              <h3 className="text-[17px] font-bold text-[#0b1c30]">Upload Study Material</h3>
-              <p className="text-[12px] text-[#44474d]">
+              <h3 className="text-[17px] font-bold text-[var(--aven-ink)]">Upload Study Material</h3>
+              <p className="text-[12px] text-[var(--aven-muted)]">
                 Store documents safely in your personal AVEN library
               </p>
             </div>
@@ -147,7 +147,7 @@ export const UploadModal: React.FC<UploadModalProps> = ({
           {!isUploading && (
             <button
               onClick={handleResetAndClose}
-              className="text-[#75777e] hover:text-[#0b1c30] p-1.5 rounded-xl hover:bg-[#eff4ff] transition-colors"
+              className="text-[var(--aven-muted)] hover:text-[var(--aven-ink)] p-1.5 rounded-xl hover:bg-[var(--aven-soft)] transition-colors"
             >
               <span className="material-symbols-outlined text-[22px]">close</span>
             </button>
@@ -189,8 +189,8 @@ export const UploadModal: React.FC<UploadModalProps> = ({
                 onDrop={handleDrop}
                 className={`border-2 border-dashed rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${
                   dragOver
-                    ? 'border-[#0051d5] bg-[#eff4ff]'
-                    : 'border-[#c5c6ce] hover:border-[#0051d5] hover:bg-[#eff4ff]/40'
+                    ? 'border-[var(--aven-action)] bg-[var(--aven-soft)]'
+                    : 'border-[var(--aven-border)] hover:border-[var(--aven-action)] hover:bg-[var(--aven-soft)]/40'
                 }`}
               >
                 <input
@@ -201,27 +201,27 @@ export const UploadModal: React.FC<UploadModalProps> = ({
                   onChange={handleNativeChange}
                   disabled={isUploading}
                 />
-                <div className="w-12 h-12 rounded-full bg-[#eff4ff] text-[#0051d5] flex items-center justify-center mb-2">
+                <div className="w-12 h-12 rounded-full bg-[var(--aven-soft)] text-[var(--aven-action)] flex items-center justify-center mb-2">
                   <span className="material-symbols-outlined text-[26px]">cloud_upload</span>
                 </div>
-                <p className="text-[14px] font-bold text-[#0b1c30]">
+                <p className="text-[14px] font-bold text-[var(--aven-ink)]">
                   Click to select or drag & drop file
                 </p>
-                <p className="text-[12px] text-[#75777e] mt-0.5">
-                  Supported: PDF (.pdf), Plain Text (.txt), Markdown (.md) • Max 25 MB
+                <p className="text-[12px] text-[var(--aven-muted)] mt-0.5">
+                  Supported: PDF (.pdf), Plain Text (.txt), Markdown (.md) • Your account’s upload limit applies
                 </p>
               </label>
             ) : (
-              <div className="p-4 rounded-2xl bg-[#eff4ff]/60 border border-[#0051d5]/30 flex items-center justify-between">
+              <div className="p-4 rounded-2xl bg-[var(--aven-soft)]/60 border border-[var(--aven-action)]/30 flex items-center justify-between">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-9 h-9 rounded-xl bg-[#0051d5] text-white flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-[var(--aven-action)] text-white flex items-center justify-center shrink-0">
                     <span className="material-symbols-outlined text-[20px]">
                       {selectedFile.name.endsWith('.pdf') ? 'picture_as_pdf' : 'description'}
                     </span>
                   </div>
                   <div className="min-w-0">
-                    <p className="text-[13px] font-bold text-[#0b1c30] truncate">{selectedFile.name}</p>
-                    <p className="text-[11px] text-[#44474d]">
+                    <p className="text-[13px] font-bold text-[var(--aven-ink)] truncate">{selectedFile.name}</p>
+                    <p className="text-[11px] text-[var(--aven-muted)]">
                       {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB • Ready to upload
                     </p>
                   </div>
@@ -231,7 +231,7 @@ export const UploadModal: React.FC<UploadModalProps> = ({
                   <button
                     type="button"
                     onClick={() => setSelectedFile(null)}
-                    className="p-1.5 rounded-lg text-[#75777e] hover:text-red-600 hover:bg-red-50 transition-colors"
+                    className="p-1.5 rounded-lg text-[var(--aven-muted)] hover:text-red-600 hover:bg-red-50 transition-colors"
                     title="Remove file"
                   >
                     <span className="material-symbols-outlined text-[18px]">close</span>
@@ -243,7 +243,7 @@ export const UploadModal: React.FC<UploadModalProps> = ({
             {/* Document Metadata Inputs */}
             <div className="space-y-3">
               <div>
-                <label className="block text-[12px] font-semibold text-[#44474d] mb-1">
+                <label className="block text-[12px] font-semibold text-[var(--aven-muted)] mb-1">
                   Document Title
                 </label>
                 <input
@@ -251,20 +251,20 @@ export const UploadModal: React.FC<UploadModalProps> = ({
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. Electromagnetic Waves Lecture 5"
-                  className="w-full px-3 py-2 bg-white rounded-xl border border-[#c5c6ce] text-[13px] text-[#0b1c30] placeholder-[#75777e] focus:outline-none focus:border-[#0051d5] focus:ring-1 focus:ring-[#0051d5]"
+                  className="w-full px-3 py-2 bg-white rounded-xl border border-[var(--aven-border)] text-[13px] text-[var(--aven-ink)] placeholder-[var(--aven-muted)] focus:outline-none focus:border-[var(--aven-action)] focus:ring-1 focus:ring-[var(--aven-action)]"
                   disabled={isUploading}
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[12px] font-semibold text-[#44474d] mb-1">
+                  <label className="block text-[12px] font-semibold text-[var(--aven-muted)] mb-1">
                     Subject
                   </label>
                   <select
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
-                    className="w-full px-3 py-2 bg-white rounded-xl border border-[#c5c6ce] text-[13px] text-[#0b1c30] focus:outline-none focus:border-[#0051d5] focus:ring-1 focus:ring-[#0051d5]"
+                    className="w-full px-3 py-2 bg-white rounded-xl border border-[var(--aven-border)] text-[13px] text-[var(--aven-ink)] focus:outline-none focus:border-[var(--aven-action)] focus:ring-1 focus:ring-[var(--aven-action)]"
                     disabled={isUploading}
                   >
                     {subjects.map((sub) => (
@@ -276,7 +276,7 @@ export const UploadModal: React.FC<UploadModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-[12px] font-semibold text-[#44474d] mb-1">
+                  <label className="block text-[12px] font-semibold text-[var(--aven-muted)] mb-1">
                     Topic / Unit (Optional)
                   </label>
                   <input
@@ -284,7 +284,7 @@ export const UploadModal: React.FC<UploadModalProps> = ({
                     value={topic}
                     onChange={(e) => setTopic(e.target.value)}
                     placeholder="e.g. Wave Optics, Unit 3"
-                    className="w-full px-3 py-2 bg-white rounded-xl border border-[#c5c6ce] text-[13px] text-[#0b1c30] placeholder-[#75777e] focus:outline-none focus:border-[#0051d5] focus:ring-1 focus:ring-[#0051d5]"
+                    className="w-full px-3 py-2 bg-white rounded-xl border border-[var(--aven-border)] text-[13px] text-[var(--aven-ink)] placeholder-[var(--aven-muted)] focus:outline-none focus:border-[var(--aven-action)] focus:ring-1 focus:ring-[var(--aven-action)]"
                     disabled={isUploading}
                   />
                 </div>
@@ -295,26 +295,26 @@ export const UploadModal: React.FC<UploadModalProps> = ({
             {isUploading && (
               <div className="space-y-1.5 pt-1">
                 <div className="flex items-center justify-between text-[12px]">
-                  <span className="font-semibold text-[#0051d5] flex items-center gap-1.5">
-                    <span className="w-3.5 h-3.5 border-2 border-[#0051d5] border-t-transparent rounded-full animate-spin"></span>
+                  <span className="font-semibold text-[var(--aven-action)] flex items-center gap-1.5">
+                    <span className="w-3.5 h-3.5 border-2 border-[var(--aven-action)] border-t-transparent rounded-full animate-spin"></span>
                     Uploading & verifying file...
                   </span>
-                  <span className="text-[#44474d] font-mono">{uploadProgress}%</span>
+                  <span className="text-[var(--aven-muted)] font-mono">{uploadProgress}%</span>
                 </div>
-                <div className="w-full h-2 bg-[#eff4ff] rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-[var(--aven-soft)] rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-[#0051d5] transition-all duration-200"
+                    className="h-full bg-[var(--aven-action)] transition-all duration-200"
                     style={{ width: `${uploadProgress}%` }}
                   ></div>
                 </div>
               </div>
             )}
 
-            {/* Architecture Notice (Non-AI Phase 5) */}
-            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11.5px] text-[#44474d] flex items-start gap-2">
-              <span className="material-symbols-outlined text-[16px] text-[#0051d5] shrink-0 mt-0.5">info</span>
+            {/* Processing guidance */}
+            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11.5px] text-[var(--aven-muted)] flex items-start gap-2">
+              <span className="material-symbols-outlined text-[16px] text-[var(--aven-action)] shrink-0 mt-0.5">info</span>
               <div>
-                <strong>Phase 5 Storage:</strong> Document is verified and safely indexed in your PostgreSQL library. Full Document Intelligence and concept retrieval will be introduced in Phase 6.
+                After upload, Aven extracts the text and prepares your document for search. You can follow its progress in your library.
               </div>
             </div>
 
@@ -324,14 +324,14 @@ export const UploadModal: React.FC<UploadModalProps> = ({
                 type="button"
                 onClick={handleResetAndClose}
                 disabled={isUploading}
-                className="px-4 py-2 rounded-xl border border-[#c5c6ce] text-[#44474d] hover:text-[#0b1c30] hover:bg-[#eff4ff]/50 text-[13px] font-semibold transition-colors disabled:opacity-50"
+                className="px-4 py-2 rounded-xl border border-[var(--aven-border)] text-[var(--aven-muted)] hover:text-[var(--aven-ink)] hover:bg-[var(--aven-soft)]/50 text-[13px] font-semibold transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={!selectedFile || isUploading}
-                className="inline-flex items-center gap-2 bg-[#0051d5] hover:bg-[#316bf3] text-white px-5 py-2 rounded-xl text-[13px] font-bold shadow-xs transition-all disabled:opacity-50 cursor-pointer"
+                className="inline-flex items-center gap-2 bg-[var(--aven-action)] hover:bg-[var(--aven-action-hover)] text-white px-5 py-2 rounded-xl text-[13px] font-bold shadow-xs transition-all disabled:opacity-50 cursor-pointer"
               >
                 {isUploading ? (
                   <>
