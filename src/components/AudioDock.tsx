@@ -84,7 +84,7 @@ export const AudioDock: React.FC<AudioDockProps> = ({ track, onSpeedChange }) =>
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 lg:left-64 right-0 bg-white/95 backdrop-blur-xl border-t border-[#c5c6ce]/40 px-4 lg:px-8 py-3 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
+      <div className="fixed bottom-0 left-0 lg:left-64 right-0 bg-white/95 backdrop-blur-xl border-t border-[var(--aven-border)]/40 px-4 lg:px-8 py-3 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
           {/* Left: Play button + Title info */}
           <div className="flex items-center gap-3.5 w-full md:w-auto">
@@ -92,7 +92,7 @@ export const AudioDock: React.FC<AudioDockProps> = ({ track, onSpeedChange }) =>
               id="play-pause-btn"
               onClick={togglePlay}
               aria-label={isPlaying ? 'Pause audio summary' : 'Play audio summary'}
-              className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#0051d5] text-white flex items-center justify-center shadow-md hover:bg-[#316bf3] transition-transform active:scale-95 shrink-0"
+              className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[var(--aven-action)] text-white flex items-center justify-center shadow-md hover:bg-[var(--aven-action-hover)] transition-transform active:scale-95 shrink-0"
               type="button"
             >
               <span className="material-symbols-outlined text-[24px]" id="play-icon">
@@ -102,18 +102,18 @@ export const AudioDock: React.FC<AudioDockProps> = ({ track, onSpeedChange }) =>
 
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-2">
-                <span className="font-bold text-[13px] sm:text-[14px] text-[#0b1c30] truncate">
+                <span className="font-bold text-[13px] sm:text-[14px] text-[var(--aven-ink)] truncate">
                   {track.title}
                 </span>
                 <span
                   onClick={nextSpeed}
-                  className="cursor-pointer font-semibold text-[11px] text-[#0051d5] bg-[#dbe1ff] px-2 py-0.5 rounded-full hover:bg-blue-200 transition-colors"
+                  className="cursor-pointer font-semibold text-[11px] text-[var(--aven-action)] bg-[var(--aven-blue-soft)] px-2 py-0.5 rounded-full hover:bg-blue-200 transition-colors"
                   title="Click to toggle speed"
                 >
                   {track.speed}x Speed
                 </span>
               </div>
-              <span className="text-[12px] text-[#44474d] truncate mt-0.5">
+              <span className="text-[12px] text-[var(--aven-muted)] truncate mt-0.5">
                 {track.subtitle}
               </span>
             </div>
@@ -121,32 +121,32 @@ export const AudioDock: React.FC<AudioDockProps> = ({ track, onSpeedChange }) =>
 
           {/* Right: Scrubber, Timestamps & Controls */}
           <div className="flex items-center gap-3 sm:gap-4 w-full md:w-1/2 lg:w-3/5">
-            <span className="text-[11px] sm:text-[12px] font-medium text-[#44474d] tabular-nums">
+            <span className="text-[11px] sm:text-[12px] font-medium text-[var(--aven-muted)] tabular-nums">
               {formatTime(currentTime)}
             </span>
 
             {/* Clickable Progress Bar */}
             <div
               onClick={handleSeek}
-              className="flex-1 bg-[#e5eeff] h-2.5 rounded-full overflow-hidden relative cursor-pointer group"
+              className="flex-1 bg-[var(--aven-soft)] h-2.5 rounded-full overflow-hidden relative cursor-pointer group"
               title="Seek audio position"
             >
               <div
-                className="bg-[#0051d5] h-full rounded-full transition-all duration-150 group-hover:bg-[#316bf3]"
+                className="bg-[var(--aven-action)] h-full rounded-full transition-all duration-150 group-hover:bg-[var(--aven-action-hover)]"
                 style={{ width: `${progressPercent}%` }}
               ></div>
             </div>
 
-            <span className="text-[11px] sm:text-[12px] font-medium text-[#44474d] tabular-nums">
+            <span className="text-[11px] sm:text-[12px] font-medium text-[var(--aven-muted)] tabular-nums">
               {formatTime(track.durationSeconds)}
             </span>
 
             {/* Action Buttons */}
-            <div className="flex items-center gap-1 text-[#44474d]">
+            <div className="flex items-center gap-1 text-[var(--aven-muted)]">
               <button
                 onClick={nextSpeed}
                 aria-label="Toggle playback speed"
-                className="px-2 py-1 rounded-lg hover:bg-[#eff4ff] text-[12px] font-bold text-[#0051d5]"
+                className="px-2 py-1 rounded-lg hover:bg-[var(--aven-soft)] text-[12px] font-bold text-[var(--aven-action)]"
                 type="button"
               >
                 {track.speed}x
@@ -156,7 +156,7 @@ export const AudioDock: React.FC<AudioDockProps> = ({ track, onSpeedChange }) =>
                 onClick={() => setShowTranscript(!showTranscript)}
                 aria-label="View dialogue transcript"
                 className={`p-1.5 rounded-lg transition-colors ${
-                  showTranscript ? 'bg-[#dbe1ff] text-[#0051d5]' : 'hover:bg-[#eff4ff]'
+                  showTranscript ? 'bg-[var(--aven-blue-soft)] text-[var(--aven-action)]' : 'hover:bg-[var(--aven-soft)]'
                 }`}
                 title="View AI Dialogue Transcript"
                 type="button"
@@ -169,7 +169,7 @@ export const AudioDock: React.FC<AudioDockProps> = ({ track, onSpeedChange }) =>
                   alert('Audio podcast episode downloaded: Electrostatics_Module3_AI_Voice_Duo.mp3');
                 }}
                 aria-label="Download audio episode"
-                className="p-1.5 rounded-lg hover:bg-[#eff4ff] text-[#44474d] hover:text-[#0b1c30]"
+                className="p-1.5 rounded-lg hover:bg-[var(--aven-soft)] text-[var(--aven-muted)] hover:text-[var(--aven-ink)]"
                 type="button"
                 title="Download Episode"
               >
@@ -182,15 +182,15 @@ export const AudioDock: React.FC<AudioDockProps> = ({ track, onSpeedChange }) =>
 
       {/* Transcript Drawer Modal */}
       {showTranscript && (
-        <div className="fixed bottom-20 left-4 lg:left-72 right-4 lg:right-12 max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl border border-[#c5c6ce]/60 p-5 z-40 max-h-96 flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-200">
-          <div className="flex items-center justify-between pb-3 border-b border-[#c5c6ce]/40">
+        <div className="fixed bottom-20 left-4 lg:left-72 right-4 lg:right-12 max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl border border-[var(--aven-border)]/60 p-5 z-40 max-h-96 flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-200">
+          <div className="flex items-center justify-between pb-3 border-b border-[var(--aven-border)]/40">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#0051d5]">mic</span>
-              <h4 className="font-bold text-[15px] text-[#0b1c30]">Two-Host AI Dialogue Transcript</h4>
+              <span className="material-symbols-outlined text-[var(--aven-action)]">mic</span>
+              <h4 className="font-bold text-[15px] text-[var(--aven-ink)]">Two-Host AI Dialogue Transcript</h4>
             </div>
             <button
               onClick={() => setShowTranscript(false)}
-              className="text-[#75777e] hover:text-[#0b1c30] p-1 rounded-lg"
+              className="text-[var(--aven-muted)] hover:text-[var(--aven-ink)] p-1 rounded-lg"
             >
               <span className="material-symbols-outlined text-[18px]">close</span>
             </button>
@@ -202,19 +202,19 @@ export const AudioDock: React.FC<AudioDockProps> = ({ track, onSpeedChange }) =>
                 key={idx}
                 className={`p-3 rounded-xl ${
                   item.speaker.includes('Alex')
-                    ? 'bg-[#eff4ff] border border-[#dbe1ff]'
-                    : 'bg-[#f8f9ff] border border-[#e5eeff]'
+                    ? 'bg-[var(--aven-soft)] border border-[var(--aven-blue-soft)]'
+                    : 'bg-[var(--aven-canvas)] border border-[var(--aven-soft)]'
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-bold text-[#0051d5] text-[12px]">{item.speaker}</span>
-                  <span className="text-[11px] text-[#75777e] font-mono">{item.timestamp}</span>
+                  <span className="font-bold text-[var(--aven-action)] text-[12px]">{item.speaker}</span>
+                  <span className="text-[11px] text-[var(--aven-muted)] font-mono">{item.timestamp}</span>
                 </div>
                 <p className="text-[#334155] leading-relaxed">{item.text}</p>
               </div>
             ))}
           </div>
-          <div className="pt-2 text-[11px] text-[#75777e] text-center border-t border-[#c5c6ce]/30">
+          <div className="pt-2 text-[11px] text-[var(--aven-muted)] text-center border-t border-[var(--aven-border)]/30">
             Powered by Next-Gen Neural Voice 3.2 • High-fidelity synthesized discussion
           </div>
         </div>

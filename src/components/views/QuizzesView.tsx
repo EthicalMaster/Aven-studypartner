@@ -197,17 +197,17 @@ export const QuizzesView: React.FC<QuizzesViewProps> = ({
       {/* View Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-[24px] font-bold text-[#0b1c30] tracking-tight">
-            Curriculum Quizzes & Assessments
+          <h1 className="aven-page-title text-[24px] font-bold text-[var(--aven-ink)] tracking-tight">
+            Put your knowledge to work.
           </h1>
-          <p className="text-[13px] text-[#44474d] mt-0.5">
+          <p className="text-[13px] text-[var(--aven-muted)] mt-0.5">
             PostgreSQL-backed examination engine with server-authoritative timer, proctored exam modes, and real-time grading.
           </p>
         </div>
 
         <button
           onClick={() => setScreen('setup')}
-          className="px-5 py-2.5 rounded-2xl bg-[#0051d5] hover:bg-[#003ea8] text-white text-[13px] font-bold shadow-md shadow-[#0051d5]/20 flex items-center justify-center gap-2 transition-all shrink-0"
+          className="px-5 py-2.5 rounded-2xl bg-[var(--aven-action)] hover:bg-[var(--aven-action)] text-white text-[13px] font-bold shadow-md shadow-[var(--aven-action)]/20 flex items-center justify-center gap-2 transition-all shrink-0"
         >
           <span className="material-symbols-outlined text-[18px]">add_circle</span>
           <span>Build Quiz Paper</span>
@@ -216,20 +216,20 @@ export const QuizzesView: React.FC<QuizzesViewProps> = ({
 
       {/* Real Statistics Banner */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-white rounded-3xl p-5 border border-[#c5c6ce]/30 shadow-xs">
-          <div className="flex items-center gap-2 text-[#75777e] mb-1">
-            <span className="material-symbols-outlined text-[18px] text-[#0051d5]">
+        <div className="bg-white rounded-3xl p-5 border border-[var(--aven-border)]/30 shadow-xs">
+          <div className="flex items-center gap-2 text-[var(--aven-muted)] mb-1">
+            <span className="material-symbols-outlined text-[18px] text-[var(--aven-action)]">
               description
             </span>
             <span className="text-[11px] uppercase tracking-wider font-bold">
               Papers Built
             </span>
           </div>
-          <div className="text-[26px] font-black text-[#0b1c30]">{quizzes.length}</div>
+          <div className="text-[26px] font-black text-[var(--aven-ink)]">{quizzes.length}</div>
         </div>
 
-        <div className="bg-white rounded-3xl p-5 border border-[#c5c6ce]/30 shadow-xs">
-          <div className="flex items-center gap-2 text-[#75777e] mb-1">
+        <div className="bg-white rounded-3xl p-5 border border-[var(--aven-border)]/30 shadow-xs">
+          <div className="flex items-center gap-2 text-[var(--aven-muted)] mb-1">
             <span className="material-symbols-outlined text-[18px] text-emerald-600">
               task_alt
             </span>
@@ -237,11 +237,11 @@ export const QuizzesView: React.FC<QuizzesViewProps> = ({
               Completed Attempts
             </span>
           </div>
-          <div className="text-[26px] font-black text-[#0b1c30]">{totalAttempts}</div>
+          <div className="text-[26px] font-black text-[var(--aven-ink)]">{totalAttempts}</div>
         </div>
 
-        <div className="bg-white rounded-3xl p-5 border border-[#c5c6ce]/30 shadow-xs">
-          <div className="flex items-center gap-2 text-[#75777e] mb-1">
+        <div className="bg-white rounded-3xl p-5 border border-[var(--aven-border)]/30 shadow-xs">
+          <div className="flex items-center gap-2 text-[var(--aven-muted)] mb-1">
             <span className="material-symbols-outlined text-[18px] text-amber-500">
               analytics
             </span>
@@ -249,11 +249,11 @@ export const QuizzesView: React.FC<QuizzesViewProps> = ({
               Average Accuracy
             </span>
           </div>
-          <div className="text-[26px] font-black text-[#0b1c30]">{avgAccuracy}%</div>
+          <div className="text-[26px] font-black text-[var(--aven-ink)]">{avgAccuracy}%</div>
         </div>
 
-        <div className="bg-white rounded-3xl p-5 border border-[#c5c6ce]/30 shadow-xs">
-          <div className="flex items-center gap-2 text-[#75777e] mb-1">
+        <div className="bg-white rounded-3xl p-5 border border-[var(--aven-border)]/30 shadow-xs">
+          <div className="flex items-center gap-2 text-[var(--aven-muted)] mb-1">
             <span className="material-symbols-outlined text-[18px] text-purple-600">
               schedule
             </span>
@@ -261,14 +261,14 @@ export const QuizzesView: React.FC<QuizzesViewProps> = ({
               Assessment Time
             </span>
           </div>
-          <div className="text-[26px] font-black text-[#0b1c30]">
+          <div className="text-[26px] font-black text-[var(--aven-ink)]">
             {formatStudyTime(totalStudySeconds)}
           </div>
         </div>
       </div>
 
       {/* Tabs Row */}
-      <div className="flex items-center gap-2 border-b border-[#c5c6ce]/20 pb-2 overflow-x-auto">
+      <div className="flex items-center gap-2 border-b border-[var(--aven-border)]/20 pb-2 overflow-x-auto">
         {[
           { id: 'all', label: `All Papers (${quizzes.length})` },
           {
@@ -286,8 +286,8 @@ export const QuizzesView: React.FC<QuizzesViewProps> = ({
             onClick={() => setActiveTab(tab.id as any)}
             className={`px-4 py-2 rounded-xl text-[13px] font-bold transition-all whitespace-nowrap ${
               activeTab === tab.id
-                ? 'bg-[#0051d5] text-white shadow-xs'
-                : 'text-[#44474d] hover:bg-[#f8f9ff]'
+                ? 'bg-[var(--aven-action)] text-white shadow-xs'
+                : 'text-[var(--aven-muted)] hover:bg-[var(--aven-canvas)]'
             }`}
           >
             {tab.label}
@@ -307,9 +307,9 @@ export const QuizzesView: React.FC<QuizzesViewProps> = ({
 
       {/* Loading Spinner */}
       {loading && (
-        <div className="bg-white rounded-3xl p-16 border border-[#c5c6ce]/30 flex flex-col items-center justify-center gap-3">
-          <div className="w-8 h-8 border-3 border-[#0051d5] border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-[13px] text-[#75777e]">Connecting to PostgreSQL quiz repository...</p>
+        <div className="bg-white rounded-3xl p-16 border border-[var(--aven-border)]/30 flex flex-col items-center justify-center gap-3">
+          <div className="w-8 h-8 border-3 border-[var(--aven-action)] border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-[13px] text-[var(--aven-muted)]">Connecting to PostgreSQL quiz repository...</p>
         </div>
       )}
 
@@ -328,19 +328,19 @@ export const QuizzesView: React.FC<QuizzesViewProps> = ({
       {!loading && activeTab !== 'history' && (
         <>
           {filteredQuizzes.length === 0 ? (
-            <div className="bg-white rounded-3xl p-12 border border-[#c5c6ce]/30 text-center flex flex-col items-center justify-center max-w-lg mx-auto">
-              <span className="material-symbols-outlined text-[48px] text-[#0051d5]/30 mb-2">
+            <div className="bg-white rounded-3xl p-12 border border-[var(--aven-border)]/30 text-center flex flex-col items-center justify-center max-w-lg mx-auto">
+              <span className="material-symbols-outlined text-[48px] text-[var(--aven-action)]/30 mb-2">
                 quiz
               </span>
-              <h3 className="text-[18px] font-bold text-[#0b1c30]">
+              <h3 className="text-[18px] font-bold text-[var(--aven-ink)]">
                 No Quiz Papers Found
               </h3>
-              <p className="text-[13px] text-[#75777e] mt-1 mb-5 leading-relaxed">
+              <p className="text-[13px] text-[var(--aven-muted)] mt-1 mb-5 leading-relaxed">
                 Build your first standardized assessment paper from the university curriculum question bank to get started.
               </p>
               <button
                 onClick={() => setScreen('setup')}
-                className="px-6 py-2.5 rounded-xl bg-[#0051d5] text-white text-[13px] font-bold hover:bg-[#003ea8] transition-all"
+                className="px-6 py-2.5 rounded-xl bg-[var(--aven-action)] text-white text-[13px] font-bold hover:bg-[var(--aven-action)] transition-all"
               >
                 Build Quiz Paper
               </button>
@@ -352,16 +352,16 @@ export const QuizzesView: React.FC<QuizzesViewProps> = ({
                 return (
                   <div
                     key={q.id}
-                    className="bg-white rounded-3xl p-6 border border-[#c5c6ce]/30 shadow-xs flex flex-col justify-between gap-5 hover:border-[#0051d5]/40 hover:shadow-md transition-all group"
+                    className="bg-white rounded-3xl p-6 border border-[var(--aven-border)]/30 shadow-xs flex flex-col justify-between gap-5 hover:border-[var(--aven-action)]/40 hover:shadow-md transition-all group"
                   >
                     <div>
                       {/* Tags & Mode */}
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-[11px] font-bold uppercase tracking-wider text-[#0051d5] bg-[#eff4ff] px-2.5 py-0.5 rounded-full border border-[#0051d5]/20">
+                          <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--aven-action)] bg-[var(--aven-soft)] px-2.5 py-0.5 rounded-full border border-[var(--aven-action)]/20">
                             {q.subject}
                           </span>
-                          <span className="text-[11px] font-bold uppercase tracking-wider text-[#44474d] bg-slate-100 px-2 py-0.5 rounded-full">
+                          <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--aven-muted)] bg-slate-100 px-2 py-0.5 rounded-full">
                             {q.difficulty}
                           </span>
                         </div>
@@ -378,38 +378,38 @@ export const QuizzesView: React.FC<QuizzesViewProps> = ({
                       </div>
 
                       {/* Paper Title */}
-                      <h3 className="text-[17px] font-bold text-[#0b1c30] group-hover:text-[#0051d5] transition-colors leading-snug mb-1">
+                      <h3 className="text-[17px] font-bold text-[var(--aven-ink)] group-hover:text-[var(--aven-action)] transition-colors leading-snug mb-1">
                         {q.title}
                       </h3>
-                      <p className="text-[12px] text-[#75777e] line-clamp-1 mb-4">
+                      <p className="text-[12px] text-[var(--aven-muted)] line-clamp-1 mb-4">
                         {q.topic}
                       </p>
 
                       {/* Paper Specs Grid */}
-                      <div className="grid grid-cols-3 gap-2 py-3 border-y border-[#c5c6ce]/20 text-center">
+                      <div className="grid grid-cols-3 gap-2 py-3 border-y border-[var(--aven-border)]/20 text-center">
                         <div>
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-[#75777e] block">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--aven-muted)] block">
                             Questions
                           </span>
-                          <span className="text-[15px] font-black text-[#0b1c30]">
+                          <span className="text-[15px] font-black text-[var(--aven-ink)]">
                             {q.question_count}
                           </span>
                         </div>
 
                         <div>
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-[#75777e] block">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--aven-muted)] block">
                             Marks
                           </span>
-                          <span className="text-[15px] font-black text-[#0051d5]">
+                          <span className="text-[15px] font-black text-[var(--aven-action)]">
                             {q.total_marks}
                           </span>
                         </div>
 
                         <div>
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-[#75777e] block">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--aven-muted)] block">
                             Time
                           </span>
-                          <span className="text-[15px] font-black text-[#0b1c30]">
+                          <span className="text-[15px] font-black text-[var(--aven-ink)]">
                             {q.time_limit_minutes}m
                           </span>
                         </div>
@@ -419,7 +419,7 @@ export const QuizzesView: React.FC<QuizzesViewProps> = ({
                     {/* Card Footer Action */}
                     <button
                       onClick={() => handleSelectQuizToPreview(q)}
-                      className="w-full py-2.5 rounded-xl bg-[#eff4ff] hover:bg-[#0051d5] text-[#0051d5] hover:text-white text-[13px] font-bold border border-[#0051d5]/20 hover:border-[#0051d5] transition-all flex items-center justify-center gap-1.5"
+                      className="w-full py-2.5 rounded-xl bg-[var(--aven-soft)] hover:bg-[var(--aven-action)] text-[var(--aven-action)] hover:text-white text-[13px] font-bold border border-[var(--aven-action)]/20 hover:border-[var(--aven-action)] transition-all flex items-center justify-center gap-1.5"
                     >
                       <span className="material-symbols-outlined text-[16px]">play_circle</span>
                       <span>Preview & Start Paper</span>

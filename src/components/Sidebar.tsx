@@ -1,6 +1,20 @@
-import React from 'react';
-import { ActiveNavTab } from '../types';
-import { useAuth } from '../context/AuthContext';
+import React, { useEffect, useRef } from "react";
+import {
+  Home,
+  Library,
+  Layers,
+  ClipboardCheck,
+  ChartNoAxesCombined,
+  Compass,
+  Target,
+  Users,
+  Settings,
+  X,
+  ArrowUpRight,
+  type LucideIcon,
+} from "lucide-react";
+import { ActiveNavTab } from "../types";
+import { useAuth } from "../context/AuthContext";
 
 interface SidebarProps {
   activeTab: ActiveNavTab;
@@ -10,7 +24,6 @@ interface SidebarProps {
   flashcardsCount?: number;
   weakTopicsCount?: number;
 }
-
 export const Sidebar: React.FC<SidebarProps> = ({
   activeTab,
   onSelectTab,
@@ -20,176 +33,169 @@ export const Sidebar: React.FC<SidebarProps> = ({
   weakTopicsCount = 0,
 }) => {
   const { user } = useAuth();
-  const studentName = user?.profile?.full_name || 'Student';
-  const studentDept = user?.profile?.department || 'Active Student';
-  const navItems: Array<{ id: ActiveNavTab; label: string; icon: string; badge?: string }> = [
-    { id: 'home', label: 'Home', icon: 'space_dashboard' },
-    { id: 'study-kits', label: 'Study Kits', icon: 'folder_special' },
-    { id: 'flashcards', label: 'Flashcards', icon: 'style', badge: String(flashcardsCount ?? 0) },
-    { id: 'quizzes', label: 'Quizzes', icon: 'quiz' },
-    { id: 'my-progress', label: 'My Progress', icon: 'insights' },
-    { id: 'adaptive-model', label: 'Adaptive Model', icon: 'psychology' },
+  const panel = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const previous = document.activeElement as HTMLElement;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const focusFrame = requestAnimationFrame(() =>
+      panel.current
+        ?.querySelector<HTMLButtonElement>(".aven-menu-close")
+        ?.focus(),
+    );
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onCloseMobile();
+      if (event.key === "Tab") {
+        const nodes = Array.from(
+          panel.current?.querySelectorAll<HTMLElement>("button,a[href]") || [],
+        ).filter((el) => el.getClientRects().length > 0);
+        const first = nodes[0],
+          last = nodes[nodes.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      cancelAnimationFrame(focusFrame);
+      document.body.style.overflow = overflow;
+      document.removeEventListener("keydown", onKey);
+      previous?.focus();
+    };
+  }, [mobileOpen, onCloseMobile]);
+  const groups: Array<{
+    title: string;
+    items: Array<{
+      id: ActiveNavTab;
+      label: string;
+      icon: LucideIcon;
+      count?: number;
+    }>;
+  }> = [
     {
-      id: 'weak-topics',
-      label: 'Weak Topics',
-      icon: 'target',
-      badge: weakTopicsCount > 0 ? String(weakTopicsCount) : undefined,
+      title: "YOUR STUDY SPACE",
+      items: [
+        { id: "home", label: "Overview", icon: Home },
+        { id: "study-kits", label: "My library", icon: Library },
+        {
+          id: "flashcards",
+          label: "Flashcards",
+          icon: Layers,
+          count: flashcardsCount,
+        },
+        { id: "quizzes", label: "Practice quizzes", icon: ClipboardCheck },
+      ],
     },
-    { id: 'peer-comparison', label: 'Peer Comparison', icon: 'leaderboard' },
+    {
+      title: "KEEP GROWING",
+      items: [
+        { id: "my-progress", label: "My progress", icon: ChartNoAxesCombined },
+        {
+          id: "weak-topics",
+          label: "Topics to revisit",
+          icon: Target,
+          count: weakTopicsCount,
+        },
+        { id: "adaptive-model", label: "Learning insights", icon: Compass },
+        { id: "peer-comparison", label: "Peer comparison", icon: Users },
+      ],
+    },
   ];
-
+  const select = (tab: ActiveNavTab) => {
+    onSelectTab(tab);
+    onCloseMobile();
+  };
   return (
     <>
-      {/* Mobile Backdrop */}
       {mobileOpen && (
-        <div
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden backdrop-blur-xs transition-opacity"
+        <button
+          className="aven-menu-backdrop"
+          aria-label="Close navigation"
           onClick={onCloseMobile}
+          tabIndex={-1}
         />
       )}
-
       <aside
+        ref={panel}
         id="app-sidebar"
-        className={`fixed left-0 top-0 h-full w-64 bg-[#0d1b33] text-white z-50 flex flex-col justify-between p-4 shadow-xl transition-transform duration-300 ease-in-out ${
-          mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}
+        onTransitionEnd={(event) => {
+          if (
+            mobileOpen &&
+            event.target === event.currentTarget &&
+            !event.currentTarget.contains(document.activeElement)
+          )
+            event.currentTarget
+              .querySelector<HTMLButtonElement>(".aven-menu-close")
+              ?.focus();
+        }}
+        role={mobileOpen ? "dialog" : undefined}
+        aria-modal={mobileOpen || undefined}
+        className={`aven-sidebar ${mobileOpen ? "is-open" : ""}`}
+        aria-label="Workspace navigation"
       >
-        <div className="flex flex-col gap-4">
-          {/* Brand Logo & Name */}
-          <div className="flex items-center justify-between px-2 py-1">
-            <div
-              className="flex items-center gap-3 cursor-pointer select-none"
-              onClick={() => {
-                onSelectTab('home');
-                onCloseMobile();
-              }}
-            >
-              <div className="w-10 h-10 rounded-xl bg-[#0051d5] flex items-center justify-center text-white shadow-md shadow-blue-900/40">
-                <span className="material-symbols-outlined text-[24px]">school</span>
-              </div>
-              <div className="flex flex-col">
-                <div className="flex items-center gap-1">
-                  <span className="text-[18px] font-bold tracking-tight text-white font-['Inter']">
-                    AVEN
-                  </span>
-                  <span className="material-symbols-outlined text-[#dbe1ff] text-[16px]">
-                    auto_awesome
-                  </span>
-                </div>
-                <span className="text-[11px] text-[#7684a1] font-medium tracking-wide">
-                  Learn Smarter, Not Harder
-                </span>
-              </div>
-            </div>
-
-            {/* Close button for mobile */}
-            <button
-              onClick={onCloseMobile}
-              className="p-1 rounded-lg text-[#b9c7e6] hover:bg-white/10 lg:hidden"
-              aria-label="Close menu"
-            >
-              <span className="material-symbols-outlined text-[20px]">close</span>
-            </button>
-          </div>
-
-          {/* Nav Items */}
-          <nav className="flex flex-col gap-1.5 mt-2" aria-label="Main Navigation">
-            {navItems.map((item) => {
-              const isActive = activeTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  id={`nav-${item.id}`}
-                  onClick={() => {
-                    onSelectTab(item.id);
-                    onCloseMobile();
-                  }}
-                  className={`flex items-center justify-between px-4 py-2.5 rounded-xl transition-all duration-150 font-['Inter'] text-[14px] font-semibold text-left ${
-                    isActive
-                      ? 'bg-[#316bf3] text-white shadow-md shadow-blue-600/30'
-                      : 'text-[#b9c7e6] hover:bg-white/10 hover:text-white'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
-                    <span>{item.label}</span>
-                  </div>
-                  {item.badge && (
-                    <span
-                      className={`text-[11px] font-bold px-1.5 py-0.5 rounded-full ${
-                        isActive ? 'bg-white/20 text-white' : 'bg-white/10 text-[#dbe1ff]'
-                      }`}
-                    >
-                      {item.badge}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </nav>
+        <div className="aven-sidebar-brand">
+          <a href="#" aria-label="Aven public home">
+            AVEN
+          </a>
+          <button
+            className="aven-menu-close"
+            onClick={onCloseMobile}
+            aria-label="Close menu"
+          >
+            <X size={20} />
+          </button>
         </div>
-
-        {/* Bottom Section */}
-        <div className="flex flex-col gap-4">
-          {/* Daily Focus Card */}
-          <div className="rounded-xl bg-[#d3e4fe]/10 p-4 relative overflow-hidden backdrop-blur-sm border border-white/5">
-            <div className="flex items-center gap-2 mb-1.5 text-[#dbe1ff]">
-              <span className="material-symbols-outlined text-[18px]">verified</span>
-              <span className="text-[11px] font-semibold uppercase tracking-wider">
-                Daily Focus
-              </span>
+        <p className="aven-sidebar-tagline">A little more understood.</p>
+        <nav aria-label="Main navigation">
+          {groups.map((group) => (
+            <div className="aven-nav-group" key={group.title}>
+              <p>{group.title}</p>
+              {group.items.map(({ id, label, icon: Icon, count }) => (
+                <button
+                  key={id}
+                  id={`nav-${id}`}
+                  onClick={() => select(id)}
+                  aria-current={activeTab === id ? "page" : undefined}
+                  className={activeTab === id ? "is-active" : ""}
+                >
+                  <Icon size={18} strokeWidth={1.6} />
+                  <span>{label}</span>
+                  {!!count && <small>{count}</small>}
+                </button>
+              ))}
             </div>
-            <p className="text-[12px] text-[#b9c7e6] leading-snug">
-              Small steps every day lead to big results.
-            </p>
-            <div className="mt-3 flex items-center gap-1.5">
-              <div className="h-1.5 w-1.5 rounded-full bg-[#316bf3]"></div>
-              <div className="h-1.5 w-6 rounded-full bg-[#316bf3]"></div>
-              <div className="h-1.5 w-3 rounded-full bg-white/20"></div>
-            </div>
-          </div>
-
-          {/* Settings & Profile */}
-          <div className="flex flex-col gap-1 border-t border-white/10 pt-2">
-            <button
-              id="nav-settings"
-              onClick={() => {
-                onSelectTab('settings');
-                onCloseMobile();
-              }}
-              className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-colors font-['Inter'] text-[14px] font-semibold text-left ${
-                activeTab === 'settings'
-                  ? 'bg-[#316bf3] text-white shadow-sm'
-                  : 'text-[#b9c7e6] hover:bg-white/10 hover:text-white'
-              }`}
-            >
-              <span className="material-symbols-outlined text-[20px]">settings</span>
-              <span>Settings</span>
-            </button>
-
-            {/* Profile Row */}
-            <div
-              className="flex items-center justify-between p-2 rounded-xl hover:bg-white/5 transition-colors cursor-pointer"
-              onClick={() => onSelectTab('settings')}
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-black border border-white/20 flex items-center justify-center text-white shrink-0">
-                  <span className="material-symbols-outlined text-[18px]">person</span>
-                </div>
-                <div className="flex flex-col text-left">
-                  <span className="text-[13px] font-semibold text-white leading-tight">
-                    {studentName}
-                  </span>
-                  <span className="text-[10px] text-[#b9c7e6] leading-tight">
-                    {studentDept}
-                  </span>
-                </div>
-              </div>
-              <span className="material-symbols-outlined text-[#b9c7e6] text-[18px]">
-                unfold_more
-              </span>
-            </div>
-          </div>
+          ))}
+        </nav>
+        <div className="aven-sidebar-bottom">
+          <a href="#" className="aven-public-link">
+            Explore Aven
+            <ArrowUpRight size={15} />
+          </a>
+          <button
+            id="nav-settings"
+            onClick={() => select("settings")}
+            aria-current={activeTab === "settings" ? "page" : undefined}
+          >
+            <Settings size={17} />
+            Settings
+          </button>
+          <button className="aven-profile" onClick={() => select("settings")}>
+            <span className="aven-avatar">
+              {(user?.profile?.full_name || "S").slice(0, 1).toUpperCase()}
+            </span>
+            <span>
+              <strong>{user?.profile?.full_name || "Student"}</strong>
+              <small>
+                {user?.profile?.department || "Your personal study space"}
+              </small>
+            </span>
+          </button>
         </div>
       </aside>
     </>

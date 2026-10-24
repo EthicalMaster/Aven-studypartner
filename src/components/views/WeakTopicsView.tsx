@@ -93,17 +93,17 @@ export const WeakTopicsView: React.FC<WeakTopicsViewProps> = ({
     <div className="flex flex-col gap-6 pb-12">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-[22px] font-bold text-[#0b1c30] tracking-tight font-['Inter']">
-            Focus Area & Weak Topics Remediation
+          <h2 className="aven-page-title text-[22px] font-bold text-[var(--aven-ink)] tracking-tight ">
+            A little more practice.
           </h2>
-          <p className="text-[13px] text-[#44474d] mt-0.5">
+          <p className="text-[13px] text-[var(--aven-muted)] mt-0.5">
             Empirical learning gaps based on missed quiz questions (accuracy &lt; 70% with minimum 3 attempts).
           </p>
         </div>
 
         <button
           onClick={onGenerateRemedialKit}
-          className="inline-flex items-center gap-2 bg-[#0051d5] hover:bg-[#316bf3] text-white px-4 py-2.5 rounded-xl text-[13px] font-bold shadow-sm transition-all cursor-pointer self-start sm:self-auto"
+          className="inline-flex items-center gap-2 bg-[var(--aven-action)] hover:bg-[var(--aven-action-hover)] text-white px-4 py-2.5 rounded-xl text-[13px] font-bold shadow-sm transition-all cursor-pointer self-start sm:self-auto"
         >
           <span className="material-symbols-outlined text-[18px]">psychology</span>
           <span>Generate Remedial Kit</span>
@@ -124,10 +124,10 @@ export const WeakTopicsView: React.FC<WeakTopicsViewProps> = ({
               <span className="material-symbols-outlined text-[22px]">warning</span>
             </div>
             <div>
-              <span className="text-[14px] font-bold text-[#0b1c30]">
+              <span className="text-[14px] font-bold text-[var(--aven-ink)]">
                 {weakTopics.length} Priority Topic{weakTopics.length === 1 ? '' : 's'} Identified
               </span>
-              <p className="text-[12px] text-[#44474d]">
+              <p className="text-[12px] text-[var(--aven-muted)]">
                 Primary focus needed in <strong className="font-bold text-amber-900">{primarySubject}</strong>. Target drills will calibrate to these gaps.
               </p>
             </div>
@@ -137,7 +137,7 @@ export const WeakTopicsView: React.FC<WeakTopicsViewProps> = ({
 
       {/* Weak Topics List or Empty State */}
       {loading ? (
-        <div className="py-16 text-center text-[14px] text-[#75777e]">
+        <div className="py-16 text-center text-[14px] text-[var(--aven-muted)]">
           Evaluating database quiz history for weak topics...
         </div>
       ) : weakTopics.length > 0 ? (
@@ -162,11 +162,11 @@ export const WeakTopicsView: React.FC<WeakTopicsViewProps> = ({
             return (
               <div
                 key={wt.id}
-                className="bg-white p-5 rounded-2xl border border-[#c5c6ce]/30 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+                className="bg-white p-5 rounded-2xl border border-[var(--aven-border)]/30 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#eff4ff] text-[#0051d5]">
+                    <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[var(--aven-soft)] text-[var(--aven-action)]">
                       {wt.subject}
                     </span>
                     <div className="flex items-center gap-1.5">
@@ -179,18 +179,18 @@ export const WeakTopicsView: React.FC<WeakTopicsViewProps> = ({
                     </div>
                   </div>
 
-                  <h3 className="text-[17px] font-bold text-[#0b1c30]">{wt.topic}</h3>
-                  <p className="text-[12px] text-[#75777e] mt-1">
+                  <h3 className="text-[17px] font-bold text-[var(--aven-ink)]">{wt.topic}</h3>
+                  <p className="text-[12px] text-[var(--aven-muted)] mt-1">
                     {wt.incorrect} missed problem{wt.incorrect === 1 ? '' : 's'} across {wt.attempts} attempt{wt.attempts === 1 ? '' : 's'}.
                   </p>
 
                   {/* Diagnostic Accuracy Bar */}
                   <div className="mt-3">
-                    <div className="flex justify-between text-[11px] font-semibold text-[#44474d] mb-1">
+                    <div className="flex justify-between text-[11px] font-semibold text-[var(--aven-muted)] mb-1">
                       <span>Diagnostic Accuracy</span>
-                      <span className="font-bold text-[#0b1c30]">{wt.accuracy}%</span>
+                      <span className="font-bold text-[var(--aven-ink)]">{wt.accuracy}%</span>
                     </div>
-                    <div className="w-full bg-[#eff4ff] h-2 rounded-full overflow-hidden">
+                    <div className="w-full bg-[var(--aven-soft)] h-2 rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full ${
                           wt.accuracy < 50
@@ -205,12 +205,12 @@ export const WeakTopicsView: React.FC<WeakTopicsViewProps> = ({
                   </div>
                 </div>
 
-                <div className="pt-4 mt-3 border-t border-[#c5c6ce]/20 flex items-center justify-between">
-                  <span className="text-[12px] text-[#75777e]">Target: 70%+</span>
+                <div className="pt-4 mt-3 border-t border-[var(--aven-border)]/20 flex items-center justify-between">
+                  <span className="text-[12px] text-[var(--aven-muted)]">Target: 70%+</span>
                   <button
                     disabled={launchingTopicId === wt.id}
                     onClick={() => handleLaunchTargetedDrill(wt)}
-                    className="px-4 py-1.5 rounded-xl bg-[#0051d5] text-white text-[12px] font-bold hover:bg-[#316bf3] shadow-xs cursor-pointer disabled:opacity-50 inline-flex items-center gap-1"
+                    className="px-4 py-1.5 rounded-xl bg-[var(--aven-action)] text-white text-[12px] font-bold hover:bg-[var(--aven-action-hover)] shadow-xs cursor-pointer disabled:opacity-50 inline-flex items-center gap-1"
                   >
                     {launchingTopicId === wt.id ? 'Starting Drill...' : 'Launch Targeted Drill →'}
                   </button>
@@ -221,17 +221,17 @@ export const WeakTopicsView: React.FC<WeakTopicsViewProps> = ({
         </div>
       ) : (
         /* Clean Empty State when student has no weak topics */
-        <div className="bg-white p-10 rounded-2xl border border-[#c5c6ce]/30 shadow-xs text-center flex flex-col items-center justify-center">
+        <div className="bg-white p-10 rounded-2xl border border-[var(--aven-border)]/30 shadow-xs text-center flex flex-col items-center justify-center">
           <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3">
             <span className="material-symbols-outlined text-[32px]">verified</span>
           </div>
-          <h3 className="text-[18px] font-bold text-[#0b1c30]">No Critical Weak Topics Detected</h3>
-          <p className="text-[13px] text-[#44474d] mt-1.5 max-w-md">
+          <h3 className="text-[18px] font-bold text-[var(--aven-ink)]">No Critical Weak Topics Detected</h3>
+          <p className="text-[13px] text-[var(--aven-muted)] mt-1.5 max-w-md">
             Great job! You do not currently have any topics with accuracy below 70% (minimum 3 attempts). Keep practicing to maintain your mastery.
           </p>
           <button
             onClick={() => onNavigate('quizzes')}
-            className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0051d5] text-white font-bold text-[13px] hover:bg-[#316bf3] transition-all shadow-xs cursor-pointer"
+            className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--aven-action)] text-white font-bold text-[13px] hover:bg-[var(--aven-action-hover)] transition-all shadow-xs cursor-pointer"
           >
             <span>Take Practice Quiz →</span>
           </button>
@@ -241,30 +241,30 @@ export const WeakTopicsView: React.FC<WeakTopicsViewProps> = ({
       {/* Target Drill Notification Modal when questions are unavailable */}
       {drillErrorModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-[#c5c6ce]/50 space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[#c5c6ce]/30">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-[var(--aven-border)]/50 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--aven-border)]/30">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-amber-600 text-[22px]">info</span>
-                <h3 className="text-[17px] font-bold text-[#0b1c30]">
+                <h3 className="text-[17px] font-bold text-[var(--aven-ink)]">
                   {drillErrorModal.topic}
                 </h3>
               </div>
               <button
                 onClick={() => setDrillErrorModal(null)}
-                className="text-[#75777e] hover:text-[#0b1c30] p-1.5 rounded-xl cursor-pointer"
+                className="text-[var(--aven-muted)] hover:text-[var(--aven-ink)] p-1.5 rounded-xl cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
             </div>
 
-            <p className="text-[13px] text-[#44474d] leading-relaxed">
+            <p className="text-[13px] text-[var(--aven-muted)] leading-relaxed">
               {drillErrorModal.message}
             </p>
 
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 onClick={() => setDrillErrorModal(null)}
-                className="px-4 py-2 rounded-xl bg-[#eff4ff] text-[#0b1c30] font-semibold text-[13px] hover:bg-[#dbe1ff] cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-[var(--aven-soft)] text-[var(--aven-ink)] font-semibold text-[13px] hover:bg-[var(--aven-blue-soft)] cursor-pointer"
               >
                 Dismiss
               </button>
@@ -273,7 +273,7 @@ export const WeakTopicsView: React.FC<WeakTopicsViewProps> = ({
                   setDrillErrorModal(null);
                   onNavigate('study-kits');
                 }}
-                className="px-4 py-2 rounded-xl bg-[#0051d5] text-white font-bold text-[13px] hover:bg-[#316bf3] cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-[var(--aven-action)] text-white font-bold text-[13px] hover:bg-[var(--aven-action-hover)] cursor-pointer"
               >
                 Upload Material
               </button>

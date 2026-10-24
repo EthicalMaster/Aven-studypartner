@@ -339,27 +339,27 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
     return (
       <div className="flex flex-col gap-6 pb-12 max-w-4xl mx-auto">
         {/* Session Top Bar */}
-        <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-[#c5c6ce]/30 shadow-xs">
+        <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-[var(--aven-border)]/30 shadow-xs">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsReviewing(false)}
-              className="p-2 rounded-xl bg-[#eff4ff] text-[#0051d5] hover:bg-[#dbe1ff] transition-colors"
+              className="p-2 rounded-xl bg-[var(--aven-soft)] text-[var(--aven-action)] hover:bg-[var(--aven-blue-soft)] transition-colors"
               title="Exit Session"
             >
               <span className="material-symbols-outlined text-[20px]">arrow_back</span>
             </button>
             <div>
-              <h2 className="text-[16px] font-bold text-[#0b1c30] tracking-tight">
+              <h2 className="text-[16px] font-bold text-[var(--aven-ink)] tracking-tight">
                 {sessionTitle}
               </h2>
-              <p className="text-[12px] text-[#75777e]">
+              <p className="text-[12px] text-[var(--aven-muted)]">
                 AVEN Adaptive Spaced Repetition (SM-2)
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-[12px] font-bold text-[#0051d5] bg-[#eff4ff] px-3 py-1 rounded-full">
+            <span className="text-[12px] font-bold text-[var(--aven-action)] bg-[var(--aven-soft)] px-3 py-1 rounded-full">
               Card {currentIndex + 1} of {activeDeck.length}
             </span>
           </div>
@@ -368,9 +368,9 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
         {!deckCompleted && currentCard && (
           <>
             {/* Progress Bar */}
-            <div className="w-full bg-[#eff4ff] h-2 rounded-full overflow-hidden">
+            <div className="w-full bg-[var(--aven-soft)] h-2 rounded-full overflow-hidden">
               <div
-                className="bg-[#0051d5] h-full rounded-full transition-all duration-300"
+                className="bg-[var(--aven-action)] h-full rounded-full transition-all duration-300"
                 style={{ width: `${((currentIndex + 1) / activeDeck.length) * 100}%` }}
               ></div>
             </div>
@@ -386,13 +386,13 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                 }`}
               >
                 {/* Front of Card */}
-                <div className="absolute inset-0 backface-hidden bg-white rounded-3xl p-8 sm:p-10 shadow-lg border border-[#c5c6ce]/40 flex flex-col justify-between hover:border-[#0051d5]/40 transition-colors">
+                <div className="absolute inset-0 backface-hidden bg-white rounded-3xl p-8 sm:p-10 shadow-lg border border-[var(--aven-border)]/40 flex flex-col justify-between hover:border-[var(--aven-action)]/40 transition-colors">
                   <div className="flex items-center justify-between flex-wrap gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-[11px] uppercase font-bold text-[#0051d5] bg-[#eff4ff] px-3 py-1 rounded-full">
+                      <span className="text-[11px] uppercase font-bold text-[var(--aven-action)] bg-[var(--aven-soft)] px-3 py-1 rounded-full">
                         {currentCard.subject}
                       </span>
-                      <span className="text-[11px] font-semibold text-[#44474d] bg-[#f8f9ff] px-2.5 py-1 rounded-full border border-[#c5c6ce]/30">
+                      <span className="text-[11px] font-semibold text-[var(--aven-muted)] bg-[var(--aven-canvas)] px-2.5 py-1 rounded-full border border-[var(--aven-border)]/30">
                         {currentCard.topic}
                       </span>
                       <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${
@@ -406,19 +406,19 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                       </span>
                     </div>
 
-                    <span className="text-[11px] font-semibold text-[#75777e] flex items-center gap-1">
+                    <span className="text-[11px] font-semibold text-[var(--aven-muted)] flex items-center gap-1">
                       <span className="material-symbols-outlined text-[16px]">touch_app</span>
                       Click or press Space to reveal answer
                     </span>
                   </div>
 
                   <div className="my-auto py-6">
-                    <h3 className="text-[20px] sm:text-[24px] font-bold text-[#0b1c30] leading-snug">
+                    <h3 className="text-[20px] sm:text-[24px] font-bold text-[var(--aven-ink)] leading-snug">
                       {currentCard.question}
                     </h3>
 
                     {currentCard.key_concept && (
-                      <div className="mt-4 inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#44474d] bg-[#f8f9ff] px-3 py-1.5 rounded-xl border border-[#c5c6ce]/30">
+                      <div className="mt-4 inline-flex items-center gap-1.5 text-[12px] font-semibold text-[var(--aven-muted)] bg-[var(--aven-canvas)] px-3 py-1.5 rounded-xl border border-[var(--aven-border)]/30">
                         <span className="material-symbols-outlined text-[16px] text-amber-500">
                           lightbulb
                         </span>
@@ -430,7 +430,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                       <div className="mt-4 p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200 text-amber-900 text-[13px] animate-fadeIn">
                         <span className="font-bold block mb-1">💡 Memory Hint:</span>
                         {currentCard.formula && (
-                          <div className="font-mono text-[13px] text-[#0051d5] font-semibold mb-1">
+                          <div className="font-mono text-[13px] text-[var(--aven-action)] font-semibold mb-1">
                             {currentCard.formula}
                           </div>
                         )}
@@ -441,78 +441,78 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                     )}
                   </div>
 
-                  <div className="flex items-center justify-between text-[12px] text-[#75777e] border-t border-[#c5c6ce]/20 pt-3">
+                  <div className="flex items-center justify-between text-[12px] text-[var(--aven-muted)] border-t border-[var(--aven-border)]/20 pt-3">
                     <button
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         setShowHint(!showHint);
                       }}
-                      className="text-[#0051d5] hover:underline font-semibold flex items-center gap-1"
+                      className="text-[var(--aven-action)] hover:underline font-semibold flex items-center gap-1"
                     >
                       <span className="material-symbols-outlined text-[16px]">help</span>
                       {showHint ? 'Hide Hint' : 'Need a Hint?'}
                     </button>
-                    <span className="text-[#0051d5] font-bold">Tap to flip ↺</span>
+                    <span className="text-[var(--aven-action)] font-bold">Tap to flip ↺</span>
                   </div>
                 </div>
 
                 {/* Back of Card */}
-                <div className="absolute inset-0 backface-hidden rotate-y-180 bg-gradient-to-br from-[#f8f9ff] to-white rounded-3xl p-8 sm:p-10 shadow-lg border-2 border-[#0051d5]/30 flex flex-col justify-between">
+                <div className="absolute inset-0 backface-hidden rotate-y-180 bg-gradient-to-br from-[var(--aven-canvas)] to-white rounded-3xl p-8 sm:p-10 shadow-lg border-2 border-[var(--aven-action)]/30 flex flex-col justify-between">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="text-[11px] uppercase font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full">
                         Verified Answer
                       </span>
-                      <span className="text-[11px] font-semibold text-[#75777e]">
+                      <span className="text-[11px] font-semibold text-[var(--aven-muted)]">
                         {currentCard.subject} • {currentCard.topic}
                       </span>
                     </div>
-                    <span className="text-[11px] font-semibold text-[#75777e]">
+                    <span className="text-[11px] font-semibold text-[var(--aven-muted)]">
                       Card {currentIndex + 1}
                     </span>
                   </div>
 
                   <div className="my-auto py-4 space-y-4">
-                    <p className="text-[17px] sm:text-[19px] text-[#0b1c30] leading-relaxed font-medium">
+                    <p className="text-[17px] sm:text-[19px] text-[var(--aven-ink)] leading-relaxed font-medium">
                       {currentCard.answer}
                     </p>
 
                     {currentCard.formula && (
-                      <div className="p-3.5 rounded-2xl bg-white border border-[#c5c6ce]/40 shadow-xs">
-                        <span className="text-[11px] font-bold text-[#0051d5] uppercase tracking-wider block mb-1">
+                      <div className="p-3.5 rounded-2xl bg-white border border-[var(--aven-border)]/40 shadow-xs">
+                        <span className="text-[11px] font-bold text-[var(--aven-action)] uppercase tracking-wider block mb-1">
                           Mathematical Identity:
                         </span>
-                        <code className="text-[15px] font-mono font-bold text-[#0051d5]">
+                        <code className="text-[15px] font-mono font-bold text-[var(--aven-action)]">
                           {currentCard.formula}
                         </code>
                       </div>
                     )}
 
                     {currentCard.explanation && (
-                      <div className="text-[13px] text-[#44474d] bg-[#f8f9ff] p-3 rounded-xl border border-[#c5c6ce]/30">
-                        <span className="font-bold text-[#0b1c30] block mb-0.5">Explanation:</span>
+                      <div className="text-[13px] text-[var(--aven-muted)] bg-[var(--aven-canvas)] p-3 rounded-xl border border-[var(--aven-border)]/30">
+                        <span className="font-bold text-[var(--aven-ink)] block mb-0.5">Explanation:</span>
                         {currentCard.explanation}
                       </div>
                     )}
                   </div>
 
-                  <div className="text-[12px] text-[#75777e] border-t border-[#c5c6ce]/20 pt-3 flex items-center justify-between">
+                  <div className="text-[12px] text-[var(--aven-muted)] border-t border-[var(--aven-border)]/20 pt-3 flex items-center justify-between">
                     <span>How well did you recall this concept?</span>
-                    <span className="text-[#0051d5] font-bold">Rate recall below (Keys 1 - 4) ↓</span>
+                    <span className="text-[var(--aven-action)] font-bold">Rate recall below (Keys 1 - 4) ↓</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Spaced Repetition Rating Controls */}
-            <div className="bg-white p-5 rounded-3xl border border-[#c5c6ce]/30 shadow-xs">
+            <div className="bg-white p-5 rounded-3xl border border-[var(--aven-border)]/30 shadow-xs">
               <div className="flex items-center justify-between mb-3 px-1">
-                <span className="text-[12px] font-bold text-[#44474d] uppercase tracking-wider">
+                <span className="text-[12px] font-bold text-[var(--aven-muted)] uppercase tracking-wider">
                   Select Retention Rating (SM-2 Interval)
                 </span>
-                <span className="text-[11px] text-[#75777e]">
-                  Calibrates your neural forgetting curve
+                <span className="text-[11px] text-[var(--aven-muted)]">
+                  Helps schedule your next review
                 </span>
               </div>
 
@@ -546,16 +546,16 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                 <button
                   onClick={() => handleRating(3)}
                   disabled={submittingRating}
-                  className="flex flex-col items-center py-3 px-3 rounded-2xl bg-[#eff4ff] hover:bg-[#dbe1ff] text-[#0051d5] font-bold transition-all active:scale-95 cursor-pointer border border-[#dbe1ff]"
+                  className="flex flex-col items-center py-3 px-3 rounded-2xl bg-[var(--aven-soft)] hover:bg-[var(--aven-blue-soft)] text-[var(--aven-action)] font-bold transition-all active:scale-95 cursor-pointer border border-[var(--aven-blue-soft)]"
                 >
                   <div className="flex items-center gap-1.5">
                     <span className="text-[14px]">Good</span>
-                    <kbd className="text-[10px] bg-[#dbe1ff] px-1.5 py-0.5 rounded text-[#0051d5]">3</kbd>
+                    <kbd className="text-[10px] bg-[var(--aven-blue-soft)] px-1.5 py-0.5 rounded text-[var(--aven-action)]">3</kbd>
                   </div>
-                  <span className="text-[11px] font-normal text-[#0051d5] mt-0.5">
+                  <span className="text-[11px] font-normal text-[var(--aven-action)] mt-0.5">
                     {currentCard.repetitions === 0 ? '1 day' : currentCard.repetitions === 1 ? '3 days' : `${Math.round(currentCard.interval_days * currentCard.ease_factor)} days`}
                   </span>
-                  <span className="text-[9px] text-[#0051d5]/80 uppercase tracking-tight">Consolidating</span>
+                  <span className="text-[9px] text-[var(--aven-action)]/80 uppercase tracking-tight">Consolidating</span>
                 </button>
 
                 <button
@@ -579,14 +579,14 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
 
         {/* Deck Completion View */}
         {deckCompleted && (
-          <div className="bg-white rounded-3xl p-8 sm:p-12 shadow-xl border border-[#c5c6ce]/40 text-center space-y-6">
+          <div className="bg-white rounded-3xl p-8 sm:p-12 shadow-xl border border-[var(--aven-border)]/40 text-center space-y-6">
             <div className="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto shadow-md">
               <span className="material-symbols-outlined text-[36px]">workspace_premium</span>
             </div>
 
             <div>
-              <h3 className="text-[24px] font-bold text-[#0b1c30]">Retention Drill Complete! 🎉</h3>
-              <p className="text-[14px] text-[#44474d] mt-1 max-w-md mx-auto">
+              <h3 className="text-[24px] font-bold text-[var(--aven-ink)]">Retention Drill Complete! 🎉</h3>
+              <p className="text-[14px] text-[var(--aven-muted)] mt-1 max-w-md mx-auto">
                 You successfully reviewed {activeDeck.length} flashcards in this session. Spaced repetition intervals have been recalibrated in your Adaptive Student Model.
               </p>
             </div>
@@ -601,7 +601,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                 <span className="block text-[20px] font-bold">{reviewedCounts.hard}</span>
                 <span className="text-[11px] font-semibold">Hard</span>
               </div>
-              <div className="p-3 rounded-2xl bg-[#eff4ff] text-[#0051d5] border border-[#dbe1ff]">
+              <div className="p-3 rounded-2xl bg-[var(--aven-soft)] text-[var(--aven-action)] border border-[var(--aven-blue-soft)]">
                 <span className="block text-[20px] font-bold">{reviewedCounts.good}</span>
                 <span className="text-[11px] font-semibold">Good</span>
               </div>
@@ -611,9 +611,9 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[#eff4ff]/60 border border-[#0051d5]/20 max-w-lg mx-auto text-left flex items-start gap-3">
-              <span className="material-symbols-outlined text-[#0051d5] text-[20px] mt-0.5">psychology</span>
-              <div className="text-[12px] text-[#0b1c30]">
+            <div className="p-4 rounded-2xl bg-[var(--aven-soft)]/60 border border-[var(--aven-action)]/20 max-w-lg mx-auto text-left flex items-start gap-3">
+              <span className="material-symbols-outlined text-[var(--aven-action)] text-[20px] mt-0.5">psychology</span>
+              <div className="text-[12px] text-[var(--aven-ink)]">
                 <strong className="block font-bold">Adaptive Model Synchronized:</strong>
                 Concepts rated &quot;Good&quot; or &quot;Easy&quot; updated memory consolidation states. Difficult concepts will resurface at high priority during your next review cycle.
               </div>
@@ -629,21 +629,21 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                   setReviewedCounts({ again: 0, hard: 0, good: 0, easy: 0 });
                   setCardStartTime(Date.now());
                 }}
-                className="px-5 py-2.5 rounded-xl bg-[#eff4ff] text-[#0051d5] font-bold text-[13px] hover:bg-[#dbe1ff] transition-colors"
+                className="px-5 py-2.5 rounded-xl bg-[var(--aven-soft)] text-[var(--aven-action)] font-bold text-[13px] hover:bg-[var(--aven-blue-soft)] transition-colors"
               >
                 Review This Deck Again
               </button>
 
               <button
                 onClick={() => setIsReviewing(false)}
-                className="px-5 py-2.5 rounded-xl bg-white border border-[#c5c6ce]/50 text-[#0b1c30] font-bold text-[13px] hover:bg-slate-50 transition-colors"
+                className="px-5 py-2.5 rounded-xl bg-white border border-[var(--aven-border)]/50 text-[var(--aven-ink)] font-bold text-[13px] hover:bg-slate-50 transition-colors"
               >
                 Return to Flashcards Hub
               </button>
 
               <button
                 onClick={() => onNavigate('quizzes')}
-                className="px-5 py-2.5 rounded-xl bg-[#0051d5] text-white font-bold text-[13px] hover:bg-[#316bf3] shadow-sm transition-colors"
+                className="px-5 py-2.5 rounded-xl bg-[var(--aven-action)] text-white font-bold text-[13px] hover:bg-[var(--aven-action-hover)] shadow-sm transition-colors"
               >
                 Test Knowledge in Quiz →
               </button>
@@ -683,17 +683,17 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
       {/* Header Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-[24px] font-bold text-[#0b1c30] tracking-tight">
-              Intelligent Flashcards 2.0
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="aven-page-title text-[24px] font-bold text-[var(--aven-ink)] tracking-tight">
+              Your flashcards.
             </h1>
-            <span className="text-[11px] font-bold uppercase tracking-wider bg-[#eff4ff] text-[#0051d5] px-2.5 py-0.5 rounded-full">
-              SM-2 Spaced Repetition
+            <span className="text-[11px] font-bold uppercase tracking-wider bg-[var(--aven-soft)] text-[var(--aven-action)] px-2.5 py-0.5 rounded-full">
+              Spaced practice
             </span>
           </div>
-          <p className="text-[13px] text-[#44474d] mt-1">
+          <p className="text-[13px] text-[var(--aven-muted)] mt-1">
             Personalized active recall calibrated against cognitive forgetting curves and your academic stage:
-            <strong className="text-[#0051d5] ml-1">
+            <strong className="text-[var(--aven-action)] ml-1">
               {dashboard?.academicContext?.program || 'Academic Curriculum'} ({dashboard?.academicContext?.academicStage || 'Current Stage'})
             </strong>
           </p>
@@ -702,15 +702,15 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
         <div className="flex items-center gap-2.5">
           <button
             onClick={() => setIsCreateOpen(true)}
-            className="px-3.5 py-2 rounded-xl bg-white border border-[#c5c6ce]/50 hover:bg-[#f8f9ff] text-[#0b1c30] font-bold text-[13px] flex items-center gap-1.5 shadow-xs transition-colors"
+            className="px-3.5 py-2 rounded-xl bg-white border border-[var(--aven-border)]/50 hover:bg-[var(--aven-canvas)] text-[var(--aven-ink)] font-bold text-[13px] flex items-center gap-1.5 shadow-xs transition-colors"
           >
-            <span className="material-symbols-outlined text-[18px] text-[#0051d5]">add</span>
+            <span className="material-symbols-outlined text-[18px] text-[var(--aven-action)]">add</span>
             <span>Create Card</span>
           </button>
 
           <button
             onClick={() => onNavigate('study-kits')}
-            className="px-3.5 py-2 rounded-xl bg-[#0051d5] text-white font-bold text-[13px] hover:bg-[#316bf3] shadow-xs flex items-center gap-1.5 transition-colors"
+            className="px-3.5 py-2 rounded-xl bg-[var(--aven-action)] text-white font-bold text-[13px] hover:bg-[var(--aven-action-hover)] shadow-xs flex items-center gap-1.5 transition-colors"
           >
             <span className="material-symbols-outlined text-[18px]">upload_file</span>
             <span>Upload Notes</span>
@@ -720,29 +720,29 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
 
       {/* Stats Ribbon */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-3xl border border-[#c5c6ce]/30 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between text-[#75777e]">
+        <div className="bg-white p-5 rounded-3xl border border-[var(--aven-border)]/30 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[var(--aven-muted)]">
             <span className="text-[12px] font-semibold">Total Flashcards</span>
-            <span className="material-symbols-outlined text-[20px] text-[#0051d5]">style</span>
+            <span className="material-symbols-outlined text-[20px] text-[var(--aven-action)]">style</span>
           </div>
           <div className="mt-3">
-            <span className="text-[26px] font-bold text-[#0b1c30]">
+            <span className="text-[26px] font-bold text-[var(--aven-ink)]">
               {dashboard?.stats?.totalCards || 0}
             </span>
-            <span className="text-[11px] text-[#75777e] block mt-0.5">
+            <span className="text-[11px] text-[var(--aven-muted)] block mt-0.5">
               Across eligible curriculum & notes
             </span>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-3xl border border-[#c5c6ce]/30 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between text-[#75777e]">
+        <div className="bg-white p-5 rounded-3xl border border-[var(--aven-border)]/30 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[var(--aven-muted)]">
             <span className="text-[12px] font-semibold">Due for Review Today</span>
             <span className="material-symbols-outlined text-[20px] text-amber-500">alarm</span>
           </div>
           <div className="mt-3">
             <div className="flex items-baseline gap-2">
-              <span className="text-[26px] font-bold text-[#0b1c30]">
+              <span className="text-[26px] font-bold text-[var(--aven-ink)]">
                 {dashboard?.stats?.dueTodayCount || 0}
               </span>
               {(dashboard?.stats?.dueTodayCount || 0) > 0 && (
@@ -751,14 +751,14 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                 </span>
               )}
             </div>
-            <span className="text-[11px] text-[#75777e] block mt-0.5">
+            <span className="text-[11px] text-[var(--aven-muted)] block mt-0.5">
               {dashboard?.stats?.reviewedTodayCount || 0} cards reviewed today
             </span>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-3xl border border-[#c5c6ce]/30 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between text-[#75777e]">
+        <div className="bg-white p-5 rounded-3xl border border-[var(--aven-border)]/30 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[var(--aven-muted)]">
             <span className="text-[12px] font-semibold">Mastered Knowledge</span>
             <span className="material-symbols-outlined text-[20px] text-emerald-600">verified</span>
           </div>
@@ -767,31 +767,31 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
               <span className="text-[26px] font-bold text-emerald-700">
                 {dashboard?.stats?.masteredCount || 0}
               </span>
-              <span className="text-[12px] font-bold text-[#75777e]">
+              <span className="text-[12px] font-bold text-[var(--aven-muted)]">
                 ({dashboard?.stats?.totalCards ? Math.round(((dashboard.stats.masteredCount || 0) / dashboard.stats.totalCards) * 100) : 0}%)
               </span>
             </div>
-            <span className="text-[11px] text-[#75777e] block mt-0.5">
-              Long-term neural stability
+            <span className="text-[11px] text-[var(--aven-muted)] block mt-0.5">
+              Cards you’ve mastered
             </span>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-3xl border border-[#c5c6ce]/30 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between text-[#75777e]">
+        <div className="bg-white p-5 rounded-3xl border border-[var(--aven-border)]/30 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[var(--aven-muted)]">
             <span className="text-[12px] font-semibold">Retention Health</span>
-            <span className="material-symbols-outlined text-[20px] text-[#0051d5]">psychology</span>
+            <span className="material-symbols-outlined text-[20px] text-[var(--aven-action)]">psychology</span>
           </div>
           <div className="mt-3">
             <div className="flex items-baseline gap-2">
-              <span className="text-[26px] font-bold text-[#0051d5]">
-                {dashboard?.stats?.retentionScore || 75}%
+              <span className="text-[26px] font-bold text-[var(--aven-action)]">
+                {dashboard ? `${dashboard.stats.retentionScore}%` : '—'}
               </span>
               <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
-                Optimal
+                From reviews
               </span>
             </div>
-            <span className="text-[11px] text-[#75777e] block mt-0.5">
+            <span className="text-[11px] text-[var(--aven-muted)] block mt-0.5">
               Model memory recall index
             </span>
           </div>
@@ -801,7 +801,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
       {/* Smart Quick Launch Review Action Banners */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Due Cards Action */}
-        <div className="bg-gradient-to-br from-[#0051d5] to-[#003896] text-white p-6 rounded-3xl shadow-md flex flex-col justify-between">
+        <div className="bg-[var(--aven-action)] text-white p-6 rounded-3xl shadow-md flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between">
               <span className="text-[11px] uppercase tracking-wider font-bold bg-white/20 px-2.5 py-0.5 rounded-full">
@@ -818,14 +818,14 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
           </div>
           <button
             onClick={() => startSession('Due Cards Review', 'due')}
-            className="mt-5 w-full py-2.5 rounded-xl bg-white text-[#0051d5] font-bold text-[13px] hover:bg-[#eff4ff] transition-colors shadow-xs"
+            className="mt-5 w-full py-2.5 rounded-xl bg-white text-[var(--aven-action)] font-bold text-[13px] hover:bg-[var(--aven-soft)] transition-colors shadow-xs"
           >
             Review Due Cards ({(dashboard?.stats?.dueTodayCount || 0)}) →
           </button>
         </div>
 
         {/* Weak Topics Drill */}
-        <div className="bg-white p-6 rounded-3xl border border-[#c5c6ce]/40 shadow-xs flex flex-col justify-between">
+        <div className="bg-white p-6 rounded-3xl border border-[var(--aven-border)]/40 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between">
               <span className="text-[11px] uppercase tracking-wider font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-0.5 rounded-full">
@@ -833,8 +833,8 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
               </span>
               <span className="material-symbols-outlined text-[24px] text-amber-500">crisis_alert</span>
             </div>
-            <h3 className="text-[18px] font-bold text-[#0b1c30] mt-3">Target Weak Topics</h3>
-            <p className="text-[12px] text-[#44474d] mt-1">
+            <h3 className="text-[18px] font-bold text-[var(--aven-ink)] mt-3">Target Weak Topics</h3>
+            <p className="text-[12px] text-[var(--aven-muted)] mt-1">
               {(dashboard?.weakTopicCards?.length || 0) > 0
                 ? `Drill ${dashboard?.weakTopicCards?.length} cards flagged as decaying or needing revision by the Adaptive Model.`
                 : 'No severe weak retention signals detected right now.'}
@@ -842,29 +842,29 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
           </div>
           <button
             onClick={() => startSession('Weak Topics Retention Drill', 'weak')}
-            className="mt-5 w-full py-2.5 rounded-xl bg-[#eff4ff] text-[#0051d5] font-bold text-[13px] hover:bg-[#dbe1ff] transition-colors border border-[#dbe1ff]"
+            className="mt-5 w-full py-2.5 rounded-xl bg-[var(--aven-soft)] text-[var(--aven-action)] font-bold text-[13px] hover:bg-[var(--aven-blue-soft)] transition-colors border border-[var(--aven-blue-soft)]"
           >
             Target Weak Topics Drill →
           </button>
         </div>
 
         {/* Smart Recommended Deck */}
-        <div className="bg-white p-6 rounded-3xl border border-[#c5c6ce]/40 shadow-xs flex flex-col justify-between">
+        <div className="bg-white p-6 rounded-3xl border border-[var(--aven-border)]/40 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between">
               <span className="text-[11px] uppercase tracking-wider font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 rounded-full">
-                AI Curated
+                Suggested practice
               </span>
               <span className="material-symbols-outlined text-[24px] text-emerald-600">auto_awesome</span>
             </div>
-            <h3 className="text-[18px] font-bold text-[#0b1c30] mt-3">Recommended Deck</h3>
-            <p className="text-[12px] text-[#44474d] mt-1">
+            <h3 className="text-[18px] font-bold text-[var(--aven-ink)] mt-3">Recommended Deck</h3>
+            <p className="text-[12px] text-[var(--aven-muted)] mt-1">
               Balanced 15-card session mixing active curriculum topics with high-yield recall items.
             </p>
           </div>
           <button
             onClick={() => startSession('Smart Recommended Session', 'recommended')}
-            className="mt-5 w-full py-2.5 rounded-xl bg-[#0b1c30] text-white font-bold text-[13px] hover:bg-[#1a2d48] transition-colors shadow-xs"
+            className="mt-5 w-full py-2.5 rounded-xl bg-[var(--aven-ink)] text-white font-bold text-[13px] hover:bg-[#1a2d48] transition-colors shadow-xs"
           >
             Start Recommended Session →
           </button>
@@ -872,22 +872,22 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
       </div>
 
       {/* Main Two-Source Navigation & Library */}
-      <div className="bg-white rounded-3xl border border-[#c5c6ce]/40 shadow-xs overflow-hidden">
+      <div className="bg-white rounded-3xl border border-[var(--aven-border)]/40 shadow-xs overflow-hidden">
         {/* Source Switcher Header */}
-        <div className="border-b border-[#c5c6ce]/30 px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-1.5 p-1 bg-[#eff4ff] rounded-2xl">
+        <div className="border-b border-[var(--aven-border)]/30 px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-1.5 p-1 bg-[var(--aven-soft)] rounded-2xl">
             <button
               onClick={() => setActiveTab('curriculum')}
               className={`px-4 py-2 rounded-xl text-[13px] font-bold transition-all ${
                 activeTab === 'curriculum'
-                  ? 'bg-white text-[#0051d5] shadow-xs'
-                  : 'text-[#44474d] hover:text-[#0b1c30]'
+                  ? 'bg-white text-[var(--aven-action)] shadow-xs'
+                  : 'text-[var(--aven-muted)] hover:text-[var(--aven-ink)]'
               }`}
             >
               <div className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[18px]">school</span>
                 <span>AVEN Curriculum</span>
-                <span className="text-[11px] bg-[#eff4ff] text-[#0051d5] px-2 py-0.2 rounded-full font-bold ml-1">
+                <span className="text-[11px] bg-[var(--aven-soft)] text-[var(--aven-action)] px-2 py-0.2 rounded-full font-bold ml-1">
                   {dashboard?.curriculumSubjects?.length || 0}
                 </span>
               </div>
@@ -897,14 +897,14 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
               onClick={() => setActiveTab('materials')}
               className={`px-4 py-2 rounded-xl text-[13px] font-bold transition-all ${
                 activeTab === 'materials'
-                  ? 'bg-white text-[#0051d5] shadow-xs'
-                  : 'text-[#44474d] hover:text-[#0b1c30]'
+                  ? 'bg-white text-[var(--aven-action)] shadow-xs'
+                  : 'text-[var(--aven-muted)] hover:text-[var(--aven-ink)]'
               }`}
             >
               <div className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[18px]">folder_open</span>
                 <span>My Study Materials</span>
-                <span className="text-[11px] bg-[#eff4ff] text-[#0051d5] px-2 py-0.2 rounded-full font-bold ml-1">
+                <span className="text-[11px] bg-[var(--aven-soft)] text-[var(--aven-action)] px-2 py-0.2 rounded-full font-bold ml-1">
                   {dashboard?.studyMaterialDecks?.length || 0}
                 </span>
               </div>
@@ -914,8 +914,8 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
               onClick={() => setActiveTab('library')}
               className={`px-4 py-2 rounded-xl text-[13px] font-bold transition-all ${
                 activeTab === 'library'
-                  ? 'bg-white text-[#0051d5] shadow-xs'
-                  : 'text-[#44474d] hover:text-[#0b1c30]'
+                  ? 'bg-white text-[var(--aven-action)] shadow-xs'
+                  : 'text-[var(--aven-muted)] hover:text-[var(--aven-ink)]'
               }`}
             >
               <div className="flex items-center gap-1.5">
@@ -925,7 +925,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
             </button>
           </div>
 
-          <div className="text-[12px] text-[#75777e] flex items-center gap-1">
+          <div className="text-[12px] text-[var(--aven-muted)] flex items-center gap-1">
             <span className="material-symbols-outlined text-[16px] text-emerald-600">verified_user</span>
             <span>Curriculum filtered strictly by academic stage</span>
           </div>
@@ -937,7 +937,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               {/* Subject Selector Sidebar */}
               <div className="lg:col-span-4 flex flex-col gap-2.5">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#75777e] px-1">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--aven-muted)] px-1">
                   Eligible Academic Subjects
                 </span>
 
@@ -950,12 +950,12 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                         onClick={() => handleSelectCurriculumSubject(sub.subject)}
                         className={`p-4 rounded-2xl border cursor-pointer transition-all ${
                           isSelected
-                            ? 'bg-[#eff4ff] border-[#0051d5] shadow-xs'
-                            : 'bg-white border-[#c5c6ce]/30 hover:border-[#c5c6ce] hover:bg-slate-50/50'
+                            ? 'bg-[var(--aven-soft)] border-[var(--aven-action)] shadow-xs'
+                            : 'bg-white border-[var(--aven-border)]/30 hover:border-[var(--aven-border)] hover:bg-slate-50/50'
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <h4 className="font-bold text-[15px] text-[#0b1c30]">
+                          <h4 className="font-bold text-[15px] text-[var(--aven-ink)]">
                             {sub.subject}
                           </h4>
                           <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${
@@ -969,7 +969,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                           </span>
                         </div>
 
-                        <div className="flex items-center gap-3 mt-2 text-[12px] text-[#75777e]">
+                        <div className="flex items-center gap-3 mt-2 text-[12px] text-[var(--aven-muted)]">
                           <span>{sub.totalCards} cards</span>
                           <span>•</span>
                           <span>{sub.topicCount} topics</span>
@@ -984,21 +984,21 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                     );
                   })
                 ) : (
-                  <div className="p-6 text-center text-[#75777e] bg-slate-50 rounded-2xl">
+                  <div className="p-6 text-center text-[var(--aven-muted)] bg-slate-50 rounded-2xl">
                     No curriculum subjects eligible for current profile.
                   </div>
                 )}
               </div>
 
               {/* Topic Breakdown & Practice Actions */}
-              <div className="lg:col-span-8 bg-[#f8f9ff] rounded-3xl p-6 border border-[#c5c6ce]/30 flex flex-col justify-between">
+              <div className="lg:col-span-8 bg-[var(--aven-canvas)] rounded-3xl p-6 border border-[var(--aven-border)]/30 flex flex-col justify-between">
                 <div>
-                  <div className="flex items-center justify-between flex-wrap gap-3 pb-4 border-b border-[#c5c6ce]/30">
+                  <div className="flex items-center justify-between flex-wrap gap-3 pb-4 border-b border-[var(--aven-border)]/30">
                     <div>
-                      <h3 className="text-[18px] font-bold text-[#0b1c30]">
+                      <h3 className="text-[18px] font-bold text-[var(--aven-ink)]">
                         {selectedCurriculumSubject || 'Select a Subject'}
                       </h3>
-                      <p className="text-[12px] text-[#75777e]">
+                      <p className="text-[12px] text-[var(--aven-muted)]">
                         Curriculum topics & active recall flashcards
                       </p>
                     </div>
@@ -1012,7 +1012,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                             selectedCurriculumSubject
                           )
                         }
-                        className="px-4 py-2 rounded-xl bg-[#0051d5] text-white font-bold text-[13px] hover:bg-[#316bf3] shadow-xs flex items-center gap-1.5 transition-colors"
+                        className="px-4 py-2 rounded-xl bg-[var(--aven-action)] text-white font-bold text-[13px] hover:bg-[var(--aven-action-hover)] shadow-xs flex items-center gap-1.5 transition-colors"
                       >
                         <span className="material-symbols-outlined text-[18px]">play_arrow</span>
                         <span>Practice Full Subject</span>
@@ -1023,20 +1023,20 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                   {/* Topics List */}
                   <div className="mt-4 space-y-2.5">
                     {loadingTopics ? (
-                      <div className="py-12 text-center text-[#75777e] text-[13px]">
+                      <div className="py-12 text-center text-[var(--aven-muted)] text-[13px]">
                         Loading topic breakdown...
                       </div>
                     ) : subjectTopics.length > 0 ? (
                       subjectTopics.map((topicItem) => (
                         <div
                           key={topicItem.topic}
-                          className="bg-white p-4 rounded-2xl border border-[#c5c6ce]/30 flex items-center justify-between hover:border-[#0051d5]/40 transition-colors shadow-xs"
+                          className="bg-white p-4 rounded-2xl border border-[var(--aven-border)]/30 flex items-center justify-between hover:border-[var(--aven-action)]/40 transition-colors shadow-xs"
                         >
                           <div>
-                            <h5 className="font-bold text-[14px] text-[#0b1c30]">
+                            <h5 className="font-bold text-[14px] text-[var(--aven-ink)]">
                               {topicItem.topic}
                             </h5>
-                            <div className="flex items-center gap-2 mt-1 text-[11px] text-[#75777e]">
+                            <div className="flex items-center gap-2 mt-1 text-[11px] text-[var(--aven-muted)]">
                               <span>{topicItem.totalCards} cards</span>
                               <span>•</span>
                               <span className="text-emerald-700 font-semibold">
@@ -1062,14 +1062,14 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                                 topicItem.topic
                               )
                             }
-                            className="px-3 py-1.5 rounded-xl bg-[#eff4ff] text-[#0051d5] font-bold text-[12px] hover:bg-[#dbe1ff] transition-colors"
+                            className="px-3 py-1.5 rounded-xl bg-[var(--aven-soft)] text-[var(--aven-action)] font-bold text-[12px] hover:bg-[var(--aven-blue-soft)] transition-colors"
                           >
                             Drill Topic →
                           </button>
                         </div>
                       ))
                     ) : (
-                      <div className="py-8 text-center text-[#75777e] text-[13px]">
+                      <div className="py-8 text-center text-[var(--aven-muted)] text-[13px]">
                         No topics found for this subject.
                       </div>
                     )}
@@ -1085,17 +1085,17 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
           <div className="p-6">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-[16px] font-bold text-[#0b1c30]">
+                <h3 className="text-[16px] font-bold text-[var(--aven-ink)]">
                   Synthesized Decks from Your Uploaded Notes
                 </h3>
-                <p className="text-[12px] text-[#75777e]">
+                <p className="text-[12px] text-[var(--aven-muted)]">
                   Active recall flashcards created from your PDFs, lecture notes, and document intelligence chunks.
                 </p>
               </div>
 
               <button
                 onClick={() => onNavigate('study-kits')}
-                className="text-[12px] font-bold text-[#0051d5] hover:underline flex items-center gap-1"
+                className="text-[12px] font-bold text-[var(--aven-action)] hover:underline flex items-center gap-1"
               >
                 <span>Manage Study Materials</span>
                 <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
@@ -1107,23 +1107,23 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                 {dashboard.studyMaterialDecks.map((deck) => (
                   <div
                     key={deck.materialId}
-                    className="p-5 rounded-3xl bg-white border border-[#c5c6ce]/40 shadow-xs flex flex-col justify-between"
+                    className="p-5 rounded-3xl bg-white border border-[var(--aven-border)]/40 shadow-xs flex flex-col justify-between"
                   >
                     <div>
                       <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-bold uppercase tracking-wider bg-[#eff4ff] text-[#0051d5] px-2.5 py-0.5 rounded-full">
+                        <span className="text-[11px] font-bold uppercase tracking-wider bg-[var(--aven-soft)] text-[var(--aven-action)] px-2.5 py-0.5 rounded-full">
                           {deck.subject}
                         </span>
-                        <span className="text-[11px] text-[#75777e]">
+                        <span className="text-[11px] text-[var(--aven-muted)]">
                           {new Date(deck.createdAt).toLocaleDateString()}
                         </span>
                       </div>
 
-                      <h4 className="text-[16px] font-bold text-[#0b1c30] mt-2 line-clamp-1">
+                      <h4 className="text-[16px] font-bold text-[var(--aven-ink)] mt-2 line-clamp-1">
                         {deck.title}
                       </h4>
 
-                      <div className="flex items-center gap-3 mt-2 text-[12px] text-[#75777e]">
+                      <div className="flex items-center gap-3 mt-2 text-[12px] text-[var(--aven-muted)]">
                         <span>{deck.totalCards} cards</span>
                         <span>•</span>
                         <span className="text-emerald-700 font-semibold">{deck.masteredCount} mastered</span>
@@ -1136,7 +1136,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 mt-5 pt-3 border-t border-[#c5c6ce]/20">
+                    <div className="flex items-center gap-2 mt-5 pt-3 border-t border-[var(--aven-border)]/20">
                       {deck.totalCards > 0 ? (
                         <button
                           onClick={() =>
@@ -1148,7 +1148,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                               deck.materialId
                             )
                           }
-                          className="flex-1 py-2 rounded-xl bg-[#0051d5] text-white font-bold text-[12px] hover:bg-[#316bf3] shadow-xs transition-colors"
+                          className="flex-1 py-2 rounded-xl bg-[var(--aven-action)] text-white font-bold text-[12px] hover:bg-[var(--aven-action-hover)] shadow-xs transition-colors"
                         >
                           Study Deck ({deck.totalCards}) →
                         </button>
@@ -1156,7 +1156,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                         <button
                           onClick={() => handleGenerateFromMaterial(deck.materialId, deck.title)}
                           disabled={generatingMaterialId === deck.materialId}
-                          className="flex-1 py-2 rounded-xl bg-[#eff4ff] text-[#0051d5] font-bold text-[12px] hover:bg-[#dbe1ff] transition-colors border border-[#dbe1ff] flex items-center justify-center gap-1.5"
+                          className="flex-1 py-2 rounded-xl bg-[var(--aven-soft)] text-[var(--aven-action)] font-bold text-[12px] hover:bg-[var(--aven-blue-soft)] transition-colors border border-[var(--aven-blue-soft)] flex items-center justify-center gap-1.5"
                         >
                           {generatingMaterialId === deck.materialId ? (
                             <span>Synthesizing Cards...</span>
@@ -1173,19 +1173,19 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                 ))}
               </div>
             ) : (
-              <div className="p-12 text-center bg-[#f8f9ff] rounded-3xl border border-[#c5c6ce]/30 space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-white border border-[#c5c6ce]/40 flex items-center justify-center mx-auto text-[#0051d5] shadow-xs">
+              <div className="p-12 text-center bg-[var(--aven-canvas)] rounded-3xl border border-[var(--aven-border)]/30 space-y-3">
+                <div className="w-12 h-12 rounded-2xl bg-white border border-[var(--aven-border)]/40 flex items-center justify-center mx-auto text-[var(--aven-action)] shadow-xs">
                   <span className="material-symbols-outlined text-[24px]">note_add</span>
                 </div>
-                <h4 className="font-bold text-[16px] text-[#0b1c30]">
+                <h4 className="font-bold text-[16px] text-[var(--aven-ink)]">
                   No Study Documents Uploaded Yet
                 </h4>
-                <p className="text-[13px] text-[#44474d] max-w-md mx-auto">
+                <p className="text-[13px] text-[var(--aven-muted)] max-w-md mx-auto">
                   Upload PDF lecture notes or summaries in Study Materials to generate custom active recall flashcards.
                 </p>
                 <button
                   onClick={() => onNavigate('study-kits')}
-                  className="px-4 py-2 rounded-xl bg-[#0051d5] text-white font-bold text-[13px] hover:bg-[#316bf3] transition-colors shadow-xs"
+                  className="px-4 py-2 rounded-xl bg-[var(--aven-action)] text-white font-bold text-[13px] hover:bg-[var(--aven-action-hover)] transition-colors shadow-xs"
                 >
                   Upload Study Notes →
                 </button>
@@ -1205,9 +1205,9 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                   placeholder="Search questions, concepts, answers..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 rounded-xl bg-white border border-[#c5c6ce]/50 text-[13px] text-[#0b1c30] outline-none shadow-xs"
+                  className="w-full pl-9 pr-4 py-2 rounded-xl bg-white border border-[var(--aven-border)]/50 text-[13px] text-[var(--aven-ink)] outline-none shadow-xs"
                 />
-                <span className="material-symbols-outlined absolute left-2.5 top-2.5 text-[18px] text-[#75777e]">
+                <span className="material-symbols-outlined absolute left-2.5 top-2.5 text-[18px] text-[var(--aven-muted)]">
                   search
                 </span>
               </div>
@@ -1215,7 +1215,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
               <select
                 value={filterDifficulty}
                 onChange={(e) => setFilterDifficulty(e.target.value)}
-                className="px-3 py-2 rounded-xl bg-white border border-[#c5c6ce]/50 text-[13px] font-semibold text-[#0b1c30] outline-none shadow-xs"
+                className="px-3 py-2 rounded-xl bg-white border border-[var(--aven-border)]/50 text-[13px] font-semibold text-[var(--aven-ink)] outline-none shadow-xs"
               >
                 <option value="all">All Difficulties</option>
                 <option value="easy">Easy</option>
@@ -1226,7 +1226,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
               <select
                 value={filterMastery}
                 onChange={(e) => setFilterMastery(e.target.value)}
-                className="px-3 py-2 rounded-xl bg-white border border-[#c5c6ce]/50 text-[13px] font-semibold text-[#0b1c30] outline-none shadow-xs"
+                className="px-3 py-2 rounded-xl bg-white border border-[var(--aven-border)]/50 text-[13px] font-semibold text-[var(--aven-ink)] outline-none shadow-xs"
               >
                 <option value="all">All Retention States</option>
                 <option value="learning">Learning</option>
@@ -1237,7 +1237,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
 
             {/* Cards Grid */}
             {libraryLoading ? (
-              <div className="py-16 text-center text-[#75777e] text-[13px]">
+              <div className="py-16 text-center text-[var(--aven-muted)] text-[13px]">
                 Loading flashcard library...
               </div>
             ) : libraryCards.length > 0 ? (
@@ -1245,15 +1245,15 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                 {libraryCards.map((card) => (
                   <div
                     key={card.id}
-                    className="p-5 rounded-3xl bg-white border border-[#c5c6ce]/40 shadow-xs flex flex-col justify-between hover:border-[#0051d5]/40 transition-colors"
+                    className="p-5 rounded-3xl bg-white border border-[var(--aven-border)]/40 shadow-xs flex flex-col justify-between hover:border-[var(--aven-action)]/40 transition-colors"
                   >
                     <div>
                       <div className="flex items-center justify-between flex-wrap gap-2">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-[10px] font-bold uppercase tracking-wider bg-[#eff4ff] text-[#0051d5] px-2 py-0.5 rounded-full">
+                          <span className="text-[10px] font-bold uppercase tracking-wider bg-[var(--aven-soft)] text-[var(--aven-action)] px-2 py-0.5 rounded-full">
                             {card.subject}
                           </span>
-                          <span className="text-[10px] font-semibold text-[#75777e]">
+                          <span className="text-[10px] font-semibold text-[var(--aven-muted)]">
                             {card.topic}
                           </span>
                         </div>
@@ -1269,22 +1269,22 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                         </span>
                       </div>
 
-                      <h4 className="text-[15px] font-bold text-[#0b1c30] mt-3 leading-snug">
+                      <h4 className="text-[15px] font-bold text-[var(--aven-ink)] mt-3 leading-snug">
                         {card.question}
                       </h4>
 
-                      <p className="text-[13px] text-[#44474d] mt-2 line-clamp-2">
+                      <p className="text-[13px] text-[var(--aven-muted)] mt-2 line-clamp-2">
                         {card.answer}
                       </p>
 
                       {card.formula && (
-                        <div className="mt-2 text-[12px] font-mono text-[#0051d5] bg-[#f8f9ff] px-2.5 py-1 rounded-lg inline-block border border-[#c5c6ce]/20">
+                        <div className="mt-2 text-[12px] font-mono text-[var(--aven-action)] bg-[var(--aven-canvas)] px-2.5 py-1 rounded-lg inline-block border border-[var(--aven-border)]/20">
                           {card.formula}
                         </div>
                       )}
                     </div>
 
-                    <div className="flex items-center justify-between mt-4 pt-3 border-t border-[#c5c6ce]/20 text-[11px] text-[#75777e]">
+                    <div className="flex items-center justify-between mt-4 pt-3 border-t border-[var(--aven-border)]/20 text-[11px] text-[var(--aven-muted)]">
                       <span>Next review: {new Date(card.next_review_due).toLocaleDateString()}</span>
                       <button
                         onClick={() => {
@@ -1296,7 +1296,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                           setSessionTitle(`Card: ${card.topic}`);
                           setIsReviewing(true);
                         }}
-                        className="text-[#0051d5] font-bold hover:underline"
+                        className="text-[var(--aven-action)] font-bold hover:underline"
                       >
                         Drill This Card →
                       </button>
@@ -1305,7 +1305,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                 ))}
               </div>
             ) : (
-              <div className="p-12 text-center text-[#75777e] bg-[#f8f9ff] rounded-3xl">
+              <div className="p-12 text-center text-[var(--aven-muted)] bg-[var(--aven-canvas)] rounded-3xl">
                 No flashcards matched your query.
               </div>
             )}
@@ -1315,15 +1315,15 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
 
       {/* Create Custom Flashcard Modal */}
       {isCreateOpen && (
-        <div className="fixed inset-0 z-50 bg-[#0b1c30]/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-[#c5c6ce]/40 space-y-4">
-            <div className="flex items-center justify-between pb-2 border-b border-[#c5c6ce]/20">
-              <h3 className="text-[18px] font-bold text-[#0b1c30]">
+        <div className="fixed inset-0 z-50 bg-[var(--aven-ink)]/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-[var(--aven-border)]/40 space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-[var(--aven-border)]/20">
+              <h3 className="text-[18px] font-bold text-[var(--aven-ink)]">
                 Create Custom Flashcard
               </h3>
               <button
                 onClick={() => setIsCreateOpen(false)}
-                className="p-1.5 rounded-xl hover:bg-slate-100 text-[#75777e]"
+                className="p-1.5 rounded-xl hover:bg-slate-100 text-[var(--aven-muted)]"
               >
                 ✕
               </button>
@@ -1332,7 +1332,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
             <form onSubmit={handleCreateCustomCard} className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[12px] font-bold text-[#44474d] block mb-1">
+                  <label className="text-[12px] font-bold text-[var(--aven-muted)] block mb-1">
                     Subject *
                   </label>
                   <input
@@ -1341,11 +1341,11 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                     placeholder="e.g. Physics"
                     value={createForm.subject}
                     onChange={(e) => setCreateForm({ ...createForm, subject: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl border border-[#c5c6ce]/60 text-[13px] outline-none"
+                    className="w-full px-3 py-2 rounded-xl border border-[var(--aven-border)]/60 text-[13px] outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-[12px] font-bold text-[#44474d] block mb-1">
+                  <label className="text-[12px] font-bold text-[var(--aven-muted)] block mb-1">
                     Topic *
                   </label>
                   <input
@@ -1354,13 +1354,13 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                     placeholder="e.g. Thermodynamics"
                     value={createForm.topic}
                     onChange={(e) => setCreateForm({ ...createForm, topic: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl border border-[#c5c6ce]/60 text-[13px] outline-none"
+                    className="w-full px-3 py-2 rounded-xl border border-[var(--aven-border)]/60 text-[13px] outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-[12px] font-bold text-[#44474d] block mb-1">
+                <label className="text-[12px] font-bold text-[var(--aven-muted)] block mb-1">
                   Question *
                 </label>
                 <textarea
@@ -1369,12 +1369,12 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                   placeholder="What is the first law of thermodynamics?"
                   value={createForm.question}
                   onChange={(e) => setCreateForm({ ...createForm, question: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl border border-[#c5c6ce]/60 text-[13px] outline-none"
+                  className="w-full px-3 py-2 rounded-xl border border-[var(--aven-border)]/60 text-[13px] outline-none"
                 />
               </div>
 
               <div>
-                <label className="text-[12px] font-bold text-[#44474d] block mb-1">
+                <label className="text-[12px] font-bold text-[var(--aven-muted)] block mb-1">
                   Verified Answer *
                 </label>
                 <textarea
@@ -1383,13 +1383,13 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                   placeholder="Energy cannot be created or destroyed, only transformed."
                   value={createForm.answer}
                   onChange={(e) => setCreateForm({ ...createForm, answer: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl border border-[#c5c6ce]/60 text-[13px] outline-none"
+                  className="w-full px-3 py-2 rounded-xl border border-[var(--aven-border)]/60 text-[13px] outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[12px] font-bold text-[#44474d] block mb-1">
+                  <label className="text-[12px] font-bold text-[var(--aven-muted)] block mb-1">
                     Formula Identity (Optional)
                   </label>
                   <input
@@ -1397,18 +1397,18 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                     placeholder="ΔU = Q - W"
                     value={createForm.formula}
                     onChange={(e) => setCreateForm({ ...createForm, formula: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl border border-[#c5c6ce]/60 text-[13px] outline-none font-mono"
+                    className="w-full px-3 py-2 rounded-xl border border-[var(--aven-border)]/60 text-[13px] outline-none font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[12px] font-bold text-[#44474d] block mb-1">
+                  <label className="text-[12px] font-bold text-[var(--aven-muted)] block mb-1">
                     Difficulty
                   </label>
                   <select
                     value={createForm.difficulty}
                     onChange={(e) => setCreateForm({ ...createForm, difficulty: e.target.value as any })}
-                    className="w-full px-3 py-2 rounded-xl border border-[#c5c6ce]/60 text-[13px] outline-none"
+                    className="w-full px-3 py-2 rounded-xl border border-[var(--aven-border)]/60 text-[13px] outline-none"
                   >
                     <option value="easy">Easy</option>
                     <option value="medium">Medium</option>
@@ -1417,17 +1417,17 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#c5c6ce]/20">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-[var(--aven-border)]/20">
                 <button
                   type="button"
                   onClick={() => setIsCreateOpen(false)}
-                  className="px-4 py-2 rounded-xl text-[13px] font-bold text-[#75777e] hover:bg-slate-100"
+                  className="px-4 py-2 rounded-xl text-[13px] font-bold text-[var(--aven-muted)] hover:bg-slate-100"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#0051d5] text-white font-bold text-[13px] hover:bg-[#316bf3] shadow-xs"
+                  className="px-5 py-2 rounded-xl bg-[var(--aven-action)] text-white font-bold text-[13px] hover:bg-[var(--aven-action-hover)] shadow-xs"
                 >
                   Save Flashcard
                 </button>

@@ -256,9 +256,9 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
 
   if (loading) {
     return (
-      <div className="bg-white rounded-3xl p-16 border border-[#c5c6ce]/30 flex flex-col items-center justify-center gap-3">
-        <div className="w-9 h-9 border-3 border-[#0051d5] border-t-transparent rounded-full animate-spin"></div>
-        <p className="text-[14px] text-[#75777e] font-medium">Preparing authoritative quiz paper...</p>
+      <div className="bg-white rounded-3xl p-16 border border-[var(--aven-border)]/30 flex flex-col items-center justify-center gap-3">
+        <div className="w-9 h-9 border-3 border-[var(--aven-action)] border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-[14px] text-[var(--aven-muted)] font-medium">Preparing authoritative quiz paper...</p>
       </div>
     );
   }
@@ -267,11 +267,11 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
     return (
       <div className="max-w-xl mx-auto p-8 bg-white rounded-3xl border border-rose-200 text-center flex flex-col items-center gap-4">
         <span className="material-symbols-outlined text-rose-600 text-[48px]">warning</span>
-        <h3 className="text-[18px] font-bold text-[#0b1c30]">Assessment Encountered an Error</h3>
-        <p className="text-[13px] text-[#75777e]">{error}</p>
+        <h3 className="text-[18px] font-bold text-[var(--aven-ink)]">Assessment Encountered an Error</h3>
+        <p className="text-[13px] text-[var(--aven-muted)]">{error}</p>
         <button
           onClick={onExit}
-          className="px-6 py-2 rounded-xl bg-[#0051d5] text-white text-[13px] font-bold"
+          className="px-6 py-2 rounded-xl bg-[var(--aven-action)] text-white text-[13px] font-bold"
         >
           Return to Quizzes
         </button>
@@ -293,20 +293,20 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
             <span className="material-symbols-outlined text-rose-600 text-[48px] animate-bounce">
               gavel
             </span>
-            <h3 className="text-[20px] font-bold text-[#0b1c30]">
+            <h3 className="text-[20px] font-bold text-[var(--aven-ink)]">
               Exam Mode Violation Detected
             </h3>
-            <p className="text-[13px] text-[#44474d] leading-relaxed">
+            <p className="text-[13px] text-[var(--aven-muted)] leading-relaxed">
               Window focus loss or tab switch was detected via the Page Visibility API. As per strict exam rules, your paper has been automatically submitted to PostgreSQL for evaluation.
             </p>
             <div className="w-5 h-5 border-2 border-rose-600 border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-[11px] text-[#75777e]">Submitting responses...</p>
+            <p className="text-[11px] text-[var(--aven-muted)]">Submitting responses...</p>
           </div>
         </div>
       )}
 
       {/* Top Header Bar */}
-      <div className="bg-white rounded-3xl p-4 sm:p-6 border border-[#c5c6ce]/30 shadow-xs mb-6 flex flex-wrap items-center justify-between gap-4 sticky top-4 z-20 backdrop-blur-md">
+      <div className="bg-white rounded-3xl p-4 sm:p-6 border border-[var(--aven-border)]/30 shadow-xs mb-6 flex flex-wrap items-center justify-between gap-4 sticky top-4 z-20 backdrop-blur-md">
         <div className="flex items-center gap-3">
           {session.mode === 'EXAM' ? (
             <div className="flex items-center gap-1.5 px-3 py-1 bg-rose-50 border border-rose-200 rounded-full text-rose-700 text-[11px] font-bold uppercase tracking-wider">
@@ -314,17 +314,17 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
               Exam Mode
             </div>
           ) : (
-            <div className="flex items-center gap-1.5 px-3 py-1 bg-[#eff4ff] border border-[#0051d5]/20 rounded-full text-[#0051d5] text-[11px] font-bold uppercase tracking-wider">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#0051d5]"></span>
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-[var(--aven-soft)] border border-[var(--aven-action)]/20 rounded-full text-[var(--aven-action)] text-[11px] font-bold uppercase tracking-wider">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--aven-action)]"></span>
               Practice Mode
             </div>
           )}
 
           <div>
-            <h2 className="text-[15px] font-bold text-[#0b1c30] truncate max-w-[200px] sm:max-w-[320px]">
+            <h2 className="text-[15px] font-bold text-[var(--aven-ink)] truncate max-w-[200px] sm:max-w-[320px]">
               {quizMeta?.title || 'Quiz Paper'}
             </h2>
-            <div className="flex items-center gap-2 text-[11px] text-[#75777e]">
+            <div className="flex items-center gap-2 text-[11px] text-[var(--aven-muted)]">
               <span>
                 Question {currentIndex + 1} of {questions.length}
               </span>
@@ -356,7 +356,7 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
                 ? 'bg-rose-500 text-white border-rose-600 animate-pulse'
                 : isLowTime
                 ? 'bg-amber-50 text-amber-700 border-amber-300'
-                : 'bg-[#f8f9ff] text-[#0b1c30] border-[#c5c6ce]/30'
+                : 'bg-[var(--aven-canvas)] text-[var(--aven-ink)] border-[var(--aven-border)]/30'
             }`}
           >
             <span className="material-symbols-outlined text-[16px]">
@@ -368,7 +368,7 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
           <button
             onClick={() => setShowConfirmModal(true)}
             disabled={isSubmitting}
-            className="px-4 py-2 rounded-xl bg-[#0051d5] hover:bg-[#003ea8] text-white text-[12px] font-bold shadow-xs transition-all flex items-center gap-1.5 disabled:opacity-50"
+            className="px-4 py-2 rounded-xl bg-[var(--aven-action)] hover:bg-[var(--aven-action)] text-white text-[12px] font-bold shadow-xs transition-all flex items-center gap-1.5 disabled:opacity-50"
           >
             {isSubmitting ? (
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -385,14 +385,14 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
         {/* Question Area (3 cols) */}
         <div className="lg:col-span-3 flex flex-col gap-6">
           {currentQuestion && (
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#c5c6ce]/30 shadow-xs flex flex-col gap-6">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[var(--aven-border)]/30 shadow-xs flex flex-col gap-6">
               {/* Question Meta Header */}
-              <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#c5c6ce]/20">
+              <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[var(--aven-border)]/20">
                 <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#0051d5] bg-[#eff4ff] px-2.5 py-0.5 rounded-full">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--aven-action)] bg-[var(--aven-soft)] px-2.5 py-0.5 rounded-full">
                     {currentQuestion.section}
                   </span>
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#75777e] bg-slate-100 px-2 py-0.5 rounded-full">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--aven-muted)] bg-slate-100 px-2 py-0.5 rounded-full">
                     {currentQuestion.question_type.replace('_', ' ')}
                   </span>
                 </div>
@@ -411,8 +411,8 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
 
               {/* Question Text */}
               <div>
-                <p className="text-[16px] sm:text-[18px] font-medium text-[#0b1c30] leading-relaxed">
-                  <span className="font-bold text-[#0051d5] mr-2">
+                <p className="text-[16px] sm:text-[18px] font-medium text-[var(--aven-ink)] leading-relaxed">
+                  <span className="font-bold text-[var(--aven-action)] mr-2">
                     Q{currentIndex + 1}.
                   </span>
                   {currentQuestion.question_text}
@@ -435,20 +435,20 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
                           onClick={() => handleSingleOptionSelect(opt.id)}
                           className={`w-full p-4 rounded-2xl border text-left transition-all flex items-start gap-3.5 ${
                             isSelected
-                              ? 'bg-[#eff4ff] border-[#0051d5] ring-1 ring-[#0051d5]'
-                              : 'bg-[#f8f9ff]/70 border-[#c5c6ce]/30 hover:bg-[#f8f9ff] hover:border-[#c5c6ce]'
+                              ? 'bg-[var(--aven-soft)] border-[var(--aven-action)] ring-1 ring-[var(--aven-action)]'
+                              : 'bg-[var(--aven-canvas)]/70 border-[var(--aven-border)]/30 hover:bg-[var(--aven-canvas)] hover:border-[var(--aven-border)]'
                           }`}
                         >
                           <span
                             className={`w-7 h-7 rounded-xl flex items-center justify-center text-[12px] font-bold shrink-0 transition-colors ${
                               isSelected
-                                ? 'bg-[#0051d5] text-white'
-                                : 'bg-white text-[#44474d] border border-[#c5c6ce]/40'
+                                ? 'bg-[var(--aven-action)] text-white'
+                                : 'bg-white text-[var(--aven-muted)] border border-[var(--aven-border)]/40'
                             }`}
                           >
                             {letter}
                           </span>
-                          <span className="text-[14px] text-[#0b1c30] font-medium leading-relaxed mt-0.5">
+                          <span className="text-[14px] text-[var(--aven-ink)] font-medium leading-relaxed mt-0.5">
                             {opt.text}
                           </span>
                         </button>
@@ -460,7 +460,7 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
                 {/* MULTIPLE_SELECT (Checkboxes) */}
                 {currentQuestion.question_type === 'MULTIPLE_SELECT' && (
                   <div className="space-y-2.5">
-                    <div className="text-[12px] text-[#75777e] italic mb-1">
+                    <div className="text-[12px] text-[var(--aven-muted)] italic mb-1">
                       Select all correct options that apply:
                     </div>
                     {currentQuestion.options.map((opt, idx) => {
@@ -473,22 +473,22 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
                           onClick={() => handleMultiOptionToggle(opt.id)}
                           className={`w-full p-4 rounded-2xl border text-left transition-all flex items-start gap-3.5 ${
                             isSelected
-                              ? 'bg-[#eff4ff] border-[#0051d5] ring-1 ring-[#0051d5]'
-                              : 'bg-[#f8f9ff]/70 border-[#c5c6ce]/30 hover:bg-[#f8f9ff] hover:border-[#c5c6ce]'
+                              ? 'bg-[var(--aven-soft)] border-[var(--aven-action)] ring-1 ring-[var(--aven-action)]'
+                              : 'bg-[var(--aven-canvas)]/70 border-[var(--aven-border)]/30 hover:bg-[var(--aven-canvas)] hover:border-[var(--aven-border)]'
                           }`}
                         >
                           <span
                             className={`w-7 h-7 rounded-xl flex items-center justify-center text-[12px] font-bold shrink-0 transition-colors ${
                               isSelected
-                                ? 'bg-[#0051d5] text-white'
-                                : 'bg-white text-[#44474d] border border-[#c5c6ce]/40'
+                                ? 'bg-[var(--aven-action)] text-white'
+                                : 'bg-white text-[var(--aven-muted)] border border-[var(--aven-border)]/40'
                             }`}
                           >
                             <span className="material-symbols-outlined text-[16px]">
                               {isSelected ? 'check' : letter}
                             </span>
                           </span>
-                          <span className="text-[14px] text-[#0b1c30] font-medium leading-relaxed mt-0.5">
+                          <span className="text-[14px] text-[var(--aven-ink)] font-medium leading-relaxed mt-0.5">
                             {opt.text}
                           </span>
                         </button>
@@ -500,7 +500,7 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
                 {/* FILL_BLANK (Single text input) */}
                 {currentQuestion.question_type === 'FILL_BLANK' && (
                   <div className="space-y-2">
-                    <label className="block text-[12px] font-bold uppercase tracking-wider text-[#44474d]">
+                    <label className="block text-[12px] font-bold uppercase tracking-wider text-[var(--aven-muted)]">
                       Your Answer:
                     </label>
                     <input
@@ -509,9 +509,9 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
                       onChange={(e) => handleTextInputChange(e.target.value)}
                       onBlur={handleTextBlur}
                       placeholder="Type exact answer or numerical value..."
-                      className="w-full bg-[#f8f9ff] border border-[#c5c6ce]/40 rounded-xl px-4 py-3 text-[14px] font-medium text-[#0b1c30] outline-none focus:bg-white focus:border-[#0051d5]"
+                      className="w-full bg-[var(--aven-canvas)] border border-[var(--aven-border)]/40 rounded-xl px-4 py-3 text-[14px] font-medium text-[var(--aven-ink)] outline-none focus:bg-white focus:border-[var(--aven-action)]"
                     />
-                    <span className="text-[11px] text-[#75777e]">
+                    <span className="text-[11px] text-[var(--aven-muted)]">
                       Automated string matching will evaluate your submitted answer upon paper completion.
                     </span>
                   </div>
@@ -523,7 +523,7 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
                   currentQuestion.question_type === 'LONG') && (
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <label className="block text-[12px] font-bold uppercase tracking-wider text-[#44474d]">
+                      <label className="block text-[12px] font-bold uppercase tracking-wider text-[var(--aven-muted)]">
                         Subjective Response:
                       </label>
                       <span className="text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
@@ -536,14 +536,14 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
                       onChange={(e) => handleTextInputChange(e.target.value)}
                       onBlur={handleTextBlur}
                       placeholder="Write your explanation or step-by-step derivation..."
-                      className="w-full bg-[#f8f9ff] border border-[#c5c6ce]/40 rounded-xl p-4 text-[14px] font-medium text-[#0b1c30] outline-none focus:bg-white focus:border-[#0051d5] resize-y"
+                      className="w-full bg-[var(--aven-canvas)] border border-[var(--aven-border)]/40 rounded-xl p-4 text-[14px] font-medium text-[var(--aven-ink)] outline-none focus:bg-white focus:border-[var(--aven-action)] resize-y"
                     />
                   </div>
                 )}
               </div>
 
               {/* Bottom Actions of Question Card */}
-              <div className="flex items-center justify-between pt-4 border-t border-[#c5c6ce]/20">
+              <div className="flex items-center justify-between pt-4 border-t border-[var(--aven-border)]/20">
                 <button
                   type="button"
                   onClick={handleClearResponse}
@@ -552,7 +552,7 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
                     (currentAnswer.selected_option_ids.length === 0 &&
                       !currentAnswer.answer_text)
                   }
-                  className="text-[12px] font-semibold text-[#75777e] hover:text-rose-600 disabled:opacity-40 transition-colors"
+                  className="text-[12px] font-semibold text-[var(--aven-muted)] hover:text-rose-600 disabled:opacity-40 transition-colors"
                 >
                   Clear Response
                 </button>
@@ -562,7 +562,7 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
                     type="button"
                     onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
                     disabled={currentIndex === 0}
-                    className="px-4 py-2 rounded-xl border border-[#c5c6ce]/40 text-[12px] font-semibold text-[#44474d] hover:bg-[#f8f9ff] disabled:opacity-40 transition-all flex items-center gap-1"
+                    className="px-4 py-2 rounded-xl border border-[var(--aven-border)]/40 text-[12px] font-semibold text-[var(--aven-muted)] hover:bg-[var(--aven-canvas)] disabled:opacity-40 transition-all flex items-center gap-1"
                   >
                     <span className="material-symbols-outlined text-[16px]">chevron_left</span>
                     Previous
@@ -574,7 +574,7 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
                       onClick={() =>
                         setCurrentIndex((prev) => Math.min(questions.length - 1, prev + 1))
                       }
-                      className="px-5 py-2 rounded-xl bg-[#0051d5] hover:bg-[#003ea8] text-white text-[12px] font-bold shadow-xs transition-all flex items-center gap-1"
+                      className="px-5 py-2 rounded-xl bg-[var(--aven-action)] hover:bg-[var(--aven-action)] text-white text-[12px] font-bold shadow-xs transition-all flex items-center gap-1"
                     >
                       Next
                       <span className="material-symbols-outlined text-[16px]">chevron_right</span>
@@ -597,8 +597,8 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
 
         {/* Question Navigator Sidebar (1 col) */}
         <div className="flex flex-col gap-4">
-          <div className="bg-white rounded-3xl p-5 border border-[#c5c6ce]/30 shadow-xs">
-            <h4 className="text-[12px] font-bold text-[#0b1c30] uppercase tracking-wider mb-3">
+          <div className="bg-white rounded-3xl p-5 border border-[var(--aven-border)]/30 shadow-xs">
+            <h4 className="text-[12px] font-bold text-[var(--aven-ink)] uppercase tracking-wider mb-3">
               Question Palette
             </h4>
 
@@ -618,10 +618,10 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
                     onClick={() => setCurrentIndex(idx)}
                     className={`h-9 rounded-xl text-[12px] font-bold transition-all flex items-center justify-center ${
                       isCurrent
-                        ? 'bg-[#0051d5] text-white ring-2 ring-[#0051d5] ring-offset-2'
+                        ? 'bg-[var(--aven-action)] text-white ring-2 ring-[var(--aven-action)] ring-offset-2'
                         : isAnswered
                         ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                        : 'bg-[#f8f9ff] text-[#44474d] border border-[#c5c6ce]/30 hover:bg-slate-100'
+                        : 'bg-[var(--aven-canvas)] text-[var(--aven-muted)] border border-[var(--aven-border)]/30 hover:bg-slate-100'
                     }`}
                   >
                     {idx + 1}
@@ -631,17 +631,17 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
             </div>
 
             {/* Legend */}
-            <div className="pt-3 border-t border-[#c5c6ce]/20 space-y-1.5 text-[11px] text-[#75777e]">
+            <div className="pt-3 border-t border-[var(--aven-border)]/20 space-y-1.5 text-[11px] text-[var(--aven-muted)]">
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 rounded-md bg-emerald-100 border border-emerald-300"></span>
                 <span>Answered ({answeredCount})</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-md bg-[#f8f9ff] border border-[#c5c6ce]/30"></span>
+                <span className="w-3 h-3 rounded-md bg-[var(--aven-canvas)] border border-[var(--aven-border)]/30"></span>
                 <span>Unanswered ({questions.length - answeredCount})</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-md bg-[#0051d5]"></span>
+                <span className="w-3 h-3 rounded-md bg-[var(--aven-action)]"></span>
                 <span>Current Question</span>
               </div>
             </div>
@@ -652,11 +652,11 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
       {/* Confirmation Modal */}
       {showConfirmModal && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full border border-[#c5c6ce]/40 shadow-2xl flex flex-col gap-4">
-            <h3 className="text-[18px] font-bold text-[#0b1c30]">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full border border-[var(--aven-border)]/40 shadow-2xl flex flex-col gap-4">
+            <h3 className="text-[18px] font-bold text-[var(--aven-ink)]">
               Ready to Submit Assessment?
             </h3>
-            <p className="text-[13px] text-[#44474d] leading-relaxed">
+            <p className="text-[13px] text-[var(--aven-muted)] leading-relaxed">
               You have answered <strong>{answeredCount}</strong> out of{' '}
               <strong>{questions.length}</strong> questions.
               {answeredCount < questions.length && (
@@ -666,12 +666,12 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
               )}
             </p>
 
-            <div className="flex items-center justify-end gap-3 mt-3 pt-3 border-t border-[#c5c6ce]/20">
+            <div className="flex items-center justify-end gap-3 mt-3 pt-3 border-t border-[var(--aven-border)]/20">
               <button
                 type="button"
                 onClick={() => setShowConfirmModal(false)}
                 disabled={isSubmitting}
-                className="px-4 py-2 rounded-xl border border-[#c5c6ce]/40 text-[13px] font-semibold text-[#44474d] hover:bg-[#f8f9ff]"
+                className="px-4 py-2 rounded-xl border border-[var(--aven-border)]/40 text-[13px] font-semibold text-[var(--aven-muted)] hover:bg-[var(--aven-canvas)]"
               >
                 Keep Reviewing
               </button>
@@ -682,7 +682,7 @@ export const ActiveQuizView: React.FC<ActiveQuizViewProps> = ({
                   handleAutoSubmit('manual_submit');
                 }}
                 disabled={isSubmitting}
-                className="px-5 py-2 rounded-xl bg-[#0051d5] text-white text-[13px] font-bold hover:bg-[#003ea8] flex items-center gap-2"
+                className="px-5 py-2 rounded-xl bg-[var(--aven-action)] text-white text-[13px] font-bold hover:bg-[var(--aven-action)] flex items-center gap-2"
               >
                 {isSubmitting ? (
                   <>

@@ -160,18 +160,18 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
       <div
-        className="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl border border-[#c5c6ce]/40 overflow-hidden"
+        className="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl border border-[var(--aven-border)]/40 overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-[#c5c6ce]/30 flex items-center justify-between bg-slate-50/70">
+        <div className="px-6 py-4 border-b border-[var(--aven-border)]/30 flex items-center justify-between bg-slate-50/70">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-2xl bg-[#eff4ff] text-[#0051d5] flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-[var(--aven-soft)] text-[var(--aven-action)] flex items-center justify-center shrink-0">
               <span className="material-symbols-outlined text-[22px]">schema</span>
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <h2 className="text-[16px] font-bold text-[#0b1c30] truncate">{material.title}</h2>
+                <h2 className="text-[16px] font-bold text-[var(--aven-ink)] truncate">{material.title}</h2>
                 <span
                   className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
                     material.processingStatus === 'ready'
@@ -184,7 +184,7 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
                   {material.processingStatus === 'ready' ? 'TEXT EXTRACTED' : material.processingStatus.toUpperCase()}
                 </span>
               </div>
-              <p className="text-[12px] text-[#75777e] truncate">{material.originalFilename}</p>
+              <p className="text-[12px] text-[var(--aven-muted)] truncate">{material.originalFilename}</p>
             </div>
           </div>
 
@@ -192,7 +192,7 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
             <button
               onClick={handleReprocess}
               disabled={reprocessing}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[12px] font-bold bg-[#eff4ff] text-[#0051d5] hover:bg-[#dbe6fd] transition-colors cursor-pointer disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[12px] font-bold bg-[var(--aven-soft)] text-[var(--aven-action)] hover:bg-[#dbe6fd] transition-colors cursor-pointer disabled:opacity-50"
               title="Rerun deterministic document processing"
             >
               <span className={`material-symbols-outlined text-[16px] ${reprocessing ? 'animate-spin' : ''}`}>
@@ -202,7 +202,7 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
             </button>
             <button
               onClick={onClose}
-              className="p-2 rounded-xl text-[#75777e] hover:bg-[#eff4ff] hover:text-[#0b1c30] transition-colors cursor-pointer"
+              className="p-2 rounded-xl text-[var(--aven-muted)] hover:bg-[var(--aven-soft)] hover:text-[var(--aven-ink)] transition-colors cursor-pointer"
             >
               <span className="material-symbols-outlined text-[20px]">close</span>
             </button>
@@ -210,22 +210,22 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
         </div>
 
         {/* Structural Metrics Banner */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 px-6 py-3.5 bg-slate-50 border-b border-[#c5c6ce]/20 text-[12px]">
-          <div className="bg-white p-2.5 rounded-xl border border-[#c5c6ce]/30">
-            <span className="text-[#75777e] block text-[11px]">Pages Extracted</span>
-            <span className="text-[16px] font-bold text-[#0b1c30]">{details?.pageCount ?? '—'}</span>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 px-6 py-3.5 bg-slate-50 border-b border-[var(--aven-border)]/20 text-[12px]">
+          <div className="bg-white p-2.5 rounded-xl border border-[var(--aven-border)]/30">
+            <span className="text-[var(--aven-muted)] block text-[11px]">Pages Extracted</span>
+            <span className="text-[16px] font-bold text-[var(--aven-ink)]">{details?.pageCount ?? '—'}</span>
           </div>
-          <div className="bg-white p-2.5 rounded-xl border border-[#c5c6ce]/30">
-            <span className="text-[#75777e] block text-[11px]">Sections Detected</span>
-            <span className="text-[16px] font-bold text-[#0051d5]">{details?.sectionCount ?? '—'}</span>
+          <div className="bg-white p-2.5 rounded-xl border border-[var(--aven-border)]/30">
+            <span className="text-[var(--aven-muted)] block text-[11px]">Sections Detected</span>
+            <span className="text-[16px] font-bold text-[var(--aven-action)]">{details?.sectionCount ?? '—'}</span>
           </div>
-          <div className="bg-white p-2.5 rounded-xl border border-[#c5c6ce]/30">
-            <span className="text-[#75777e] block text-[11px]">Knowledge Chunks</span>
+          <div className="bg-white p-2.5 rounded-xl border border-[var(--aven-border)]/30">
+            <span className="text-[var(--aven-muted)] block text-[11px]">Knowledge Chunks</span>
             <span className="text-[16px] font-bold text-emerald-700">{details?.chunkCount ?? '—'}</span>
           </div>
-          <div className="bg-white p-2.5 rounded-xl border border-[#c5c6ce]/30">
-            <span className="text-[#75777e] block text-[11px]">Characters Extracted</span>
-            <span className="text-[16px] font-bold text-[#44474d]">
+          <div className="bg-white p-2.5 rounded-xl border border-[var(--aven-border)]/30">
+            <span className="text-[var(--aven-muted)] block text-[11px]">Characters Extracted</span>
+            <span className="text-[16px] font-bold text-[var(--aven-muted)]">
               {details?.totalCharacters ? details.totalCharacters.toLocaleString() : '—'}
             </span>
           </div>
@@ -240,13 +240,13 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
         )}
 
         {/* Navigation Tabs */}
-        <div className="flex items-center gap-2 px-6 pt-3 border-b border-[#c5c6ce]/20">
+        <div className="flex items-center gap-2 px-6 pt-3 border-b border-[var(--aven-border)]/20">
           <button
             onClick={() => setActiveTab('sections')}
             className={`pb-2.5 px-3 text-[13px] font-bold transition-all border-b-2 cursor-pointer ${
               activeTab === 'sections'
-                ? 'border-[#0051d5] text-[#0051d5]'
-                : 'border-transparent text-[#75777e] hover:text-[#0b1c30]'
+                ? 'border-[var(--aven-action)] text-[var(--aven-action)]'
+                : 'border-transparent text-[var(--aven-muted)] hover:text-[var(--aven-ink)]'
             }`}
           >
             Detected Outline & Sections ({sections.length})
@@ -255,8 +255,8 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
             onClick={() => setActiveTab('chunks')}
             className={`pb-2.5 px-3 text-[13px] font-bold transition-all border-b-2 cursor-pointer ${
               activeTab === 'chunks'
-                ? 'border-[#0051d5] text-[#0051d5]'
-                : 'border-transparent text-[#75777e] hover:text-[#0b1c30]'
+                ? 'border-[var(--aven-action)] text-[var(--aven-action)]'
+                : 'border-transparent text-[var(--aven-muted)] hover:text-[var(--aven-ink)]'
             }`}
           >
             Structured Chunks (RAG-Ready) ({chunks.length})
@@ -265,8 +265,8 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
             onClick={() => setActiveTab('embeddings')}
             className={`pb-2.5 px-3 text-[13px] font-bold transition-all border-b-2 cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'embeddings'
-                ? 'border-[#0051d5] text-[#0051d5]'
-                : 'border-transparent text-[#75777e] hover:text-[#0b1c30]'
+                ? 'border-[var(--aven-action)] text-[var(--aven-action)]'
+                : 'border-transparent text-[var(--aven-muted)] hover:text-[var(--aven-ink)]'
             }`}
           >
             <span className="material-symbols-outlined text-[16px]">hub</span>
@@ -278,17 +278,17 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
         <div className="flex-1 overflow-y-auto p-6 space-y-3">
           {loading ? (
             <div className="py-16 flex flex-col items-center justify-center text-center">
-              <div className="w-8 h-8 border-3 border-[#0051d5] border-t-transparent rounded-full animate-spin mb-3"></div>
-              <p className="text-[13px] text-[#44474d] font-medium">Loading document intelligence structure...</p>
+              <div className="w-8 h-8 border-3 border-[var(--aven-action)] border-t-transparent rounded-full animate-spin mb-3"></div>
+              <p className="text-[13px] text-[var(--aven-muted)] font-medium">Loading document intelligence structure...</p>
             </div>
           ) : activeTab === 'embeddings' ? (
             <div className="space-y-4">
               {/* Embedding System Overview Card */}
-              <div className="p-4 rounded-2xl bg-white border border-[#c5c6ce]/30 space-y-3">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#c5c6ce]/20 pb-3">
+              <div className="p-4 rounded-2xl bg-white border border-[var(--aven-border)]/30 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--aven-border)]/20 pb-3">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-[14px] text-[#0b1c30]">Vector Embedding Index</span>
+                      <span className="font-bold text-[14px] text-[var(--aven-ink)]">Vector Embedding Index</span>
                       <span
                         className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
                           embeddingSummary?.embeddingStatus === 'completed'
@@ -303,7 +303,7 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
                         {embeddingSummary?.embeddingStatus ? embeddingSummary.embeddingStatus.toUpperCase() : 'PENDING'}
                       </span>
                     </div>
-                    <p className="text-[12px] text-[#75777e] mt-0.5 flex items-center gap-1.5 flex-wrap">
+                    <p className="text-[12px] text-[var(--aven-muted)] mt-0.5 flex items-center gap-1.5 flex-wrap">
                       <span
                         className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold ${
                           embeddingSummary?.isFallback || embeddingSummary?.model === 'TEST FALLBACK'
@@ -320,7 +320,7 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
                   <button
                     onClick={handleReEmbed}
                     disabled={reEmbedding || embeddingSummary?.embeddingStatus === 'processing'}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[12px] font-bold bg-[#eff4ff] text-[#0051d5] hover:bg-[#dbe6fd] transition-colors cursor-pointer disabled:opacity-50 shrink-0"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[12px] font-bold bg-[var(--aven-soft)] text-[var(--aven-action)] hover:bg-[#dbe6fd] transition-colors cursor-pointer disabled:opacity-50 shrink-0"
                   >
                     <span className={`material-symbols-outlined text-[16px] ${reEmbedding ? 'animate-spin' : ''}`}>
                       sync
@@ -340,23 +340,23 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[12px]">
                   <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200/60">
-                    <span className="text-[#75777e] block text-[11px]">Indexed Vectors</span>
+                    <span className="text-[var(--aven-muted)] block text-[11px]">Indexed Vectors</span>
                     <span className="text-[15px] font-bold text-emerald-700">
                       {embeddingSummary?.completedChunks ?? 0} / {embeddingSummary?.totalChunks ?? chunks.length}
                     </span>
                   </div>
                   <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200/60">
-                    <span className="text-[#75777e] block text-[11px]">Embedding Dimension</span>
-                    <span className="text-[15px] font-bold text-[#0b1c30]">
+                    <span className="text-[var(--aven-muted)] block text-[11px]">Embedding Dimension</span>
+                    <span className="text-[15px] font-bold text-[var(--aven-ink)]">
                       {embeddingSummary?.dimension ?? 384}d
                     </span>
                   </div>
                   <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200/60">
-                    <span className="text-[#75777e] block text-[11px]">Lifecycle Boundary</span>
-                    <span className="text-[15px] font-bold text-[#0051d5]">material_id scoped</span>
+                    <span className="text-[var(--aven-muted)] block text-[11px]">Lifecycle Boundary</span>
+                    <span className="text-[15px] font-bold text-[var(--aven-action)]">material_id scoped</span>
                   </div>
                   <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200/60">
-                    <span className="text-[#75777e] block text-[11px]">Isolation Level</span>
+                    <span className="text-[var(--aven-muted)] block text-[11px]">Isolation Level</span>
                     <span className="text-[15px] font-bold text-purple-700">Student Tenant</span>
                   </div>
                 </div>
@@ -369,10 +369,10 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
               </div>
 
               {/* Live Semantic Search Simulator */}
-              <div className="p-4 rounded-2xl bg-white border border-[#c5c6ce]/30 space-y-3">
+              <div className="p-4 rounded-2xl bg-white border border-[var(--aven-border)]/30 space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-[13.5px] font-bold text-[#0b1c30]">Live Semantic Retrieval Test</h4>
-                  <span className="text-[11px] text-[#75777e]">Searches your document using semantic similarity</span>
+                  <h4 className="text-[13.5px] font-bold text-[var(--aven-ink)]">Live Semantic Retrieval Test</h4>
+                  <span className="text-[11px] text-[var(--aven-muted)]">Searches your document using semantic similarity</span>
                 </div>
 
                 <form onSubmit={handleSearch} className="space-y-3">
@@ -382,13 +382,13 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Ask a question or enter keywords (e.g., 'What are the main cell organelles?')..."
-                      className="flex-1 px-3.5 py-2 rounded-xl border border-[#c5c6ce] text-[13px] focus:outline-hidden focus:border-[#0051d5] focus:ring-1 focus:ring-[#0051d5]"
+                      className="flex-1 px-3.5 py-2 rounded-xl border border-[var(--aven-border)] text-[13px] focus:outline-hidden focus:border-[var(--aven-action)] focus:ring-1 focus:ring-[var(--aven-action)]"
                     />
                     <div className="flex items-center gap-2">
                       <select
                         value={topK}
                         onChange={(e) => setTopK(Number(e.target.value))}
-                        className="px-2.5 py-2 rounded-xl border border-[#c5c6ce] text-[12.5px] bg-white text-[#44474d]"
+                        className="px-2.5 py-2 rounded-xl border border-[var(--aven-border)] text-[12.5px] bg-white text-[var(--aven-muted)]"
                         title="Top K retrieved chunks"
                       >
                         <option value={3}>Top 3</option>
@@ -398,7 +398,7 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
                       <button
                         type="submit"
                         disabled={isSearching || !searchQuery.trim()}
-                        className="px-4 py-2 rounded-xl bg-[#0051d5] text-white font-bold text-[13px] hover:bg-[#0040a8] transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-1.5 shrink-0"
+                        className="px-4 py-2 rounded-xl bg-[var(--aven-action)] text-white font-bold text-[13px] hover:bg-[#0040a8] transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-1.5 shrink-0"
                       >
                         <span className={`material-symbols-outlined text-[16px] ${isSearching ? 'animate-spin' : ''}`}>
                           {isSearching ? 'progress_activity' : 'search'}
@@ -418,7 +418,7 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
                 {/* Search Results Display */}
                 {searchResults !== null && (
                   <div className="space-y-3 pt-2">
-                    <div className="flex items-center justify-between text-[12px] text-[#75777e] border-t border-[#c5c6ce]/20 pt-3">
+                    <div className="flex items-center justify-between text-[12px] text-[var(--aven-muted)] border-t border-[var(--aven-border)]/20 pt-3">
                       <span>
                         Retrieved <strong>{searchResults.length}</strong> knowledge chunk(s) for "{searchQuery}"
                       </span>
@@ -426,7 +426,7 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
                     </div>
 
                     {searchResults.length === 0 ? (
-                      <div className="py-8 text-center text-[#75777e] text-[12.5px] bg-slate-50 rounded-xl border border-dashed border-[#c5c6ce]/60">
+                      <div className="py-8 text-center text-[var(--aven-muted)] text-[12.5px] bg-slate-50 rounded-xl border border-dashed border-[var(--aven-border)]/60">
                         No matching chunks found above threshold.
                       </div>
                     ) : (
@@ -434,22 +434,22 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
                         {searchResults.map((hit, idx) => (
                           <div
                             key={hit.chunkId || idx}
-                            className="p-3.5 rounded-xl bg-slate-50 border border-[#c5c6ce]/40 space-y-2 hover:border-[#0051d5]/50 transition-colors"
+                            className="p-3.5 rounded-xl bg-slate-50 border border-[var(--aven-border)]/40 space-y-2 hover:border-[var(--aven-action)]/50 transition-colors"
                           >
                             <div className="flex flex-wrap items-center justify-between gap-2 text-[11.5px]">
                               <div className="flex items-center gap-2">
-                                <span className="font-bold text-[#0051d5] bg-blue-100 px-2 py-0.5 rounded-md">
+                                <span className="font-bold text-[var(--aven-action)] bg-blue-100 px-2 py-0.5 rounded-md">
                                   #{idx + 1} Match
                                 </span>
                                 <span className="font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-md">
                                   Score: {(hit.score * 100).toFixed(1)}% ({hit.score.toFixed(4)})
                                 </span>
-                                <span className="text-[#44474d] font-medium">
+                                <span className="text-[var(--aven-muted)] font-medium">
                                   {hit.pageStart === hit.pageEnd ? `Page ${hit.pageStart}` : `Pages ${hit.pageStart}–${hit.pageEnd}`}
                                 </span>
                               </div>
                               {hit.sectionTitle && (
-                                <span className="text-[#75777e] truncate max-w-xs" title={hit.sectionTitle}>
+                                <span className="text-[var(--aven-muted)] truncate max-w-xs" title={hit.sectionTitle}>
                                   § {hit.sectionTitle}
                                 </span>
                               )}
@@ -468,7 +468,7 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
             </div>
           ) : activeTab === 'sections' ? (
             sections.length === 0 ? (
-              <div className="py-12 text-center text-[#75777e] text-[13px]">
+              <div className="py-12 text-center text-[var(--aven-muted)] text-[13px]">
                 No structured sections available for this document.
               </div>
             ) : (
@@ -476,7 +476,7 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
                 {sections.map((sec, i) => (
                   <div
                     key={sec.id || i}
-                    className="p-3.5 rounded-2xl bg-white border border-[#c5c6ce]/30 hover:border-[#0051d5]/40 transition-colors"
+                    className="p-3.5 rounded-2xl bg-white border border-[var(--aven-border)]/30 hover:border-[var(--aven-action)]/40 transition-colors"
                     style={{ marginLeft: `${Math.max(0, (sec.headingLevel - 1) * 16)}px` }}
                   >
                     <div className="flex items-center justify-between gap-2">
@@ -494,9 +494,9 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
                         >
                           {sec.sectionType}
                         </span>
-                        <h4 className="text-[13.5px] font-bold text-[#0b1c30] truncate">{sec.title}</h4>
+                        <h4 className="text-[13.5px] font-bold text-[var(--aven-ink)] truncate">{sec.title}</h4>
                       </div>
-                      <span className="text-[11px] font-mono text-[#75777e] shrink-0">
+                      <span className="text-[11px] font-mono text-[var(--aven-muted)] shrink-0">
                         {sec.pageStart === sec.pageEnd ? `Page ${sec.pageStart}` : `Pages ${sec.pageStart}–${sec.pageEnd}`}
                       </span>
                     </div>
@@ -505,7 +505,7 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
               </div>
             )
           ) : chunks.length === 0 ? (
-            <div className="py-12 text-center text-[#75777e] text-[13px]">
+            <div className="py-12 text-center text-[var(--aven-muted)] text-[13px]">
               No chunks generated for this document yet.
             </div>
           ) : (
@@ -513,11 +513,11 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
               {chunks.map((chunk) => (
                 <div
                   key={chunk.id || chunk.chunkIndex}
-                  className="p-4 rounded-2xl bg-white border border-[#c5c6ce]/30 hover:border-[#0051d5]/40 transition-all space-y-2"
+                  className="p-4 rounded-2xl bg-white border border-[var(--aven-border)]/30 hover:border-[var(--aven-action)]/40 transition-all space-y-2"
                 >
-                  <div className="flex items-center justify-between text-[11px] text-[#75777e] border-b border-[#c5c6ce]/20 pb-2">
+                  <div className="flex items-center justify-between text-[11px] text-[var(--aven-muted)] border-b border-[var(--aven-border)]/20 pb-2">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-[#0051d5] bg-[#eff4ff] px-2 py-0.5 rounded-md">
+                      <span className="font-bold text-[var(--aven-action)] bg-[var(--aven-soft)] px-2 py-0.5 rounded-md">
                         Chunk #{chunk.chunkIndex + 1}
                       </span>
                       <span>
@@ -542,11 +542,11 @@ export const DocumentInspectModal: React.FC<DocumentInspectModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="px-6 py-3 border-t border-[#c5c6ce]/30 bg-slate-50 flex items-center justify-between text-[12px] text-[#75777e]">
+        <div className="px-6 py-3 border-t border-[var(--aven-border)]/30 bg-slate-50 flex items-center justify-between text-[12px] text-[var(--aven-muted)]">
           <span>Phase 6 Deterministic Intelligence • Source Traceability Guaranteed</span>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-xl bg-white border border-[#c5c6ce] text-[#0b1c30] font-bold hover:bg-slate-100 cursor-pointer shadow-xs"
+            className="px-4 py-1.5 rounded-xl bg-white border border-[var(--aven-border)] text-[var(--aven-ink)] font-bold hover:bg-slate-100 cursor-pointer shadow-xs"
           >
             Close
           </button>

@@ -169,9 +169,9 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
 
   if (loadingMeta) {
     return (
-      <div className="bg-white rounded-3xl p-12 border border-[#c5c6ce]/30 flex flex-col items-center justify-center gap-3">
-        <div className="w-8 h-8 border-3 border-[#0051d5] border-t-transparent rounded-full animate-spin"></div>
-        <p className="text-[14px] text-[#75777e] font-medium">Loading curriculum question bank...</p>
+      <div className="bg-white rounded-3xl p-12 border border-[var(--aven-border)]/30 flex flex-col items-center justify-center gap-3">
+        <div className="w-8 h-8 border-3 border-[var(--aven-action)] border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-[14px] text-[var(--aven-muted)] font-medium">Loading curriculum question bank...</p>
       </div>
     );
   }
@@ -184,21 +184,21 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
           <button
             type="button"
             onClick={onCancel}
-            className="flex items-center gap-1.5 text-[13px] font-semibold text-[#0051d5] hover:underline mb-2 cursor-pointer"
+            className="flex items-center gap-1.5 text-[13px] font-semibold text-[var(--aven-action)] hover:underline mb-2 cursor-pointer"
           >
             <span className="material-symbols-outlined text-[16px]">arrow_back</span>
             Back to Quiz Overview
           </button>
-          <h2 className="text-[24px] font-bold text-[#0b1c30] tracking-tight">
+          <h2 className="text-[24px] font-bold text-[var(--aven-ink)] tracking-tight">
             Quiz Paper Builder
           </h2>
-          <p className="text-[13px] text-[#44474d] mt-0.5">
+          <p className="text-[13px] text-[var(--aven-muted)] mt-0.5">
             Configure an authoritative exam-grade or practice assessment backed by the PostgreSQL curriculum question bank.
           </p>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-6 sm:p-8 border border-[#c5c6ce]/30 shadow-xs flex flex-col gap-6">
+      <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-6 sm:p-8 border border-[var(--aven-border)]/30 shadow-xs flex flex-col gap-6">
         {/* Error Notification */}
         {errorMessage && (
           <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl flex items-start gap-3">
@@ -213,7 +213,7 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
 
         {/* Paper Title */}
         <div>
-          <label className="block text-[12px] font-bold uppercase tracking-wider text-[#44474d] mb-1.5">
+          <label className="block text-[12px] font-bold uppercase tracking-wider text-[var(--aven-muted)] mb-1.5">
             Assessment Title
           </label>
           <input
@@ -221,13 +221,13 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g. Physics • Gauss Law Midterm Drill"
-            className="w-full bg-[#f8f9ff] border border-[#c5c6ce]/40 rounded-xl px-4 py-2.5 text-[14px] font-semibold text-[#0b1c30] placeholder-[#75777e] outline-none focus:border-[#0051d5] transition-all"
+            className="w-full bg-[var(--aven-canvas)] border border-[var(--aven-border)]/40 rounded-xl px-4 py-2.5 text-[14px] font-semibold text-[var(--aven-ink)] placeholder-[var(--aven-muted)] outline-none focus:border-[var(--aven-action)] transition-all"
           />
         </div>
 
         {/* Mode Selector */}
         <div>
-          <label className="block text-[12px] font-bold uppercase tracking-wider text-[#44474d] mb-2">
+          <label className="block text-[12px] font-bold uppercase tracking-wider text-[var(--aven-muted)] mb-2">
             Assessment Mode
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -236,20 +236,20 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
               onClick={() => setMode('PRACTICE')}
               className={`p-4 rounded-2xl border text-left transition-all flex flex-col gap-1.5 ${
                 mode === 'PRACTICE'
-                  ? 'bg-[#eff4ff] border-[#0051d5] ring-1 ring-[#0051d5]'
-                  : 'bg-white border-[#c5c6ce]/30 hover:bg-[#f8f9ff]'
+                  ? 'bg-[var(--aven-soft)] border-[var(--aven-action)] ring-1 ring-[var(--aven-action)]'
+                  : 'bg-white border-[var(--aven-border)]/30 hover:bg-[var(--aven-canvas)]'
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-[14px] font-bold text-[#0b1c30] flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[18px] text-[#0051d5]">menu_book</span>
+                <span className="text-[14px] font-bold text-[var(--aven-ink)] flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[18px] text-[var(--aven-action)]">menu_book</span>
                   Practice Mode
                 </span>
                 {mode === 'PRACTICE' && (
-                  <span className="w-2 h-2 rounded-full bg-[#0051d5]"></span>
+                  <span className="w-2 h-2 rounded-full bg-[var(--aven-action)]"></span>
                 )}
               </div>
-              <p className="text-[12px] text-[#75777e] leading-relaxed">
+              <p className="text-[12px] text-[var(--aven-muted)] leading-relaxed">
                 Standard paced learning session. Explanations and answer breakdown unlocked immediately upon paper submission.
               </p>
             </button>
@@ -260,11 +260,11 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
               className={`p-4 rounded-2xl border text-left transition-all flex flex-col gap-1.5 ${
                 mode === 'EXAM'
                   ? 'bg-rose-50/50 border-rose-600 ring-1 ring-rose-600'
-                  : 'bg-white border-[#c5c6ce]/30 hover:bg-[#f8f9ff]'
+                  : 'bg-white border-[var(--aven-border)]/30 hover:bg-[var(--aven-canvas)]'
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-[14px] font-bold text-[#0b1c30] flex items-center gap-2">
+                <span className="text-[14px] font-bold text-[var(--aven-ink)] flex items-center gap-2">
                   <span className="material-symbols-outlined text-[18px] text-rose-600">verified_user</span>
                   Exam Mode (Proctored)
                 </span>
@@ -272,7 +272,7 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
                   <span className="w-2 h-2 rounded-full bg-rose-600"></span>
                 )}
               </div>
-              <p className="text-[12px] text-[#75777e] leading-relaxed">
+              <p className="text-[12px] text-[var(--aven-muted)] leading-relaxed">
                 Strict exam conditions. Automatic submission on tab switch, window minimization, or app defocus via Page Visibility API.
               </p>
             </button>
@@ -281,27 +281,27 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
 
         {/* Source Selection */}
         <div>
-          <label className="block text-[12px] font-bold uppercase tracking-wider text-[#44474d] mb-2">
+          <label className="block text-[12px] font-bold uppercase tracking-wider text-[var(--aven-muted)] mb-2">
             Question Source
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div
-              className="p-3.5 rounded-xl border border-[#0051d5]/40 bg-[#eff4ff] ring-1 ring-[#0051d5] text-left flex items-center justify-between"
+              className="p-3.5 rounded-xl border border-[var(--aven-action)]/40 bg-[var(--aven-soft)] ring-1 ring-[var(--aven-action)] text-left flex items-center justify-between"
             >
               <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-[18px] text-[#0051d5]">database</span>
+                <span className="material-symbols-outlined text-[18px] text-[var(--aven-action)]">database</span>
                 <div>
-                  <div className="text-[13px] font-bold text-[#0b1c30]">Curriculum Question Bank</div>
-                  <div className="text-[11px] text-[#75777e]">Standardized university syllabus database</div>
+                  <div className="text-[13px] font-bold text-[var(--aven-ink)]">Curriculum Question Bank</div>
+                  <div className="text-[11px] text-[var(--aven-muted)]">Standardized university syllabus database</div>
                 </div>
               </div>
-              <span className="text-[10px] bg-[#0051d5] text-white font-bold px-2 py-0.5 rounded-full">
+              <span className="text-[10px] bg-[var(--aven-action)] text-white font-bold px-2 py-0.5 rounded-full">
                 Active
               </span>
             </div>
 
             <div
-              className="p-3.5 rounded-xl border border-[#c5c6ce]/30 bg-slate-50/80 opacity-60 cursor-not-allowed text-left flex items-center justify-between"
+              className="p-3.5 rounded-xl border border-[var(--aven-border)]/30 bg-slate-50/80 opacity-60 cursor-not-allowed text-left flex items-center justify-between"
               title="AI quiz generation from uploaded materials will be enabled once a dedicated generation provider is provisioned."
             >
               <div className="flex items-center gap-2.5">
@@ -341,13 +341,13 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
         {/* Subject and Topic for Question Bank */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-[12px] font-bold uppercase tracking-wider text-[#44474d] mb-1.5">
+            <label className="block text-[12px] font-bold uppercase tracking-wider text-[var(--aven-muted)] mb-1.5">
               Subject
             </label>
             <select
               value={subject}
               onChange={(e) => handleSubjectChange(e.target.value)}
-              className="w-full bg-[#f8f9ff] border border-[#c5c6ce]/40 rounded-xl px-3.5 py-2.5 text-[13px] font-semibold text-[#0b1c30] outline-none"
+              className="w-full bg-[var(--aven-canvas)] border border-[var(--aven-border)]/40 rounded-xl px-3.5 py-2.5 text-[13px] font-semibold text-[var(--aven-ink)] outline-none"
             >
               {meta?.subjects.map((s) => (
                 <option key={s.name} value={s.name}>
@@ -358,13 +358,13 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
           </div>
 
           <div>
-            <label className="block text-[12px] font-bold uppercase tracking-wider text-[#44474d] mb-1.5">
+            <label className="block text-[12px] font-bold uppercase tracking-wider text-[var(--aven-muted)] mb-1.5">
               Topic
             </label>
             <select
               value={topic}
               onChange={(e) => handleTopicChange(e.target.value)}
-              className="w-full bg-[#f8f9ff] border border-[#c5c6ce]/40 rounded-xl px-3.5 py-2.5 text-[13px] font-semibold text-[#0b1c30] outline-none"
+              className="w-full bg-[var(--aven-canvas)] border border-[var(--aven-border)]/40 rounded-xl px-3.5 py-2.5 text-[13px] font-semibold text-[var(--aven-ink)] outline-none"
             >
               <option value="All Topics">All Topics</option>
               {currentTopics.map((t) => (
@@ -380,11 +380,11 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-[12px] font-bold uppercase tracking-wider text-[#44474d]">
+              <label className="block text-[12px] font-bold uppercase tracking-wider text-[var(--aven-muted)]">
                 Question Count
               </label>
               {isCheckingCount ? (
-                <span className="text-[11px] text-[#75777e] animate-pulse">Checking DB...</span>
+                <span className="text-[11px] text-[var(--aven-muted)] animate-pulse">Checking DB...</span>
               ) : availableQuestionsCount !== null ? (
                 <span
                   className={`text-[11px] font-semibold ${
@@ -398,7 +398,7 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
             <select
               value={questionCount}
               onChange={(e) => setQuestionCount(Number(e.target.value))}
-              className="w-full bg-[#f8f9ff] border border-[#c5c6ce]/40 rounded-xl px-3.5 py-2.5 text-[13px] font-semibold text-[#0b1c30] outline-none"
+              className="w-full bg-[var(--aven-canvas)] border border-[var(--aven-border)]/40 rounded-xl px-3.5 py-2.5 text-[13px] font-semibold text-[var(--aven-ink)] outline-none"
             >
               {[5, 10, 15, 20, 25, 30].map((num) => (
                 <option key={num} value={num}>
@@ -409,13 +409,13 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
           </div>
 
           <div>
-            <label className="block text-[12px] font-bold uppercase tracking-wider text-[#44474d] mb-1.5">
+            <label className="block text-[12px] font-bold uppercase tracking-wider text-[var(--aven-muted)] mb-1.5">
               Time Limit
             </label>
             <select
               value={timeLimitMinutes}
               onChange={(e) => setTimeLimitMinutes(Number(e.target.value))}
-              className="w-full bg-[#f8f9ff] border border-[#c5c6ce]/40 rounded-xl px-3.5 py-2.5 text-[13px] font-semibold text-[#0b1c30] outline-none"
+              className="w-full bg-[var(--aven-canvas)] border border-[var(--aven-border)]/40 rounded-xl px-3.5 py-2.5 text-[13px] font-semibold text-[var(--aven-ink)] outline-none"
             >
               {[5, 10, 15, 30, 45, 60].map((mins) => (
                 <option key={mins} value={mins}>
@@ -429,11 +429,11 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
         {/* Difficulty */}
         <div>
           <div className="flex flex-wrap items-center justify-between gap-1 mb-2">
-            <label className="block text-[12px] font-bold uppercase tracking-wider text-[#44474d]">
+            <label className="block text-[12px] font-bold uppercase tracking-wider text-[var(--aven-muted)]">
               Target Difficulty
             </label>
             {selectedTopicAdaptive && (
-              <span className="text-[11px] text-[#0051d5] font-semibold flex items-center gap-1">
+              <span className="text-[11px] text-[var(--aven-action)] font-semibold flex items-center gap-1">
                 <span className="material-symbols-outlined text-[15px]">psychology</span>
                 Adaptive Readiness: <strong className="capitalize underline">{selectedTopicAdaptive.recommended_difficulty}</strong> ({selectedTopicAdaptive.mastery_score}% Mastery)
               </span>
@@ -452,8 +452,8 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
                 onClick={() => setDifficulty(d.id)}
                 className={`py-2 px-3 rounded-xl text-[12px] font-bold border transition-all ${
                   difficulty.toLowerCase() === d.id
-                    ? 'bg-[#0051d5] text-white border-[#0051d5] shadow-xs'
-                    : 'bg-[#f8f9ff] text-[#44474d] border-[#c5c6ce]/30 hover:bg-slate-100'
+                    ? 'bg-[var(--aven-action)] text-white border-[var(--aven-action)] shadow-xs'
+                    : 'bg-[var(--aven-canvas)] text-[var(--aven-muted)] border-[var(--aven-border)]/30 hover:bg-slate-100'
                 }`}
               >
                 {d.label}
@@ -464,7 +464,7 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
 
         {/* Question Types Checkboxes */}
         <div>
-          <label className="block text-[12px] font-bold uppercase tracking-wider text-[#44474d] mb-2">
+          <label className="block text-[12px] font-bold uppercase tracking-wider text-[var(--aven-muted)] mb-2">
             Allowed Question Formats
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
@@ -485,8 +485,8 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
                   onClick={() => toggleQuestionType(item.type as QuizQuestionType)}
                   className={`p-2.5 rounded-xl border text-left flex items-center gap-2 transition-all ${
                     isSelected
-                      ? 'bg-[#eff4ff] border-[#0051d5]/40 text-[#0051d5]'
-                      : 'bg-white border-[#c5c6ce]/30 text-[#75777e] hover:bg-[#f8f9ff]'
+                      ? 'bg-[var(--aven-soft)] border-[var(--aven-action)]/40 text-[var(--aven-action)]'
+                      : 'bg-white border-[var(--aven-border)]/30 text-[var(--aven-muted)] hover:bg-[var(--aven-canvas)]'
                   }`}
                 >
                   <span className="material-symbols-outlined text-[16px]">
@@ -500,11 +500,11 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
         </div>
 
         {/* Negative Marking & Randomization */}
-        <div className="border-t border-[#c5c6ce]/20 pt-5 flex flex-col gap-4">
+        <div className="border-t border-[var(--aven-border)]/20 pt-5 flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-[13px] font-bold text-[#0b1c30]">Negative Marking</span>
-              <p className="text-[12px] text-[#75777e]">
+              <span className="text-[13px] font-bold text-[var(--aven-ink)]">Negative Marking</span>
+              <p className="text-[12px] text-[var(--aven-muted)]">
                 Deduct marks for incorrect answers on objective questions.
               </p>
             </div>
@@ -513,7 +513,7 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
                 <select
                   value={negativeMarkValue}
                   onChange={(e) => setNegativeMarkValue(Number(e.target.value))}
-                  className="bg-[#eff4ff] border border-[#0051d5]/30 rounded-lg px-2.5 py-1 text-[12px] font-bold text-[#0051d5] outline-none"
+                  className="bg-[var(--aven-soft)] border border-[var(--aven-action)]/30 rounded-lg px-2.5 py-1 text-[12px] font-bold text-[var(--aven-action)] outline-none"
                 >
                   <option value={0.25}>-0.25 Marks</option>
                   <option value={0.5}>-0.50 Marks</option>
@@ -538,8 +538,8 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
 
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-[13px] font-bold text-[#0b1c30]">Question Randomization</span>
-              <p className="text-[12px] text-[#75777e]">
+              <span className="text-[13px] font-bold text-[var(--aven-ink)]">Question Randomization</span>
+              <p className="text-[12px] text-[var(--aven-muted)]">
                 Shuffle question sequence uniquely for each student session.
               </p>
             </div>
@@ -547,7 +547,7 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
               type="button"
               onClick={() => setRandomization(!randomization)}
               className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors ${
-                randomization ? 'bg-[#0051d5]' : 'bg-slate-200'
+                randomization ? 'bg-[var(--aven-action)]' : 'bg-slate-200'
               }`}
             >
               <div
@@ -560,12 +560,12 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
         </div>
 
         {/* Action Buttons */}
-        <div className="border-t border-[#c5c6ce]/20 pt-4 flex items-center justify-end gap-3">
+        <div className="border-t border-[var(--aven-border)]/20 pt-4 flex items-center justify-end gap-3">
           <button
             type="button"
             onClick={onCancel}
             disabled={isSubmitting}
-            className="px-5 py-2.5 rounded-xl border border-[#c5c6ce]/40 text-[13px] font-semibold text-[#44474d] hover:bg-[#f8f9ff] transition-all"
+            className="px-5 py-2.5 rounded-xl border border-[var(--aven-border)]/40 text-[13px] font-semibold text-[var(--aven-muted)] hover:bg-[var(--aven-canvas)] transition-all"
           >
             Cancel
           </button>
@@ -575,7 +575,7 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
               isSubmitting ||
               (availableQuestionsCount !== null && availableQuestionsCount < questionCount)
             }
-            className="px-6 py-2.5 rounded-xl bg-[#0051d5] text-white text-[13px] font-bold shadow-md hover:bg-[#003ea8] transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2.5 rounded-xl bg-[var(--aven-action)] text-white text-[13px] font-bold shadow-md hover:bg-[var(--aven-action)] transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? (
               <>
