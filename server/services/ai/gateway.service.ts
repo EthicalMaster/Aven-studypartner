@@ -182,8 +182,8 @@ export class AIGatewayService {
     };
 
     // 7. Execute request with strict timeout handling and guaranteed concurrency slot release
+    let timeoutId: NodeJS.Timeout | null = null;
     try {
-      let timeoutId: NodeJS.Timeout | null = null;
 
       const timeoutPromise = new Promise<never>((_, reject) => {
         timeoutId = setTimeout(() => {
@@ -259,6 +259,7 @@ export class AIGatewayService {
 
       throw normalized;
     } finally {
+      if (timeoutId) clearTimeout(timeoutId);
       // GUARANTEED: Release concurrency slot
       quotaService.releaseAiConcurrencySlot(studentId);
     }

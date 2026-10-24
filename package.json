@@ -34,7 +34,8 @@
     "test:load": "tsx server/test/load.test.ts",
     "test:capacity": "tsx server/test/capacity.test.ts",
     "test:pgvector": "node --import tsx server/test/postgres-vector.test.ts",
-    "test:storage": "node --import tsx server/test/supabase-storage.test.ts"
+    "test:storage": "node --import tsx server/test/supabase-storage.test.ts",
+    "test:summaries": "node --import tsx server/test/summaries.test.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

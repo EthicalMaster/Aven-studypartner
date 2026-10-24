@@ -173,6 +173,8 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
           </p>
         </div>
 
+        <div className="flex flex-wrap gap-2">
+        <button onClick={onOpenSummary} className="rounded-xl border border-[var(--aven-border)] px-4 py-2.5 text-sm font-semibold">Summarize PDF</button>
         <button
           onClick={onOpenUpload}
           className="inline-flex items-center gap-2 bg-[var(--aven-action)] hover:bg-[var(--aven-action-hover)] text-white px-4 py-2.5 rounded-xl text-[13px] font-bold shadow-xs transition-all cursor-pointer self-start sm:self-auto"
@@ -180,6 +182,7 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
           <span className="material-symbols-outlined text-[20px]">upload_file</span>
           <span>Upload Study Material</span>
         </button>
+        </div>
       </div>
 
       {/* Sub Navigation Tabs */}
@@ -722,13 +725,7 @@ export const StudyKitsView: React.FC<StudyKitsViewProps> = ({
                   </div>
 
                   <div className="pt-4 mt-3 border-t border-[var(--aven-border)]/20 flex flex-wrap items-center justify-between gap-2">
-                    <button
-                      onClick={onOpenSummary}
-                      className="text-[12px] font-bold text-[var(--aven-action)] hover:underline flex items-center gap-1 cursor-pointer"
-                    >
-                      <span className="material-symbols-outlined text-[16px]">menu_book</span>
-                      <span>Summary</span>
-                    </button>
+
 
                     <div className="flex items-center gap-1.5">
                       <button
