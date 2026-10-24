@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { materialSummary } from '../services/summaries/summary.service.js';
+import { AIGatewayError } from '../services/ai/errors.js';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -648,3 +651,15 @@ materialRouter.get('/:id/chunks', async (req: Request, res: Response): Promise<v
     });
   }
 });
+
+// Each POST advances one checkpoint. GET never starts generation.
+materialRouter.route('/:id/summary').get(summaryHandler).post(summaryHandler);
+async function summaryHandler(req: Request, res: Response): Promise<void> {
+  if (!z.string().uuid().safeParse(req.params.id).success) { res.status(400).json({message:'Invalid material ID.'}); return; }
+  try {
+    res.json(await materialSummary(req.params.id, getStudentProfileId(req), req.method === 'POST'));
+  } catch (error) {
+    if (error instanceof AIGatewayError) { res.status(error.statusCode).json(error.toResponse()); return; }
+    res.status(503).json({message:'Summary storage is unavailable. Please try again later.'});
+  }
+}

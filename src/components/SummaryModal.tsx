@@ -1,338 +1,248 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
-import React, { useState, useEffect } from 'react';
-import { materialApi } from '../services/materialApi';
-import { quizApi } from '../services/quizApi';
-import type { StudyMaterial, DocumentSection, QuestionBankMeta } from '../types';
-
-interface SummaryModalProps {
+import React, { useEffect, useRef, useState } from "react";
+import { materialApi } from "../services/materialApi";
+import type { StudyMaterial } from "../types";
+interface Props {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
   onStartQuiz?: () => void;
   onPracticeFlashcards?: () => void;
 }
-
-export const SummaryModal: React.FC<SummaryModalProps> = ({
-  isOpen,
-  onClose,
-  title = 'AI Study Summary & Key Takeaways',
-  onStartQuiz,
-  onPracticeFlashcards,
-}) => {
-  const [sourceType, setSourceType] = useState<'materials' | 'curriculum'>('materials');
+interface Summary {
+  status: string;
+  parts: { title: string; points: { text: string; pages: number[] }[] }[];
+  totalParts: number;
+  completedParts: number;
+  model: string;
+  error: string | null;
+}
+export const SummaryModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const [materials, setMaterials] = useState<StudyMaterial[]>([]);
-  const [selectedMaterialId, setSelectedMaterialId] = useState<string>('');
-  const [sections, setSections] = useState<DocumentSection[]>([]);
-  const [loadingSections, setLoadingSections] = useState<boolean>(false);
-
-  // Curriculum state
-  const [meta, setMeta] = useState<QuestionBankMeta | null>(null);
-  const [selectedSubject, setSelectedSubject] = useState<string>('');
-  const [selectedTopic, setSelectedTopic] = useState<string>('');
-
-  const [loading, setLoading] = useState<boolean>(false);
-  const [copied, setCopied] = useState<boolean>(false);
-
+  const [selected, setSelected] = useState("");
+  const [summary, setSummary] = useState<Summary | null>(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [running, setRunning] = useState(false);
+  const controller = useRef<AbortController | null>(null);
+  const dialog = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     if (!isOpen) return;
-
-    let isMounted = true;
-    async function loadData() {
-      try {
-        setLoading(true);
-        const [matRes, metaRes] = await Promise.all([
-          materialApi.getMaterials().catch(() => ({ materials: [] })),
-          quizApi.getQuestionBankMeta().catch(() => null),
-        ]);
-
-        if (isMounted) {
-          const readyMaterials = (matRes.materials || []).filter((m) => m.processingStatus === 'ready');
-          setMaterials(readyMaterials);
-          setMeta(metaRes);
-
-          if (readyMaterials.length > 0) {
-            setSourceType('materials');
-            setSelectedMaterialId(readyMaterials[0].id);
-            fetchSections(readyMaterials[0].id);
-          } else if (metaRes && metaRes.subjects && metaRes.subjects.length > 0) {
-            setSourceType('curriculum');
-            const sub = metaRes.subjects[0];
-            setSelectedSubject(sub.name);
-            if (sub.topics && sub.topics.length > 0) {
-              setSelectedTopic(sub.topics[0]);
-            }
-          }
-        }
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    }
-
-    loadData();
+    const previous = document.activeElement as HTMLElement;
+    dialog.current?.showModal();
+    let active = true;
+    setLoading(true);
+    setError("");
+    materialApi
+      .getMaterials()
+      .then((res) => {
+        if (!active) return;
+        const ready = res.materials.filter(
+          (m) => m.processingStatus === "ready",
+        );
+        setMaterials(ready);
+        setSelected(ready[0]?.id || "");
+      })
+      .catch(() => {
+        if (active)
+          setError(
+            "Could not load your library. Reopen this window to try again.",
+          );
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
     return () => {
-      isMounted = false;
+      active = false;
+      controller.current?.abort();
+      dialog.current?.close();
+      previous?.focus();
     };
   }, [isOpen]);
-
-  const fetchSections = async (matId: string) => {
+  useEffect(() => {
+    setSummary(null);
+    setRunning(false);
+    if (!isOpen || !selected) return;
+    const abort = new AbortController();
+    controller.current = abort;
+    setLoading(true);
+    setError("");
+    request(selected, "GET", abort.signal)
+      .then(setSummary)
+      .catch((e) => {
+        if (!abort.signal.aborted) setError(e.message);
+      })
+      .finally(() => {
+        if (!abort.signal.aborted) setLoading(false);
+      });
+    return () => abort.abort();
+  }, [selected, isOpen]);
+  async function request(
+    id: string,
+    method: string,
+    signal: AbortSignal,
+  ): Promise<Summary> {
+    const res = await fetch(
+      `/api/materials/${encodeURIComponent(id)}/summary`,
+      { method, credentials: "include", signal },
+    );
+    const body = await res.json();
+    if (!res.ok)
+      throw new Error(
+        body.message || "Unable to load summary. Try again later.",
+      );
+    return body;
+  }
+  async function generate() {
+    controller.current?.abort();
+    const abort = new AbortController();
+    controller.current = abort;
+    setRunning(true);
+    setError("");
     try {
-      setLoadingSections(true);
-      const res = await materialApi.getSections(matId);
-      setSections(res.sections || []);
-    } catch {
-      setSections([]);
+      while (!abort.signal.aborted) {
+        const next = await request(selected, "POST", abort.signal);
+        if (abort.signal.aborted) break;
+        setSummary(next);
+        if (next.status === "ready") break;
+        await new Promise<void>((resolve) => {
+          const finish = () => {
+            clearTimeout(timer);
+            abort.signal.removeEventListener("abort", finish);
+            resolve();
+          };
+          const timer = setTimeout(finish, 2000);
+          abort.signal.addEventListener("abort", finish, { once: true });
+        });
+      }
+    } catch (e) {
+      if (!abort.signal.aborted)
+        setError(
+          e instanceof Error ? e.message : "Unable to generate summary.",
+        );
     } finally {
-      setLoadingSections(false);
+      if (!abort.signal.aborted) setRunning(false);
     }
-  };
-
-  const handleMaterialChange = (matId: string) => {
-    setSelectedMaterialId(matId);
-    fetchSections(matId);
-  };
-
-  const handleSubjectChange = (subName: string) => {
-    setSelectedSubject(subName);
-    const sub = meta?.subjects.find((s) => s.name === subName);
-    if (sub && sub.topics && sub.topics.length > 0) {
-      setSelectedTopic(sub.topics[0]);
-    } else {
-      setSelectedTopic('');
-    }
-  };
-
+  }
+  function pause() {
+    controller.current?.abort();
+    setRunning(false);
+  }
   if (!isOpen) return null;
-
-  const currentMaterial = materials.find((m) => m.id === selectedMaterialId);
-  const activeSubjectObj = meta?.subjects.find((s) => s.name === selectedSubject);
-
-  const handleCopy = () => {
-    let textToCopy = '';
-    if (sourceType === 'materials' && currentMaterial) {
-      textToCopy = `${currentMaterial.title} (${currentMaterial.subject})\n\n` +
-        sections.map((s, idx) => `${idx + 1}. ${s.title}\n${s.summary || 'Extracted section from document.'}`).join('\n\n');
-    } else if (selectedTopic) {
-      textToCopy = `${selectedSubject} - ${selectedTopic}\nAvailable Question Bank challenges: ${activeSubjectObj?.total_questions || 0}`;
-    }
-
-    if (textToCopy) {
-      navigator.clipboard?.writeText(textToCopy);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl border border-[var(--aven-border)]/50 max-h-[88vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">
-        {/* Header */}
-        <div className="flex items-start justify-between pb-4 border-b border-[var(--aven-border)]/30">
-          <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[var(--aven-soft)] text-[var(--aven-action)] text-[11px] font-bold mb-1.5">
-              <span className="material-symbols-outlined text-[15px]">auto_awesome</span>
-              <span>Structured Study Takeaways & Summaries</span>
-            </div>
-            <h3 className="text-[20px] font-bold text-[var(--aven-ink)]">{title}</h3>
-            <p className="text-[13px] text-[var(--aven-muted)] mt-0.5">
-              Synthesized directly from your verified course documents and curriculum question bank.
-            </p>
-          </div>
-          <button
-            onClick={onClose}
-            className="text-[var(--aven-muted)] hover:text-[var(--aven-ink)] p-1.5 rounded-xl hover:bg-[var(--aven-soft)] transition-colors"
-          >
-            <span className="material-symbols-outlined text-[22px]">close</span>
-          </button>
+    <dialog
+      ref={dialog}
+      aria-labelledby="summary-title"
+      onCancel={(e) => {
+        e.preventDefault();
+        onClose();
+      }}
+      className="fixed inset-0 m-auto w-[calc(100%_-_2rem)] max-w-3xl max-h-[90dvh] overflow-y-auto rounded-3xl border border-[var(--aven-border)] bg-[var(--aven-surface)] p-6 text-[var(--aven-ink)] shadow-xl backdrop:bg-slate-950/40"
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 id="summary-title" className="text-3xl font-semibold">
+            Your document, understood.
+          </h2>
+          <p className="mt-2 text-sm text-[var(--aven-muted)]">
+            AI summaries grounded in your uploaded material.
+          </p>
         </div>
-
-        {/* Source Selector (Materials vs Curriculum) */}
-        <div className="flex flex-wrap items-center justify-between gap-3 mt-4 pb-3 border-b border-[var(--aven-border)]/30">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setSourceType('materials')}
-              className={`px-3.5 py-1.5 rounded-xl text-[13px] font-semibold transition-all ${
-                sourceType === 'materials'
-                  ? 'bg-[var(--aven-action)] text-white shadow-xs'
-                  : 'text-[var(--aven-muted)] hover:bg-[var(--aven-soft)]'
-              }`}
-            >
-              My Documents ({materials.length})
-            </button>
-            <button
-              onClick={() => setSourceType('curriculum')}
-              className={`px-3.5 py-1.5 rounded-xl text-[13px] font-semibold transition-all ${
-                sourceType === 'curriculum'
-                  ? 'bg-[var(--aven-action)] text-white shadow-xs'
-                  : 'text-[var(--aven-muted)] hover:bg-[var(--aven-soft)]'
-              }`}
-            >
-              Academic Curriculum
-            </button>
-          </div>
-
-          {/* Document / Subject Dropdown */}
-          {sourceType === 'materials' && materials.length > 0 && (
-            <select
-              value={selectedMaterialId}
-              onChange={(e) => handleMaterialChange(e.target.value)}
-              className="bg-[var(--aven-soft)] border border-[var(--aven-border)]/40 rounded-xl px-3 py-1.5 text-[12px] text-[var(--aven-ink)] font-semibold outline-none max-w-xs truncate"
-            >
-              {materials.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.title} ({m.subject})
-                </option>
-              ))}
-            </select>
-          )}
-
-          {sourceType === 'curriculum' && meta && (
-            <div className="flex items-center gap-2">
-              <select
-                value={selectedSubject}
-                onChange={(e) => handleSubjectChange(e.target.value)}
-                className="bg-[var(--aven-soft)] border border-[var(--aven-border)]/40 rounded-xl px-3 py-1.5 text-[12px] text-[var(--aven-ink)] font-semibold outline-none"
-              >
-                {meta.subjects.map((s) => (
-                  <option key={s.name} value={s.name}>
-                    {s.name}
-                  </option>
-                ))}
-              </select>
-
-              {activeSubjectObj && (
-                <select
-                  value={selectedTopic}
-                  onChange={(e) => setSelectedTopic(e.target.value)}
-                  className="bg-[var(--aven-soft)] border border-[var(--aven-border)]/40 rounded-xl px-3 py-1.5 text-[12px] text-[var(--aven-ink)] font-semibold outline-none max-w-[180px] truncate"
-                >
-                  {activeSubjectObj.topics.map((t) => (
-                    <option key={t} value={t}>
-                      {t}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Scrollable Content Body */}
-        <div className="flex-1 overflow-y-auto py-4 space-y-4 text-[13px] text-[#334155] leading-relaxed pr-2">
-          {loading ? (
-            <div className="py-12 flex flex-col items-center justify-center text-center">
-              <div className="w-8 h-8 border-3 border-[var(--aven-action)] border-t-transparent rounded-full animate-spin mb-3"></div>
-              <p className="text-[13px] text-[var(--aven-muted)]">Loading structured study takeaways...</p>
-            </div>
-          ) : sourceType === 'materials' ? (
-            materials.length === 0 ? (
-              <div className="py-12 text-center flex flex-col items-center justify-center p-6 bg-slate-50 rounded-2xl border border-dashed border-[var(--aven-border)]">
-                <span className="material-symbols-outlined text-[32px] text-[var(--aven-action)] mb-2">
-                  upload_file
-                </span>
-                <p className="font-bold text-[var(--aven-ink)] text-[15px]">No Processed Documents Yet</p>
-                <p className="text-[12px] text-[var(--aven-muted)] mt-1 max-w-sm">
-                  Upload lecture notes, textbooks, or research papers in the Study Kits tab to extract structured outlines and AI summaries.
-                </p>
-              </div>
-            ) : loadingSections ? (
-              <div className="py-8 text-center text-[var(--aven-muted)] text-[13px]">
-                Loading extracted sections...
-              </div>
-            ) : sections.length === 0 ? (
-              <div className="p-5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-[13px]">
-                No structured sections found for this document. Try re-processing in Study Kits.
-              </div>
-            ) : (
-              sections.map((sec, idx) => (
-                <div key={sec.id || idx} className="bg-[var(--aven-soft)] p-4 rounded-2xl border border-[var(--aven-blue-soft)]">
-                  <h4 className="font-bold text-[var(--aven-action)] text-[14px] mb-1.5 flex items-center gap-1.5">
-                    <span className="material-symbols-outlined text-[18px]">verified</span>
-                    {idx + 1}. {sec.title}
-                  </h4>
-                  <p className="text-[#334155] leading-relaxed">
-                    {sec.summary || 'Summary generated during document analysis.'}
-                  </p>
-                  {sec.pageStart && (
-                    <span className="inline-block mt-2 text-[11px] font-semibold text-[var(--aven-muted)]">
-                      Pages {sec.pageStart} - {sec.pageEnd || sec.pageStart}
-                    </span>
-                  )}
-                </div>
-              ))
-            )
-          ) : (
-            /* Curriculum Topic View */
-            <div className="space-y-4">
-              <div className="bg-[var(--aven-soft)] p-5 rounded-2xl border border-[var(--aven-blue-soft)]">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-white text-[var(--aven-action)] shadow-2xs">
-                    {selectedSubject}
-                  </span>
-                  <span className="text-[12px] font-semibold text-[var(--aven-action)]">
-                    {activeSubjectObj?.total_questions || 0} Questions Available in Curriculum
-                  </span>
-                </div>
-                <h4 className="text-[16px] font-bold text-[var(--aven-ink)]">{selectedTopic || 'Selected Curriculum Topic'}</h4>
-                <p className="text-[13px] text-[var(--aven-muted)] mt-1">
-                  This core curriculum unit is calibrated to your academic stage. Practice through adaptive quizzes and flashcards to build high-conviction retention.
-                </p>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-[12px] text-[var(--aven-muted)] flex items-center gap-3">
-                <span className="material-symbols-outlined text-[20px] text-[var(--aven-action)]">
-                  psychology
-                </span>
-                <span>
-                  All performance data from testing this topic feeds directly into your personal Bayesian Knowledge Tracing model.
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex items-center justify-between pt-4 border-t border-[var(--aven-border)]/30">
-          <button
-            onClick={handleCopy}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[var(--aven-border)]/60 text-[var(--aven-muted)] hover:bg-slate-50 text-[12px] font-semibold transition-colors cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-[16px]">
-              {copied ? 'check' : 'content_copy'}
-            </span>
-            <span>{copied ? 'Copied!' : 'Copy Summary'}</span>
-          </button>
-
-          <div className="flex items-center gap-2">
-            {onPracticeFlashcards && (
-              <button
-                onClick={() => {
-                  onClose();
-                  onPracticeFlashcards();
-                }}
-                className="px-4 py-2 rounded-xl bg-[var(--aven-soft)] text-[var(--aven-action)] hover:bg-[var(--aven-blue-soft)] text-[13px] font-bold transition-all cursor-pointer"
-              >
-                Practice Flashcards
-              </button>
-            )}
-
-            {onStartQuiz && (
-              <button
-                onClick={() => {
-                  onClose();
-                  onStartQuiz();
-                }}
-                className="px-4 py-2 rounded-xl bg-[var(--aven-action)] text-white hover:bg-[var(--aven-action-hover)] text-[13px] font-bold transition-all shadow-xs cursor-pointer"
-              >
-                Take Quiz
-              </button>
-            )}
-          </div>
-        </div>
+        <button
+          onClick={onClose}
+          aria-label="Close summary"
+          className="p-2 rounded-lg border"
+        >
+          ✕
+        </button>
       </div>
-    </div>
+      <label
+        className="block mt-6 text-sm font-semibold"
+        htmlFor="summary-material"
+      >
+        Choose your document
+      </label>
+      <select
+        id="summary-material"
+        className="mt-2 w-full rounded-xl border p-3 bg-[var(--aven-canvas)]"
+        value={selected}
+        disabled={running || loading}
+        onChange={(e) => setSelected(e.target.value)}
+      >
+        {!materials.length && (
+          <option value="">No processed documents yet</option>
+        )}
+        {materials.map((m) => (
+          <option key={m.id} value={m.id}>
+            {m.title}
+          </option>
+        ))}
+      </select>
+      <p className="mt-3 text-xs text-[var(--aven-muted)]">
+        Generate sends extracted document text to Groq. Completed parts are
+        saved. Closing pauses further parts; an in-progress part may finish.
+        Page references use PDF page order.
+      </p>
+      <div className="my-5 flex flex-wrap items-center gap-3">
+        {running ? (
+          <button className="rounded-xl border px-4 py-2" onClick={pause}>
+            Pause
+          </button>
+        ) : (
+          <button
+            disabled={!selected || loading || summary?.status === "ready"}
+            onClick={generate}
+            className="rounded-xl bg-[var(--aven-action)] text-white px-4 py-2 disabled:opacity-50"
+          >
+            {summary?.status === "ready"
+              ? "Summary saved"
+              : summary?.completedParts
+                ? "Resume summary"
+                : "Generate summary"}
+          </button>
+        )}
+        <span role="status" className="text-sm">
+          {loading
+            ? "Loading…"
+            : summary
+              ? `${summary.completedParts} of ${summary.totalParts} parts saved${running ? " · Working…" : ""}`
+              : ""}
+        </span>
+      </div>
+      {(error || summary?.error) && (
+        <p
+          role="alert"
+          className="rounded-xl bg-amber-50 text-amber-950 p-3 mb-4"
+        >
+          {error || summary?.error}
+        </p>
+      )}
+      {!selected && !loading && (
+        <p>Upload a PDF or text document and wait for processing to finish.</p>
+      )}
+      {summary?.parts.map((part, i) => (
+        <section key={i} className="border-t border-[var(--aven-border)] py-5">
+          <h3 className="text-xl font-semibold">{part.title}</h3>
+          <ul className="mt-3 space-y-4">
+            {part.points.map((point, j) => (
+              <li key={j}>
+                <p className="whitespace-pre-wrap leading-relaxed">
+                  {point.text}
+                </p>
+                <span className="text-xs text-[var(--aven-muted)]">
+                  Source pages: {point.pages.join(", ")}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+      {!!summary?.parts.length && (
+        <p className="text-xs text-[var(--aven-muted)] border-t pt-4">
+          AI-generated study aid. Check important facts and formulas against the
+          source.{" "}
+          {summary.status !== "ready" ? "This summary is incomplete." : ""}
+        </p>
+      )}
+    </dialog>
   );
 };

@@ -417,7 +417,8 @@ export class QuotaService {
           remaining: Math.max(0, maxDaily - newCount),
         };
       } catch {
-        // Fallback to in-memory tracking if table doesn't exist yet or connection transiently fails
+        // Do not bypass durable quotas during a database outage.
+        return { allowed: false, error: 'AI_QUOTA_UNAVAILABLE', limit: maxDaily, remaining: 0, message: 'AI usage tracking is temporarily unavailable. Try again later.' };
       }
     }
 
