@@ -11,3 +11,11 @@ assert.throws(()=>validateCards({flashcards:[card,card]},selected));
 assert.throws(()=>validateCards({flashcards:[{...card,evidence:'An invented supporting quote that does not exist.'}]},selected));
 assert.throws(()=>validateCards({flashcards:[{...card,question:'What is Unit 2 about?'}]},selected));
 console.log('PASS: distributed coverage, page-furniture removal, sparse rejection, input budget, exact evidence, duplicate and vague-question rejection.');
+
+// Short evidence can be a complete formula or factual statement.
+const formulaPassage=[{id:'formula',page:2,text:'Newton’s second law is F = ma. Here F is force, m is mass and a is acceleration.'}];
+const shortCard={...card,question:'What formula expresses Newton’s second law?',answer:'F = ma, where force equals mass times acceleration.',sourceId:'formula',evidence:'F = ma.'};
+assert.equal(validateCards({flashcards:[shortCard]},formulaPassage).length,1);
+for(const evidence of ['', '   ', 'F = mv.', 'x'.repeat(801)])assert.throws(()=>validateCards({flashcards:[{...shortCard,evidence}]},formulaPassage));
+assert.throws(()=>validateCards({flashcards:[{...shortCard,sourceId:'missing'}]},formulaPassage));
+console.log('PASS: short supported evidence accepted; empty, whitespace, invented, oversized and wrong-source evidence rejected.');
