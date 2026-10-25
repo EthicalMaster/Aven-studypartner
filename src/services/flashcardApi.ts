@@ -1,3 +1,4 @@
+import type { FlashcardDraft, EditedFlashcard } from '../../shared/flashcard-draft';
 import type { AcademicContext } from '../../shared/academic-context';
 /**
  * @license
@@ -5,6 +6,9 @@ import type { AcademicContext } from '../../shared/academic-context';
  */
 
 export interface FlashcardItem {
+  source_evidence?: string | null;
+  source_page?: number | null;
+  user_edited?: boolean;
   id: string;
   study_kit_id: string | null;
   student_id: string;
@@ -67,6 +71,7 @@ export interface TopicDeckSummary {
 }
 
 export interface MaterialDeckSummary {
+  hasDraft?: boolean;
   materialId: string;
   title: string;
   subject: string;
@@ -226,6 +231,7 @@ export const flashcardApi = {
     success: boolean;
     cards: FlashcardItem[];
     totalGenerated: number;
+    draft?: FlashcardDraft;
     rejectedCount?: number;
     reused?: boolean;
     warning?: string | null;
@@ -241,6 +247,13 @@ export const flashcardApi = {
       throw new Error(`${err.message || 'Failed to generate flashcards from document'}${err.code || err.error ? ` [${err.code || err.error}]` : ''}`);
     }
     return res.json();
+  },
+
+  async saveDraft(id:string,cards:EditedFlashcard[]):Promise<{success:boolean;cards:FlashcardItem[];reused:boolean}> {
+    const res=await fetch(`/api/flashcards/drafts/${id}/commit`,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({cards})});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok)throw new Error(data.message||'Could not save the selected cards.');
+    return data;
   },
 
   async createCustomCard(data: {

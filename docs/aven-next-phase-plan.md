@@ -16,9 +16,9 @@ Keep the free-only budget. Do not enable paid billing, rotate keys to bypass quo
 | Phase | Status | Remaining work |
 | --- | --- | --- |
 | 3 — Quizzes and exam research | PDF quizzes user-confirmed; discovery/review preview ready | Live search validation, full-paper/institution/year verification, syllabus mismatch handling, question reporting and richer quiz controls |
-| 4 — Flashcards | Core generation and review working | Source display, deck preview/edit/selection and stronger deduplication |
+| 4 — Flashcards | Draft preview/edit/selection, source display and exact duplicate checks implemented | Live quality review, existing-card editing and semantic near-duplicate handling |
 | 5 — Account recovery | Not started | Email OTP, agreed two-successful-resets policy, session/security tests |
-| 6 — Settings and helping guide | Not started | Persisted profile/account/security controls and guide theme consistency |
+| 6 — Settings and helping guide | Helping-guide correction implemented | Persisted profile/account/security controls |
 | 7 — Curriculum data | Not started | Audit, proposed hierarchy, question review and tested migration preserving history |
 
 Phases 1–2 have working foundations but are not formally closed: representative quality/token measurements, remaining cache/version controls and normalized academic mappings still need review. Finish with an integrated live acceptance pass. This count describes the agreed release scope, not a promise that all future website work is finished.
@@ -200,3 +200,12 @@ Acceptance: evidence-based schema/mapping review, tenant isolation and migration
 - Added source links on saved quiz previews; raw answer evidence remains excluded. No-key, exhausted-allowance, provider-error and empty-result paths offer PDF-only practice.
 - Migration 021 adds public candidate cache and search counters. Optional server-only TAVILY_API_KEY enables search; defaults are 500 basic searches/month for Aven and 5/day/student. No automatic retries or paid fallback.
 - PGlite tests, mocked search-provider tests, quiz provenance/reuse regressions and mobile browser checks pass. Live Tavily/Groq matching and full-source authenticity verification remain pending; phase 3 is not complete.
+
+### Paired delivery — flashcard draft review + helping-guide correction
+
+- User requested larger and smaller tasks combined to reduce delivery overhead. Completed the first pair in one bundle, also including the preceding source-discovery commit for simpler installation.
+- New PDF flashcards are durable private drafts, with source quotations/pages, editable fields and select-before-save. Resume does not call the model; commit is transactional and idempotent, with normalized duplicate checks and immutable source snapshots. Existing mastery/history remains unchanged.
+- Helping/onboarding guide now matches workspace colors and editorial typography, uses a native accessible dialog, restores focus and supports mobile/reduced-motion operation. Removed outdated verified-bank count claims. This completes the guide correction within phase 6; Settings remains open.
+- Migration 022 and real SQL/mocked-provider tests pass. Browser checks cover draft resumption, edit selection, failed-save retry, source display, all six guide steps and profile persistence. Screenshots inspected at phone/desktop sizes.
+- Phase 4 preview/edit/selection and new-card source display are implemented. Existing-card editing, semantic near-duplicate detection and representative live quality review remain open. Phases 3/5/6/7 retain the previously documented unfinished work.
+- Suggested next pair: useful Settings (larger) + question reporting (smaller). Password recovery still requires the reset-window decision and transactional-email setup before its final implementation.

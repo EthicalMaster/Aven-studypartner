@@ -1,3 +1,5 @@
+import { flashcardDraftService } from '../services/flashcard-draft.service.js';
+import { saveFlashcardDraftSchema } from '../../shared/flashcard-draft.js';
 import { AIGatewayError } from '../services/ai/errors.js';
 import { academicContextSchema } from '../../shared/academic-context.js';
 /**
@@ -357,17 +359,18 @@ flashcardRouter.post(
 
       const parsed = req.body?.academicContext === undefined ? undefined : academicContextSchema.safeParse(req.body.academicContext);
       if (parsed && !parsed.success) { res.status(400).json({message:'Invalid academic details. Check the study level, authority, stage and subject.'}); return; }
-      const result = await flashcardService.generateFromMaterial(materialId, profile.id, parsed?.data);
-      const {cards,rejectedCount,reused} = result;
+      const result = await flashcardService.generateFromMaterial(materialId, profile.id, parsed?.data, true);
+      const {cards,rejectedCount,reused,draft} = result;
 
       res.json({
         success: true,
         cards,
-        totalGenerated: reused ? 0 : cards.length,
+        draft,
+        totalGenerated: reused ? 0 : (draft?.cards.length || cards.length),
         rejectedCount,
         reused,
-        warning: rejectedCount ? `${cards.length} cards saved. ${rejectedCount} additional cards did not pass validation and were omitted. No automatic regeneration was performed.` : null,
-        message: reused ? `Your saved deck is ready (${cards.length} cards returned).` : `${cards.length} validated flashcards saved.`,
+        warning: rejectedCount ? `${draft?.cards.length || cards.length} cards ready for review. ${rejectedCount} additional cards did not pass validation and were omitted. No automatic regeneration was performed.` : null,
+        message: draft ? 'Review and select your draft cards before adding them to your deck.' : reused ? `Your saved deck is ready (${cards.length} cards returned).` : `${cards.length} validated flashcards saved.`,
       });
     } catch (err: any) {
       console.error(
@@ -382,6 +385,20 @@ flashcardRouter.post(
     }
   }
 );
+
+flashcardRouter.post('/drafts/:draftId/commit', async(req:Request,res:Response):Promise<void>=>{
+  const parsed=saveFlashcardDraftSchema.safeParse(req.body);
+  if(!z.string().uuid().safeParse(req.params.draftId).success||!parsed.success){res.status(400).json({message:'Check your selected cards. Questions, answers and concepts are required; select 1–6 cards.'});return;}
+  try {
+    const studentId=getStudentProfile(req).id;
+    const result=await flashcardDraftService.commit(studentId,req.params.draftId,parsed.data);
+    const cards=await Promise.all(result.ids.map(id=>flashcardRepository.getFlashcardById(id,studentId)));
+    res.json({success:true,cards:cards.filter(Boolean),reused:result.reused});
+  }catch(error){
+    if(error instanceof AIGatewayError){res.status(error.statusCode).json(error.toResponse());return;}
+    res.status(500).json({message:'Could not finish saving the draft. Try Save again; an already saved draft will not create duplicates.'});
+  }
+});
 
 const CreateCustomCardSchema = z.object({
   subject: z.string().min(1),

@@ -37,7 +37,8 @@
     "test:storage": "node --import tsx server/test/supabase-storage.test.ts",
     "test:summaries": "node --import tsx server/test/summaries.test.ts",
     "test:pdf-quizzes": "node --import tsx server/test/pdf-quizzes.test.ts",
-    "test:exam-research": "node --import tsx server/test/exam-research.test.ts"
+    "test:exam-research": "node --import tsx server/test/exam-research.test.ts",
+    "test:flashcard-drafts": "node --import tsx server/test/flashcard-drafts.test.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
