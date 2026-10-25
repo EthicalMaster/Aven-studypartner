@@ -1,3 +1,5 @@
+import { FlashcardDraftReview } from '../flashcards/FlashcardDraftReview';
+import type { FlashcardDraft } from '../../../shared/flashcard-draft';
 import { AcademicSetupDialog } from '../AcademicSetupDialog';
 import type { AcademicContext } from '../../../shared/academic-context';
 /**
@@ -49,6 +51,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
   // Active Review Session State
   const [isReviewing, setIsReviewing] = useState<boolean>(false);
   const [sessionTitle, setSessionTitle] = useState<string>('');
+  const [draft,setDraft]=useState<FlashcardDraft|null>(null);
   const [generationWarning,setGenerationWarning] = useState<string|null>(null);
   const [activeDeck, setActiveDeck] = useState<FlashcardItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -246,7 +249,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
 
     const handleKeyDown = (e: KeyboardEvent) => {
       // Avoid capturing when typing inside inputs
-      if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+      if ((e.target as HTMLElement)?.closest('input, textarea, select, button, a, summary, [contenteditable=true]')) {
         return;
       }
 
@@ -280,6 +283,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
     setGenerationErrors(prev => ({...prev,[materialId]:''}));
     try {
       const res = await flashcardApi.generateFromMaterial(materialId, academicContext);
+      if(res.success && res.draft){setDraft(res.draft);void loadDashboard();return;}
       if (!res.success || !res.cards?.length) throw new Error('The server returned no flashcards. Please try again; if this repeats, share this message.');
       setGenerationWarning(res.warning || null);
       setSessionTitle(title);
@@ -346,6 +350,12 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
   // ==========================================================================
   // RENDER: ACTIVE STUDY SESSION VIEW
   // ==========================================================================
+  if(draft)return <FlashcardDraftReview key={draft.id} draft={draft} onBack={()=>setDraft(null)} onSaved={cards=>{
+    setSessionTitle(draft.title);setDraft(null);setGenerationWarning(null);setActiveDeck(cards);setCurrentIndex(0);
+    setIsFlipped(false);setShowHint(false);setDeckCompleted(false);setReviewedCounts({again:0,hard:0,good:0,easy:0});
+    setCardStartTime(Date.now());setIsReviewing(true);void loadDashboard();
+  }}/>;
+
   if (isReviewing) {
     return (
       <div className="flex flex-col gap-6 pb-12 max-w-4xl mx-auto">
@@ -517,6 +527,11 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
               </div>
             </div>
 
+            {isFlipped && <details className="rounded-2xl border border-[var(--aven-border)] bg-[var(--aven-soft)] p-4 text-sm">
+              <summary className="cursor-pointer font-semibold">{currentCard.source_evidence ? `Original PDF evidence · page ${currentCard.source_page}` : 'Source information'}</summary>
+              <p className="mt-3 whitespace-pre-wrap break-words">{currentCard.source_evidence || 'This older card has no stored source quote. Check the original material when reviewing it.'}</p>
+              {currentCard.user_edited && <p className="mt-2 text-xs text-[var(--aven-muted)]">You edited this card. The quote belongs to the original generated version; the edited answer has not been automatically verified.</p>}
+            </details>}
             {/* Spaced Repetition Rating Controls */}
             <div className="bg-white p-5 rounded-3xl border border-[var(--aven-border)]/30 shadow-xs">
               <div className="flex items-center justify-between mb-3 px-1">
@@ -1168,7 +1183,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                         </button>
                       ) : (
                         <button
-                          onClick={() => deck.totalCards > 0 ? handleGenerateFromMaterial(deck.materialId, deck.title) : setAcademicSetup({materialId:deck.materialId,title:deck.title,subject:deck.subject})}
+                          onClick={() => (deck.totalCards > 0 || deck.hasDraft) ? handleGenerateFromMaterial(deck.materialId, deck.title) : setAcademicSetup({materialId:deck.materialId,title:deck.title,subject:deck.subject})}
                           disabled={generatingMaterialId !== null}
                           className="flex-1 py-2 rounded-xl bg-[var(--aven-soft)] text-[var(--aven-action)] font-bold text-[12px] hover:bg-[var(--aven-blue-soft)] transition-colors border border-[var(--aven-blue-soft)] flex items-center justify-center gap-1.5"
                         >
@@ -1177,7 +1192,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                           ) : (
                             <>
                               <span className="material-symbols-outlined text-[16px]">auto_awesome</span>
-                              <span>Generate Flashcards</span>
+                              <span>{deck.hasDraft ? 'Resume draft' : 'Generate Flashcards'}</span>
                             </>
                           )}
                         </button>

@@ -6,6 +6,9 @@
 import { getRequiredPool } from '../db/connection.js';
 
 export interface FlashcardRecord {
+  source_evidence?: string | null;
+  source_page?: number | null;
+  user_edited?: boolean;
   id: string;
   study_kit_id: string | null;
   student_id: string;
@@ -93,6 +96,7 @@ export interface TopicDeckSummary {
 }
 
 export interface MaterialDeckSummary {
+  hasDraft?: boolean;
   materialId: string;
   title: string;
   subject: string;
@@ -106,6 +110,9 @@ export interface MaterialDeckSummary {
 export class FlashcardRepository {
   private mapRow(row: any): FlashcardRecord {
     return {
+      source_evidence: row.source_evidence || null,
+      source_page: row.source_page || null,
+      user_edited: Boolean(row.user_edited),
       id: row.id,
       study_kit_id: row.study_kit_id,
       student_id: row.student_id,
@@ -543,6 +550,7 @@ export class FlashcardRepository {
     const res = await pool.query(
       `SELECT
         sm.id as material_id,
+        EXISTS(SELECT 1 FROM flashcard_generation_drafts d WHERE d.material_id=sm.id AND d.student_id=sm.student_id AND d.committed_ids IS NULL) AS has_draft,
         COALESCE(sm.title, sm.filename, 'Untitled Material') as title,
         sm.subject,
         sm.created_at,
@@ -560,6 +568,7 @@ export class FlashcardRepository {
 
     return res.rows.map((r) => ({
       materialId: r.material_id,
+      hasDraft: r.has_draft,
       title: r.title,
       subject: r.subject,
       totalCards: r.total_cards,

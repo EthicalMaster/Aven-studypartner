@@ -1,3 +1,6 @@
+import { randomUUID } from 'node:crypto';
+import { flashcardDraftService } from './flashcard-draft.service.js';
+import type { FlashcardDraft } from '../../shared/flashcard-draft.js';
 import { academicContextSchema, type AcademicContext } from '../../shared/academic-context.js';
 import { selectPassages, groundedCardsSchema, validateCardBatch } from './learning-content/flashcards.js';
 /**
@@ -520,8 +523,9 @@ export class FlashcardService {
   async generateFromMaterial(
     materialId: string,
     studentId: string,
-    academicContext?: AcademicContext
-  ): Promise<{cards:FlashcardRecord[];rejectedCount:number;reused:boolean}> {
+    academicContext?: AcademicContext,
+    preview = false
+  ): Promise<{cards:FlashcardRecord[];rejectedCount:number;reused:boolean;draft?:FlashcardDraft}> {
     const material = await materialRepository.getMaterialById(materialId, studentId);
     if (!material) {
       throw new Error(`Study material not found or unauthorized: ${materialId}`);
@@ -536,6 +540,10 @@ export class FlashcardService {
       if (!acquired) throw new Error('Flashcard generation is already running for this document. Reopen your deck shortly.');
       const existing = await flashcardRepository.getFlashcards(studentId, { materialId, sourceType: 'study_material', limit: 100 });
       if (existing.total > 0) return {cards:existing.cards,rejectedCount:0,reused:true};
+      if (preview) {
+        const draft = await flashcardDraftService.get(studentId,materialId);
+        if(draft)return {cards:[],rejectedCount:draft.rejectedCount,reused:true,draft};
+      }
     const parsedContext = academicContextSchema.safeParse(academicContext);
     if (!parsedContext.success) throw new Error('Confirm your study level, exam authority, class or semester, and subject before generating new cards.');
     const context = parsedContext.data;
@@ -546,7 +554,7 @@ export class FlashcardService {
 
     const title = material.title || material.original_filename || 'Study Material';
     const subject = context.subject;
-    const topic = material.topic || title;
+    const topic = (material.topic || title).slice(0,150);
 
     const pages = await documentRepository.getPagesByMaterial(materialId, studentId);
     const passages = selectPassages(pages);
@@ -560,6 +568,13 @@ export class FlashcardService {
     }, groundedCardsSchema);
     const validation = validateCardBatch(aiRes.data, passages);
     const generatedCards = validation.cards;
+
+    if(preview){
+      const draft=await flashcardDraftService.create(studentId,materialId,{title,subject,topic,rejectedCount:validation.rejectedCount,
+        cards:generatedCards.map(card=>({id:randomUUID(),question:card.question,answer:card.answer,keyConcept:card.keyConcept,
+          formula:card.formula,difficulty:card.difficulty,evidence:card.evidence,page:passages.find(p=>p.id===card.sourceId)!.page}))});
+      return {cards:[],rejectedCount:validation.rejectedCount,reused:false,draft};
+    }
 
     // Insert into database linked to this study material
     const cardsToInsert = generatedCards.map((c) => ({
