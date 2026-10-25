@@ -1,3 +1,4 @@
+import { reserveEstimate, reserveTokens, settleTokens } from '../token-budget.js';
 import type { IAIProvider } from "../provider.interface.js";
 import type { AIRequest, AIResponse, AIProviderHealth } from "../types.js";
 import { getAIConfig } from "../config.js";
@@ -24,6 +25,7 @@ export class GroqAIProvider implements IAIProvider {
   async chat(request: AIRequest): Promise<AIResponse> {
     const key = process.env.GROQ_API_KEY?.trim();
     if (!key) throw new AIProviderAuthenticationError();
+    const reservation = await reserveTokens(reserveEstimate(JSON.stringify({messages:request.messages,prompt:request.prompt,schema:request.jsonSchema}), request.maxTokens ?? 1500));
     const start = Date.now();
     const controller = new AbortController();
     const timer = setTimeout(
@@ -75,6 +77,8 @@ export class GroqAIProvider implements IAIProvider {
           `Groq could not complete this request (HTTP ${response.status}). Check the configured model and limits.`,
         );
       const data = await response.json();
+      // On reconciliation failure keep the conservative reservation; do not discard a valid result.
+      await settleTokens(reservation, data.usage?.total_tokens).catch(() => {});
       const choice = data.choices?.[0];
       if (
         choice?.finish_reason !== "stop" ||

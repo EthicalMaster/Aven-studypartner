@@ -571,18 +571,11 @@ ${excerpt}`;
       if (aiRes.data && aiRes.data.flashcards && aiRes.data.flashcards.length > 0) {
         generatedCards = aiRes.data.flashcards;
       }
-    } catch {
-      // Deterministic fallback if AI Gateway is null or rate-limited
-      generatedCards = chunks.slice(0, 5).map((c, idx) => {
-        const firstSentence = c.text.split('.')[0]?.trim() || `Key concept in ${title}`;
-        return {
-          question: `What is the core principle described in part ${idx + 1} of ${title}?`,
-          answer: firstSentence.length > 20 ? firstSentence : c.text.slice(0, 180),
-          keyConcept: `${topic} - Part ${idx + 1}`,
-          difficulty: idx % 2 === 0 ? 'medium' : 'easy',
-        };
-      });
+    } catch (error) {
+      // Never disguise provider failures as generated educational content.
+      throw error;
     }
+    if (!generatedCards.length) throw new Error('No valid flashcards were generated. Try again later.');
 
     // Insert into database linked to this study material
     const cardsToInsert = generatedCards.map((c) => ({

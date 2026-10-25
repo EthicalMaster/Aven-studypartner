@@ -33,6 +33,7 @@ try {
   await db.exec(
     "CREATE TABLE study_materials(id uuid PRIMARY KEY,student_id uuid,processing_status text); CREATE TABLE document_pages(material_id uuid REFERENCES study_materials ON DELETE CASCADE,page_number int,text text);",
   );
+  await db.exec(readFileSync(new URL('../db/migrations/018_ai_token_budget.sql',import.meta.url),'utf8'));
   const migration = readFileSync(
     new URL("../db/migrations/017_material_summaries.sql", import.meta.url),
     "utf8",

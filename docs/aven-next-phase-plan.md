@@ -1,7 +1,7 @@
 # Aven: reliable AI learning and account improvements
 
 Prepared: 25 October 2026
-Status: execution plan; implementation not started for the phases below.
+Status: Phase 1 in progress. First correction bundle adds durable Groq token reservations and removes fabricated fallback flashcards. Later phases remain pending.
 
 ## Goal and current baseline
 
@@ -127,3 +127,12 @@ Acceptance: evidence-based schema/mapping review, tenant isolation and migration
 - [ ] Phase 5: password recovery/security.
 - [ ] Phase 6: Settings and helping guide.
 - [ ] Phase 7: curriculum database audit and redesign.
+
+
+## Phase 1 correction log — 25 October 2026
+
+- Completed: Groq-wide PostgreSQL daily token reservation cap, atomic concurrent admission, idempotent actual-usage reconciliation and conservative retention when usage is unknown. Scope is this Aven deployment, not other projects sharing a Groq account. Default 100,000 tokens/day is an initial configurable cap, not a statement of provider quota.
+- Completed: removed flashcard fallback that converted first-chunk sentences into generic cards after any provider error. This prevents failures being disguised as successful generation; it does not yet complete the meaningful-flashcard redesign.
+- Finding: flashcard input selects only the first four chunks, up to 1,000 characters each. This biases generation toward front matter and needs replacement with meaningful, representative passage selection in the planned quality phase.
+- Validation: isolated PostgreSQL-compatible budget tests and summary regression tests; TypeScript and production build. No live model quality benchmark performed.
+- Next: representative content fixtures, cleaning and passage selection, structured generation review and the agreed quality rubric. Academic setup and quizzes follow afterward.
