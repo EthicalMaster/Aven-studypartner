@@ -359,7 +359,7 @@ flashcardRouter.post(
         success: true,
         cards,
         totalGenerated: cards.length,
-        message: `Successfully generated ${cards.length} flashcards from study document.`,
+        message: `Your document deck is ready (${cards.length} cards returned). Existing cards are reused.`,
       });
     } catch (err: any) {
       console.error(
