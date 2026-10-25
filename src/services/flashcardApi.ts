@@ -235,7 +235,7 @@ export const flashcardApi = {
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || 'Failed to generate flashcards from document');
+      throw new Error(`${err.message || 'Failed to generate flashcards from document'}${err.code || err.error ? ` [${err.code || err.error}]` : ''}`);
     }
     return res.json();
   },
