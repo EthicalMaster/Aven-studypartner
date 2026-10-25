@@ -1,3 +1,5 @@
+import { AcademicSetupDialog } from '../AcademicSetupDialog';
+import type { AcademicContext } from '../../../shared/academic-context';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -55,6 +57,8 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
   const [reviewedCounts, setReviewedCounts] = useState({ again: 0, hard: 0, good: 0, easy: 0 });
   const [cardStartTime, setCardStartTime] = useState<number>(Date.now());
   const [submittingRating, setSubmittingRating] = useState<boolean>(false);
+
+  const [academicSetup,setAcademicSetup] = useState<{materialId:string;title:string;subject:string}|null>(null);
 
   // Material Generation State
   const [generatingMaterialId, setGeneratingMaterialId] = useState<string | null>(null);
@@ -267,10 +271,10 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
   }, [isReviewing, deckCompleted, isFlipped, currentIndex, activeDeck]);
 
   // Generate Flashcards from Document
-  const handleGenerateFromMaterial = async (materialId: string, title: string) => {
+  const handleGenerateFromMaterial = async (materialId: string, title: string, academicContext?: AcademicContext) => {
     try {
       setGeneratingMaterialId(materialId);
-      const res = await flashcardApi.generateFromMaterial(materialId);
+      const res = await flashcardApi.generateFromMaterial(materialId, academicContext);
       setNotificationMsg({
         type: 'success',
         text: res.message,
@@ -659,6 +663,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
   // ==========================================================================
   return (
     <div className="flex flex-col gap-6 pb-12 max-w-6xl mx-auto">
+      {academicSetup && <AcademicSetupDialog subject={academicSetup.subject} onCancel={()=>setAcademicSetup(null)} onConfirm={context=>{const selected=academicSetup;setAcademicSetup(null);void handleGenerateFromMaterial(selected.materialId,selected.title,context);}}/>}
       {/* Toast Notification */}
       {notificationMsg && (
         <div
@@ -1154,7 +1159,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                         </button>
                       ) : (
                         <button
-                          onClick={() => handleGenerateFromMaterial(deck.materialId, deck.title)}
+                          onClick={() => deck.totalCards > 0 ? handleGenerateFromMaterial(deck.materialId, deck.title) : setAcademicSetup({materialId:deck.materialId,title:deck.title,subject:deck.subject})}
                           disabled={generatingMaterialId === deck.materialId}
                           className="flex-1 py-2 rounded-xl bg-[var(--aven-soft)] text-[var(--aven-action)] font-bold text-[12px] hover:bg-[var(--aven-blue-soft)] transition-colors border border-[var(--aven-blue-soft)] flex items-center justify-center gap-1.5"
                         >

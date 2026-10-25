@@ -150,3 +150,9 @@ Acceptance: evidence-based schema/mapping review, tenant isolation and migration
 - Batch insertion is now transactional to prevent partial decks after failures.
 - Existing review history is preserved. Semantic deduplication, source-version regeneration and preview/edit approval remain pending.
 - Targeted mocked service tests and passage-selection regressions pass; live quality evaluation remains required.
+
+### Phase 2 first integration — academic setup for flashcards
+
+- Added brief school/university context form, profile/document defaults and shared server validation.
+- Context reaches flashcard generation; existing decks are reused without asking again. Invalid/missing context stops new generation before inference.
+- This does not yet implement persistent generation preferences, PDF quizzes or web/PYQ research. Academic-context provenance beyond persisted card subject remains pending.

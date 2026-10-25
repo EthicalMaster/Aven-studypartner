@@ -1,3 +1,4 @@
+import type { AcademicContext } from '../../shared/academic-context';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -221,7 +222,7 @@ export const flashcardApi = {
     return res.json();
   },
 
-  async generateFromMaterial(materialId: string): Promise<{
+  async generateFromMaterial(materialId: string, academicContext?: AcademicContext): Promise<{
     success: boolean;
     cards: FlashcardItem[];
     totalGenerated: number;
@@ -229,6 +230,7 @@ export const flashcardApi = {
   }> {
     const res = await fetch(`/api/flashcards/generate-from-material/${materialId}`, {
       method: 'POST',
+      body: JSON.stringify({ academicContext }),
       headers: { 'Content-Type': 'application/json' },
     });
     if (!res.ok) {

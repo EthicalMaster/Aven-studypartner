@@ -1,3 +1,4 @@
+import { academicContextSchema } from '../../shared/academic-context.js';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -353,7 +354,9 @@ flashcardRouter.post(
       const profile = getStudentProfile(req);
       const { materialId } = req.params;
 
-      const cards = await flashcardService.generateFromMaterial(materialId, profile.id);
+      const parsed = req.body?.academicContext === undefined ? undefined : academicContextSchema.safeParse(req.body.academicContext);
+      if (parsed && !parsed.success) { res.status(400).json({message:'Invalid academic details. Check the study level, authority, stage and subject.'}); return; }
+      const cards = await flashcardService.generateFromMaterial(materialId, profile.id, parsed?.data);
 
       res.json({
         success: true,
