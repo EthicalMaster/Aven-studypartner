@@ -250,7 +250,7 @@ export class QuizRepository {
    * Create a new Quiz using the Paper Builder.
    * Pulls from Question Bank or custom questions, validates available count, and calculates total marks.
    */
-  async createQuiz(studentId: string, input: CreateQuizInput): Promise<{ quiz: QuizRecord; questions: SafeQuizQuestion[] }> {
+  async createQuiz(studentId: string, input: CreateQuizInput, provenance?: { materialId: string; key: string; metadata: Record<string, unknown> }): Promise<{ quiz: QuizRecord; questions: SafeQuizQuestion[] }> {
     const pool = getRequiredPool();
     const client = await pool.connect();
 
@@ -378,6 +378,11 @@ export class QuizRepository {
       );
 
       const quiz = quizRes.rows[0];
+
+      if (provenance) {
+        await client.query(`UPDATE quizzes SET source_material_id=$2, generation_key=$3, generation_metadata=$4 WHERE id=$1`,
+          [quiz.id, provenance.materialId, provenance.key, JSON.stringify(provenance.metadata)]);
+      }
 
       // Insert Quiz Questions
       const safeQuestions: SafeQuizQuestion[] = [];

@@ -9,12 +9,14 @@ import type { Quiz, QuizSession } from '../../types';
 
 interface QuizPaperPreviewProps {
   quiz: Quiz;
+  notice?: string | null;
   onStartSession: (session: QuizSession) => void;
   onBack: () => void;
 }
 
 export const QuizPaperPreview: React.FC<QuizPaperPreviewProps> = ({
   quiz,
+  notice,
   onStartSession,
   onBack,
 }) => {
@@ -44,7 +46,7 @@ export const QuizPaperPreview: React.FC<QuizPaperPreviewProps> = ({
         className="flex items-center gap-1.5 text-[13px] font-semibold text-[var(--aven-action)] hover:underline mb-4"
       >
         <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-        Back to Configuration
+        Back to quizzes
       </button>
 
       {/* Error alert */}
@@ -57,6 +59,7 @@ export const QuizPaperPreview: React.FC<QuizPaperPreviewProps> = ({
         </div>
       )}
 
+      {notice && <p role="status" className="mb-4 p-4 rounded-xl bg-amber-50 text-amber-900">{notice}</p>}
       {/* Official Paper Sheet */}
       <div className="bg-white rounded-3xl border border-[var(--aven-border)]/30 shadow-xs overflow-hidden">
         {/* Paper Header Banner */}
@@ -91,8 +94,8 @@ export const QuizPaperPreview: React.FC<QuizPaperPreviewProps> = ({
           </h1>
           <p className="text-[13px] text-[var(--aven-muted)]">
             {quiz.source === 'uploaded_material'
-              ? 'AI-grounded assessment synthesized from your uploaded lecture notes with chunk-level citations.'
-              : 'Official curriculum question paper compiled from PostgreSQL question repository.'}
+              ? 'AI practice from selected PDF passages. Explanations and source quotes appear after submission. This is not a verified past paper.'
+              : 'Practice paper compiled from the question bank.'}
           </p>
         </div>
 
@@ -140,7 +143,7 @@ export const QuizPaperPreview: React.FC<QuizPaperPreviewProps> = ({
         {/* Instructions */}
         <div className="p-6 sm:p-8 flex flex-col gap-4">
           <h3 className="text-[14px] font-bold text-[var(--aven-ink)] uppercase tracking-wider">
-            Important Examination Guidelines
+            Before you begin
           </h3>
 
           <ul className="space-y-3 text-[13px] text-[var(--aven-muted)] leading-relaxed">
@@ -149,7 +152,7 @@ export const QuizPaperPreview: React.FC<QuizPaperPreviewProps> = ({
                 timer
               </span>
               <span>
-                <strong>Server-Authoritative Clock:</strong> The countdown deadline is stored and validated on the backend. When time expires, your responses are automatically submitted and graded.
+                <strong>Timed practice:</strong> The timer starts when you begin. When time runs out, your saved answers are submitted for scoring.
               </span>
             </li>
 
@@ -158,7 +161,7 @@ export const QuizPaperPreview: React.FC<QuizPaperPreviewProps> = ({
                 save
               </span>
               <span>
-                <strong>Real-Time Persistence:</strong> Every selected option and written answer is saved to PostgreSQL in real time. If your network hiccups, your progress is preserved.
+                <strong>Stay connected:</strong> Answers are saved as you work. Keep an internet connection and check for any saving errors before submitting.
               </span>
             </li>
 
@@ -168,7 +171,7 @@ export const QuizPaperPreview: React.FC<QuizPaperPreviewProps> = ({
                   warning
                 </span>
                 <span>
-                  <strong>Strict Proctored Mode Active:</strong> Do NOT navigate away, change browser tabs, or minimize the window. The system uses the <em>Page Visibility API</em> to detect unfocused windows and will <strong>instantly auto-submit</strong> the paper upon tab switch!
+                  <strong>Exam mode:</strong> Switching tabs or minimizing the window automatically submits your paper. Stay on this page until you finish.
                 </span>
               </li>
             ) : (
@@ -177,7 +180,7 @@ export const QuizPaperPreview: React.FC<QuizPaperPreviewProps> = ({
                   school
                 </span>
                 <span>
-                  <strong>Practice Session:</strong> Comprehensive answer explanations, formula hints, and step-by-step solutions will be unlocked immediately upon submitting.
+                  <strong>Review and learn:</strong> After submitting, review the correct answers and explanations. PDF quizzes also include supporting source quotes; compare them with your notes.
                 </span>
               </li>
             )}
@@ -191,7 +194,7 @@ export const QuizPaperPreview: React.FC<QuizPaperPreviewProps> = ({
               disabled={isStarting}
               className="px-5 py-2.5 rounded-xl border border-[var(--aven-border)]/40 text-[13px] font-semibold text-[var(--aven-muted)] hover:bg-[var(--aven-canvas)] transition-all"
             >
-              Back / Modify Paper
+              Back to quizzes
             </button>
 
             <button

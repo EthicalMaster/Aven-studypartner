@@ -1,8 +1,8 @@
 import React,{useEffect,useRef,useState} from 'react';
 import { academicContextSchema,academicPreferencesSchema,type AcademicContext } from '../../shared/academic-context';
 import { useAuth } from '../context/AuthContext';
-interface Props { subject:string; onCancel:()=>void; onConfirm:(context:AcademicContext)=>void }
-export function AcademicSetupDialog({subject,onCancel,onConfirm}:Props){
+interface Props { confirmLabel?:string; subject:string; onCancel:()=>void; onConfirm:(context:AcademicContext)=>void }
+export function AcademicSetupDialog({subject,onCancel,onConfirm,confirmLabel='Generate flashcards'}:Props){
  const {user}=useAuth();const profile=user?.profile;
  const [level,setLevel]=useState<'school'|'university'>(/school|primary|secondary/i.test(profile?.education_level||'')?'school':'university');
  // Institution is deliberately not assumed to be the exam-awarding university/board.
@@ -52,6 +52,6 @@ export function AcademicSetupDialog({subject,onCancel,onConfirm}:Props){
  {hasSaved&&<button type="button" onClick={forget} className="text-sm underline">Forget saved study details</button>}
  <p className="text-xs text-[var(--aven-muted)]">No web or past-paper search is performed yet. These choices apply to this generation and do not change your profile.</p>
  {error&&<p role="alert" className="text-sm text-red-700">{error}</p>}
- <div className="flex justify-end gap-3"><button type="button" className="rounded-xl border px-4 py-2" onClick={onCancel}>Cancel</button><button className="rounded-xl bg-[var(--aven-action)] text-white px-4 py-2" type="submit">Generate flashcards</button></div>
+ <div className="flex justify-end gap-3"><button type="button" className="rounded-xl border px-4 py-2" onClick={onCancel}>Cancel</button><button className="rounded-xl bg-[var(--aven-action)] text-white px-4 py-2" type="submit">{confirmLabel}</button></div>
  </fieldset></form></dialog>;
 }

@@ -1,3 +1,7 @@
+import { z } from 'zod';
+import { academicContextSchema } from '../../shared/academic-context.js';
+import { pdfQuizService } from '../services/pdf-quiz.service.js';
+import { AIGatewayError } from '../services/ai/errors.js';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -155,6 +159,19 @@ quizRouter.post('/', validateBody(createQuizSchema), async (req: Request, res: R
     }
     console.error('[Quiz Routes] POST /api/quizzes error:', err);
     res.status(500).json({ error: 'INTERNAL_ERROR', message: err.message || 'Failed to create quiz paper.' });
+  }
+});
+
+quizRouter.post('/from-material', validateBody(z.object({
+  materialId: z.string().uuid(), academicContext: academicContextSchema,
+}).strict()), async (req: Request, res: Response) => {
+  try {
+    const result = await pdfQuizService.generate(getStudentProfileId(req), req.body.materialId, req.body.academicContext);
+    res.status(result.reused ? 200 : 201).json(result);
+  } catch (error) {
+    if (error instanceof AIGatewayError) { res.status(error.statusCode).json(error.toResponse()); return; }
+    console.error('[PDF Quiz] Generation failed:', error);
+    res.status(500).json({ error: 'GENERATION_FAILED', message: 'Could not prepare this quiz. Check saved papers before trying again.' });
   }
 });
 
