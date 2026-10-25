@@ -1,13 +1,27 @@
 # Aven: reliable AI learning and account improvements
 
 Prepared: 25 October 2026
-Status: Phase 1 in progress. First correction bundle adds durable Groq token reservations and removes fabricated fallback flashcards. Later phases remain pending.
+Updated: 26 October 2026. Status: token controls, brief academic setup, saved preferences, meaningful flashcard generation and PDF practice quizzes are implemented; the user reports the quiz flow works. Phase 3 source discovery/review is in preview. Full source verification and remaining release work are open.
 
 ## Goal and current baseline
 
 Build a useful learning platform for school and university students generally. Correct, relevant learning content and responsible token consumption are release requirements, not optional polish. Existing baseline: deployed workspace redesign, PostgreSQL/pgvector retrieval, and Groq-backed PDF summaries with saved checkpoints. The user has reported that the summary deployment works. This plan does not imply that all live data or generation quality has been audited.
 
 Keep the free-only budget. Do not enable paid billing, rotate keys to bypass quotas, or assume separate keys provide independent capacity. Reuse existing infrastructure where practical. Keep secrets server-side.
+
+## Remaining release scope — 26 October 2026
+
+**Five substantial phases remain**, including two that are already underway:
+
+| Phase | Status | Remaining work |
+| --- | --- | --- |
+| 3 — Quizzes and exam research | PDF quizzes user-confirmed; discovery/review preview ready | Live search validation, full-paper/institution/year verification, syllabus mismatch handling, question reporting and richer quiz controls |
+| 4 — Flashcards | Core generation and review working | Source display, deck preview/edit/selection and stronger deduplication |
+| 5 — Account recovery | Not started | Email OTP, agreed two-successful-resets policy, session/security tests |
+| 6 — Settings and helping guide | Not started | Persisted profile/account/security controls and guide theme consistency |
+| 7 — Curriculum data | Not started | Audit, proposed hierarchy, question review and tested migration preserving history |
+
+Phases 1–2 have working foundations but are not formally closed: representative quality/token measurements, remaining cache/version controls and normalized academic mappings still need review. Finish with an integrated live acceptance pass. This count describes the agreed release scope, not a promise that all future website work is finished.
 
 ## Execution order
 
@@ -178,3 +192,11 @@ Acceptance: evidence-based schema/mapping review, tenant isolation and migration
 - Migration 020 stores source/context/model provenance and generation keys, supports valid partial batches, and preserves paper/attempt history when source PDFs are deleted. Session creation now enforces quiz ownership.
 - Verified real repository SQL with PGlite and mocked model/lock responses, including answer scoring and private access; inspected mocked browser mobile/desktop flows. TypeScript/build and flashcard regressions pass.
 - Live PDF/model quality review remains pending. Web/PYQ research, verified source discovery, richer question formats and the remaining phases are still open.
+
+### Phase 3 second integration — optional source discovery and review
+
+- Added one explicit basic Tavily search using academic labels only, maximum five candidates, seven-day public metadata cache, monthly app-wide and daily student reservations. No Groq call is used for search or candidate validation.
+- Candidates require student review and selection (maximum two). Persisted server-side source snapshots can guide phrasing/emphasis, while answers must still cite the PDF. Generated content is never labelled authentic PYQ or a guaranteed exam prediction.
+- Added source links on saved quiz previews; raw answer evidence remains excluded. No-key, exhausted-allowance, provider-error and empty-result paths offer PDF-only practice.
+- Migration 021 adds public candidate cache and search counters. Optional server-only TAVILY_API_KEY enables search; defaults are 500 basic searches/month for Aven and 5/day/student. No automatic retries or paid fallback.
+- PGlite tests, mocked search-provider tests, quiz provenance/reuse regressions and mobile browser checks pass. Live Tavily/Groq matching and full-source authenticity verification remain pending; phase 3 is not complete.
