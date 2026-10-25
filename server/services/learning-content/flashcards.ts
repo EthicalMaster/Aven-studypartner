@@ -26,7 +26,7 @@ export function selectPassages(pages: {page_number:number;text:string}[], budget
 }
 export const groundedCardsSchema=z.object({flashcards:z.array(z.object({
   question:z.string().min(12).max(500),answer:z.string().min(12).max(1200),keyConcept:z.string().min(2).max(160),
-  formula:z.string().max(300),difficulty:z.enum(['easy','medium','hard']),sourceId:z.string(),evidence:z.string().min(30).max(800),
+  formula:z.string().max(300),difficulty:z.enum(['easy','medium','hard']),sourceId:z.string(),evidence:z.string().trim().min(1).max(800),
 }).strict()).min(1).max(6)}).strict();
 export function validateCards(value:unknown,passages:Passage[]){
  const parsed=groundedCardsSchema.parse(value);const questions=new Set<string>();const answers=new Set<string>();
