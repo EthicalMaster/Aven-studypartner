@@ -1,0 +1,1 @@
+DROP TABLE academic_generation_preferences;
