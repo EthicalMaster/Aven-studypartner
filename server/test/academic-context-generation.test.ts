@@ -23,10 +23,10 @@ flashcardRepository.getFlashcards=async()=>({cards:[],total:0});
 let called=false;
 (aiGatewayService as any).executeStructured=async(input:any)=>{
  const payload=JSON.parse(input.messages[1].content);assert.equal(payload.academicContext.level,'school');assert.equal(payload.academicContext.stage,'Class 10');called=true;
- return {data:{flashcards:[{question:'How is energy conserved in a closed system?',answer:'Total energy remains constant while its form can change.',keyConcept:'Energy',formula:'',difficulty:'easy',sourceId:'p1',evidence:source}]}};
+ return {data:{flashcards:[{question:'How is energy conserved in a closed system?',answer:'Total energy remains constant while its form can change.',keyConcept:'Energy',formula:'',difficulty:'easy',sourceId:'p1',evidence:source},{answer:'',sourceId:'p1'}]}};
 };
-flashcardRepository.createFlashcardsBatch=async(cards)=>{assert.equal(cards[0].subject,'Physics');return [{id:'new'} as any];};
+flashcardRepository.createFlashcardsBatch=async(cards)=>{assert.equal(cards.length,1);assert.equal(cards[0].subject,'Physics');return [{id:'new'} as any];};
 await assert.rejects(()=>flashcardService.generateFromMaterial('m','s'),/Confirm your study level/);assert.equal(called,false);
-await flashcardService.generateFromMaterial('m','s',{level:'school',authority:'CBSE',stage:'Class 10',subject:'Physics'});assert(called);
+const result=await flashcardService.generateFromMaterial('m','s',{level:'school',authority:'CBSE',stage:'Class 10',subject:'Physics'});assert(called);assert.equal(result.cards.length,1);assert.equal(result.rejectedCount,1);assert.equal(result.reused,false);
 setPoolForTesting(null);
 console.log('PASS: context required for new deck, passed to generation, selected subject persisted.');

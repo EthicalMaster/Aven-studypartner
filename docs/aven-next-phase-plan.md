@@ -163,3 +163,10 @@ Acceptance: evidence-based schema/mapping review, tenant isolation and migration
 - Form loads and confirms saved defaults; Remember saves and Forget explicitly deletes. Load failure permits manual entry, save failure does not silently proceed.
 - Migration 019 adds the dedicated preferences table. Existing profile and review history are untouched.
 - PDF quizzes and web/PYQ research remain the next larger feature phase.
+
+### Flashcard validation stability correction
+
+- Removed arbitrary answer-length floor; accepts non-empty short/numeric answers.
+- Per-card validation retains accepted cards and reports rejected count without extra model calls.
+- Conservative evidence normalization preserves mathematical signs, exponents and case; genuine mismatches remain rejected.
+- Added regression fixtures for both reported failures. Live content accuracy still requires source review.
