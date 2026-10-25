@@ -156,3 +156,10 @@ Acceptance: evidence-based schema/mapping review, tenant isolation and migration
 - Added brief school/university context form, profile/document defaults and shared server validation.
 - Context reaches flashcard generation; existing decks are reused without asking again. Invalid/missing context stops new generation before inference.
 - This does not yet implement persistent generation preferences, PDF quizzes or web/PYQ research. Academic-context provenance beyond persisted card subject remains pending.
+
+### Phase 2 preference persistence
+
+- Added optional server-persisted academic defaults keyed by authenticated profile, excluding document subject.
+- Form loads and confirms saved defaults; Remember saves and Forget explicitly deletes. Load failure permits manual entry, save failure does not silently proceed.
+- Migration 019 adds the dedicated preferences table. Existing profile and review history are untouched.
+- PDF quizzes and web/PYQ research remain the next larger feature phase.

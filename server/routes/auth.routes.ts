@@ -1,3 +1,5 @@
+import { academicPreferencesService } from '../services/academic-preferences.service.js';
+import { academicPreferencesSchema } from '../../shared/academic-context.js';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -285,3 +287,19 @@ authRouter.get(
   }
 );
 
+
+// Preferences are always scoped to the authenticated profile, never a client ID.
+authRouter.all('/academic-preferences', requireAuth, async (req: Request, res: Response): Promise<void> => {
+  const studentId = req.user?.profile?.id;
+  if (!studentId) { res.status(403).json({message:'A student profile is required.'}); return; }
+  try {
+    if (req.method === 'GET') { res.json({preferences:await academicPreferencesService.get(studentId)}); return; }
+    if (req.method === 'DELETE') { await academicPreferencesService.clear(studentId); res.json({preferences:null}); return; }
+    if (req.method === 'PUT') {
+      const parsed=academicPreferencesSchema.safeParse(req.body);
+      if (!parsed.success) { res.status(400).json({message:'Invalid academic preferences.'}); return; }
+      res.json({preferences:await academicPreferencesService.save(studentId,parsed.data)}); return;
+    }
+    res.setHeader('Allow','GET, PUT, DELETE');res.status(405).json({message:'Method not allowed.'});
+  } catch { res.status(503).json({message:'Could not access saved academic preferences. Please try again later.'}); }
+});
