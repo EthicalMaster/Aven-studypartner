@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import {academicContextSchema} from '../../shared/academic-context.js';
+assert(academicContextSchema.safeParse({level:'school',authority:'CBSE',stage:'Class 10',subject:'Physics'}).success);
+assert(academicContextSchema.safeParse({level:'university',authority:'Unknown',stage:'Semester 1',subject:'Mathematics',program:'BSc'}).success);
+assert(!academicContextSchema.safeParse({level:'university',authority:'RGPV',stage:'Semester 1',subject:'Mathematics'}).success);
+assert(!academicContextSchema.safeParse({level:'school',authority:'CBSE',stage:' ',subject:'Physics'}).success);
+assert(!academicContextSchema.safeParse({level:'school',authority:'CBSE',stage:'10',subject:'Physics',studentId:'other'}).success);
+assert(!academicContextSchema.safeParse({level:'school',authority:'x'.repeat(121),stage:'10',subject:'Physics'}).success);
+console.log('PASS: both academic paths, unknown authority, required fields, length bounds and unexpected fields.');
+
+const {setPoolForTesting}=await import('../db/connection.js');
+const {materialRepository}=await import('../repositories/material.repository.js');
+const {documentRepository}=await import('../repositories/document.repository.js');
+const {flashcardRepository}=await import('../repositories/flashcard.repository.js');
+const {flashcardService}=await import('../services/flashcard.service.js');
+const {aiGatewayService}=await import('../services/ai/gateway.service.js');
+const source='In a closed system total energy is conserved, although it can change form. Energy transfers between objects through work and heat.';
+setPoolForTesting({connect:async()=>({query:async()=>({rows:[{acquired:true}]}),release(){}})});
+materialRepository.getMaterialById=async()=>({id:'m',title:'Energy',subject:'Old subject'} as any);
+documentRepository.getChunksByMaterial=async()=>[{} as any];
+documentRepository.getPagesByMaterial=async()=>[{page_number:1,text:source} as any];
+flashcardRepository.getFlashcards=async()=>({cards:[],total:0});
+let called=false;
+(aiGatewayService as any).executeStructured=async(input:any)=>{
+ const payload=JSON.parse(input.messages[1].content);assert.equal(payload.academicContext.level,'school');assert.equal(payload.academicContext.stage,'Class 10');called=true;
+ return {data:{flashcards:[{question:'How is energy conserved in a closed system?',answer:'Total energy remains constant while its form can change.',keyConcept:'Energy',formula:'',difficulty:'easy',sourceId:'p1',evidence:source}]}};
+};
+flashcardRepository.createFlashcardsBatch=async(cards)=>{assert.equal(cards[0].subject,'Physics');return [{id:'new'} as any];};
+await assert.rejects(()=>flashcardService.generateFromMaterial('m','s'),/Confirm your study level/);assert.equal(called,false);
+await flashcardService.generateFromMaterial('m','s',{level:'school',authority:'CBSE',stage:'Class 10',subject:'Physics'});assert(called);
+setPoolForTesting(null);
+console.log('PASS: context required for new deck, passed to generation, selected subject persisted.');
