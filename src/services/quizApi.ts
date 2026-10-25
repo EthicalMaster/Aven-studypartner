@@ -1,3 +1,4 @@
+import type { ExamResearchResult, ResearchSelection } from '../../shared/exam-research';
 import type { AcademicContext } from '../../shared/academic-context';
 /**
  * @license
@@ -54,10 +55,16 @@ export interface SessionStateResponse {
 }
 
 export const quizApi = {
-  async generateFromMaterial(materialId: string, academicContext: AcademicContext): Promise<{quiz: Quiz; reused: boolean; rejectedCount: number; warning: string | null}> {
+  async discoverSources(academicContext: AcademicContext): Promise<ExamResearchResult> {
+    const res=await fetch('/api/quizzes/research',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({academicContext})});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok) throw new Error(data.message || 'Could not search for sources.');
+    return data;
+  },
+  async generateFromMaterial(materialId: string, academicContext: AcademicContext, research?: ResearchSelection): Promise<{quiz: Quiz; reused: boolean; rejectedCount: number; warning: string | null}> {
     const res = await fetch('/api/quizzes/from-material', {
       method: 'POST', credentials: 'include', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({materialId, academicContext}),
+      body: JSON.stringify({materialId, academicContext, research}),
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.message || 'Could not generate the quiz. Check saved papers before retrying.');

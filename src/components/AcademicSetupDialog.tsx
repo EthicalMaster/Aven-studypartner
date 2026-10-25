@@ -1,8 +1,8 @@
 import React,{useEffect,useRef,useState} from 'react';
 import { academicContextSchema,academicPreferencesSchema,type AcademicContext } from '../../shared/academic-context';
 import { useAuth } from '../context/AuthContext';
-interface Props { confirmLabel?:string; subject:string; onCancel:()=>void; onConfirm:(context:AcademicContext)=>void }
-export function AcademicSetupDialog({subject,onCancel,onConfirm,confirmLabel='Generate flashcards'}:Props){
+interface Props { confirmLabel?:string; researchEnabled?:boolean; subject:string; onCancel:()=>void; onConfirm:(context:AcademicContext)=>void }
+export function AcademicSetupDialog({subject,onCancel,onConfirm,confirmLabel='Generate flashcards',researchEnabled=false}:Props){
  const {user}=useAuth();const profile=user?.profile;
  const [level,setLevel]=useState<'school'|'university'>(/school|primary|secondary/i.test(profile?.education_level||'')?'school':'university');
  // Institution is deliberately not assumed to be the exam-awarding university/board.
@@ -50,7 +50,7 @@ export function AcademicSetupDialog({subject,onCancel,onConfirm,confirmLabel='Ge
  <label className="block text-sm">Subject<input required maxLength={120} className={input} value={selectedSubject} onChange={e=>setSubject(e.target.value)}/></label>
  <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={remember} onChange={e=>setRemember(e.target.checked)}/>Remember these study details for future documents (subject stays document-specific)</label>
  {hasSaved&&<button type="button" onClick={forget} className="text-sm underline">Forget saved study details</button>}
- <p className="text-xs text-[var(--aven-muted)]">No web or past-paper search is performed yet. These choices apply to this generation and do not change your profile.</p>
+ <p className="text-xs text-[var(--aven-muted)]">{researchEnabled ? 'Next, search public sources using these academic labels only. Your PDF text is not sent to search. Review any results before using them.' : 'These choices apply to this generation and do not change your profile. No web search is performed for PDF-only practice.'}</p>
  {error&&<p role="alert" className="text-sm text-red-700">{error}</p>}
  <div className="flex justify-end gap-3"><button type="button" className="rounded-xl border px-4 py-2" onClick={onCancel}>Cancel</button><button className="rounded-xl bg-[var(--aven-action)] text-white px-4 py-2" type="submit">{confirmLabel}</button></div>
  </fieldset></form></dialog>;

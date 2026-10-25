@@ -9,6 +9,7 @@ import { quizSessionRepository } from '../repositories/quiz_session.repository.j
 import { aiGatewayService } from '../services/ai/gateway.service.js';
 import { scoringService } from '../services/scoring.service.js';
 import { adaptiveModelService } from '../services/adaptive-model.service.js';
+import { examResearchService } from '../services/exam-research/research.service.js';
 import { pdfQuizService } from '../services/pdf-quiz.service.js';
 import { validateQuizBatch, quizBatchSchema } from '../services/learning-content/quizzes.js';
 const source = 'In a closed system total energy is conserved, although it can change form. Energy transfers between objects through work and heat.';
@@ -64,7 +65,17 @@ try {
   invalid=true;await assert.rejects(()=>pdfQuizService.generate(student,material,{...context,stage:'Class 12'}),/No questions/);invalid=false;
   assert.equal((await db.query<{n:number}>('SELECT count(*)::int AS n FROM quizzes')).rows[0].n,1);
   const university=await pdfQuizService.generate(student,material,{level:'university',authority:'RGPV',program:'B.Tech',stage:'Semester 1',subject:'P'.repeat(120)});assert.equal(university.quiz?.subject.length,120);
-  await db.query('DELETE FROM study_materials WHERE id=$1',[material]);assert.equal((await db.query<{n:number}>('SELECT count(*)::int AS n FROM quizzes')).rows[0].n,2);
+  const examSource={id:'candidate',title:'Reviewed syllabus',url:'https://example.edu/syllabus',host:'example.edu',snippet:'Definitions and conceptual applications.'};
+  examResearchService.resolveSelection=async()=>[examSource];
+  (aiGatewayService as any).executeStructured=async(input:any)=>{
+    calls++;const payload=JSON.parse(input.messages[1].content);assert.deepEqual(payload.examSourceCandidates,[{title:examSource.title,snippet:examSource.snippet}]);assert(payload.passages.length>0);
+    return {data:{questions:[card]}};
+  };
+  const informed=await pdfQuizService.generate(student,material,context,{reviewed:true});assert.notEqual(informed.quiz?.id,generated.quiz.id);
+  const metadata=await db.query<{generation_metadata:any}>('SELECT generation_metadata FROM quizzes WHERE id=$1',[informed.quiz!.id]);
+  assert.deepEqual(metadata.rows[0].generation_metadata.examSources,[examSource]);
+  const countBefore=calls;const repeat=await pdfQuizService.generate(student,material,context,{reviewed:true});assert(repeat.reused);assert.equal(calls,countBefore);
+  await db.query('DELETE FROM study_materials WHERE id=$1',[material]);assert.equal((await db.query<{n:number}>('SELECT count(*)::int AS n FROM quizzes')).rows[0].n,3);
   assert.equal((await db.query<{source_material_id:string|null}>('SELECT source_material_id FROM quizzes LIMIT 1')).rows[0].source_material_id,null);
   assert(releases>0);
   console.log('PASS: item validation, source checks, schema migration, private ownership, busy guard, one-call generation, safe active payload, saved reuse, context-keyed papers, partial counts, rollback, school/university, 120-character subject and history retention. Mock AI and advisory locks; real PGlite SQL.');

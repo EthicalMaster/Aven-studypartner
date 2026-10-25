@@ -1,3 +1,6 @@
+import { examResearchService } from '../services/exam-research/research.service.js';
+import { researchSelectionSchema } from '../../shared/exam-research.js';
+import { getRequiredPool } from '../db/connection.js';
 import { z } from 'zod';
 import { academicContextSchema } from '../../shared/academic-context.js';
 import { pdfQuizService } from '../services/pdf-quiz.service.js';
@@ -162,11 +165,27 @@ quizRouter.post('/', validateBody(createQuizSchema), async (req: Request, res: R
   }
 });
 
+quizRouter.post('/research', validateBody(z.object({academicContext: academicContextSchema}).strict()), async (req: Request, res: Response) => {
+  try {res.json(await examResearchService.discover(getStudentProfileId(req),req.body.academicContext));}
+  catch {res.status(503).json({message:'Source search is temporarily unavailable. PDF-only practice is still available.'});}
+});
+
+quizRouter.get('/:quizId/research', async (req: Request, res: Response) => {
+  if (!z.string().uuid().safeParse(req.params.quizId).success) {res.status(400).json({message:'Invalid quiz ID.'});return;}
+  try {
+    const result = await getRequiredPool().query('SELECT generation_metadata FROM quizzes WHERE id=$1 AND student_id=$2',[req.params.quizId,getStudentProfileId(req)]);
+    if (!result.rows[0]) {res.status(404).json({message:'Quiz not found.'});return;}
+    // Never return the complete metadata: it also contains private answer evidence.
+    const sources = result.rows[0].generation_metadata?.examSources || [];
+    res.json({sources: sources.map((source: any) => ({title:source.title,url:source.url,host:source.host})),status:'user_reviewed_candidates'});
+  } catch {res.status(500).json({message:'Could not load source links.'});}
+});
+
 quizRouter.post('/from-material', validateBody(z.object({
-  materialId: z.string().uuid(), academicContext: academicContextSchema,
+  materialId: z.string().uuid(), academicContext: academicContextSchema, research: researchSelectionSchema.optional(),
 }).strict()), async (req: Request, res: Response) => {
   try {
-    const result = await pdfQuizService.generate(getStudentProfileId(req), req.body.materialId, req.body.academicContext);
+    const result = await pdfQuizService.generate(getStudentProfileId(req), req.body.materialId, req.body.academicContext, req.body.research);
     res.status(result.reused ? 200 : 201).json(result);
   } catch (error) {
     if (error instanceof AIGatewayError) { res.status(error.statusCode).json(error.toResponse()); return; }
