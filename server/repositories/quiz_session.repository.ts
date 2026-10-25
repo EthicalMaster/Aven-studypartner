@@ -100,8 +100,8 @@ export class QuizSessionRepository {
         `SELECT id, student_id, title, mode, question_count, total_marks::float as total_marks,
                 time_limit_minutes, negative_marking, negative_mark_value::float as negative_mark_value,
                 randomization
-         FROM quizzes WHERE id = $1`,
-        [quizId]
+         FROM quizzes WHERE id = $1 AND student_id = $2`,
+        [quizId, studentId]
       );
 
       if (quizRes.rows.length === 0) {

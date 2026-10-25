@@ -1,3 +1,4 @@
+import { PdfQuizSetup } from '../quiz/PdfQuizSetup';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -26,7 +27,7 @@ interface QuizzesViewProps {
   onRecordQuizCompletion?: () => void;
 }
 
-type ViewScreen = 'home' | 'setup' | 'preview' | 'active' | 'results';
+type ViewScreen = 'home' | 'pdf' | 'setup' | 'preview' | 'active' | 'results';
 
 export const QuizzesView: React.FC<QuizzesViewProps> = ({
   onNavigate,
@@ -43,6 +44,7 @@ export const QuizzesView: React.FC<QuizzesViewProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   // Active paper / session / results workflow
+  const [generationNotice, setGenerationNotice] = useState<string | null>(null);
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
   const [activeSession, setActiveSession] = useState<QuizSession | null>(null);
   const [activeResult, setActiveResult] = useState<DetailedQuizResult | null>(null);
@@ -94,6 +96,7 @@ export const QuizzesView: React.FC<QuizzesViewProps> = ({
 
   // Handler when user clicks "Preview & Start" on a quiz card
   const handleSelectQuizToPreview = (quiz: Quiz) => {
+    setGenerationNotice(null);
     setSelectedQuiz(quiz);
     setScreen('preview');
   };
@@ -137,6 +140,12 @@ export const QuizzesView: React.FC<QuizzesViewProps> = ({
     return `${h}h ${m}m`;
   };
 
+  if (screen === 'pdf') return <PdfQuizSetup onCancel={() => setScreen('home')} onCreated={(quiz, notice) => {
+    setQuizzes(previous => [quiz, ...previous.filter(q => q.id !== quiz.id)]);
+    setGenerationNotice(notice);
+    handlePaperCreated(quiz);
+  }}/>;
+
   // 1. SETUP SCREEN
   if (screen === 'setup') {
     return (
@@ -152,6 +161,7 @@ export const QuizzesView: React.FC<QuizzesViewProps> = ({
     return (
       <QuizPaperPreview
         quiz={selectedQuiz}
+        notice={generationNotice}
         onStartSession={handleStartSession}
         onBack={() => setScreen('home')}
       />
@@ -201,12 +211,12 @@ export const QuizzesView: React.FC<QuizzesViewProps> = ({
             Put your knowledge to work.
           </h1>
           <p className="text-[13px] text-[var(--aven-muted)] mt-0.5">
-            PostgreSQL-backed examination engine with server-authoritative timer, proctored exam modes, and real-time grading.
+            Practice from your PDFs or the question bank, then review your answers and progress.
           </p>
         </div>
 
         <button
-          onClick={() => setScreen('setup')}
+          onClick={() => {setGenerationNotice(null);setScreen('setup');}}
           className="px-5 py-2.5 rounded-2xl bg-[var(--aven-action)] hover:bg-[var(--aven-action)] text-white text-[13px] font-bold shadow-md shadow-[var(--aven-action)]/20 flex items-center justify-center gap-2 transition-all shrink-0"
         >
           <span className="material-symbols-outlined text-[18px]">add_circle</span>
@@ -214,6 +224,11 @@ export const QuizzesView: React.FC<QuizzesViewProps> = ({
         </button>
       </div>
 
+      <section className="rounded-3xl border border-[var(--aven-border)] bg-[var(--aven-soft)] p-6 flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
+        <div><h2 className="text-xl font-semibold">Turn a PDF into practice.</h2>
+          <p className="mt-2 text-sm text-[var(--aven-muted)]">Up to five multiple-choice questions, with explanations and source quotes after you finish. Saved papers are free to repeat.</p></div>
+        <button onClick={() => {setGenerationNotice(null);setScreen('pdf');}} className="shrink-0 rounded-xl bg-[var(--aven-action)] text-white px-5 py-3 font-semibold">Quiz from PDF</button>
+      </section>
       {/* Real Statistics Banner */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="bg-white rounded-3xl p-5 border border-[var(--aven-border)]/30 shadow-xs">
@@ -309,7 +324,7 @@ export const QuizzesView: React.FC<QuizzesViewProps> = ({
       {loading && (
         <div className="bg-white rounded-3xl p-16 border border-[var(--aven-border)]/30 flex flex-col items-center justify-center gap-3">
           <div className="w-8 h-8 border-3 border-[var(--aven-action)] border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-[13px] text-[var(--aven-muted)]">Connecting to PostgreSQL quiz repository...</p>
+          <p className="text-[13px] text-[var(--aven-muted)]">Loading your papers…</p>
         </div>
       )}
 
@@ -336,10 +351,10 @@ export const QuizzesView: React.FC<QuizzesViewProps> = ({
                 No Quiz Papers Found
               </h3>
               <p className="text-[13px] text-[var(--aven-muted)] mt-1 mb-5 leading-relaxed">
-                Build your first standardized assessment paper from the university curriculum question bank to get started.
+                Create practice from an uploaded PDF or build a paper from the question bank.
               </p>
               <button
-                onClick={() => setScreen('setup')}
+                onClick={() => {setGenerationNotice(null);setScreen('setup');}}
                 className="px-6 py-2.5 rounded-xl bg-[var(--aven-action)] text-white text-[13px] font-bold hover:bg-[var(--aven-action)] transition-all"
               >
                 Build Quiz Paper

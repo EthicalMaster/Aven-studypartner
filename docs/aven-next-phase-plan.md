@@ -170,3 +170,11 @@ Acceptance: evidence-based schema/mapping review, tenant isolation and migration
 - Per-card validation retains accepted cards and reports rejected count without extra model calls.
 - Conservative evidence normalization preserves mathematical signs, exponents and case; genuine mismatches remain rejected.
 - Added regression fixtures for both reported failures. Live content accuracy still requires source review.
+
+### Phase 3 first integration — PDF practice quizzes
+
+- Added PDF → academic setup → saved MCQ paper → existing timed attempt/results flow. School and university defaults share the existing optional Remember preferences.
+- One bounded AI request produces up to five questions. Source/format checks omit invalid items with a visible notice; no automatic retry. Saved papers reuse content without inference.
+- Migration 020 stores source/context/model provenance and generation keys, supports valid partial batches, and preserves paper/attempt history when source PDFs are deleted. Session creation now enforces quiz ownership.
+- Verified real repository SQL with PGlite and mocked model/lock responses, including answer scoring and private access; inspected mocked browser mobile/desktop flows. TypeScript/build and flashcard regressions pass.
+- Live PDF/model quality review remains pending. Web/PYQ research, verified source discovery, richer question formats and the remaining phases are still open.
