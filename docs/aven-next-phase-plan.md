@@ -136,3 +136,10 @@ Acceptance: evidence-based schema/mapping review, tenant isolation and migration
 - Finding: flashcard input selects only the first four chunks, up to 1,000 characters each. This biases generation toward front matter and needs replacement with meaningful, representative passage selection in the planned quality phase.
 - Validation: isolated PostgreSQL-compatible budget tests and summary regression tests; TypeScript and production build. No live model quality benchmark performed.
 - Next: representative content fixtures, cleaning and passage selection, structured generation review and the agreed quality rubric. Academic setup and quizzes follow afterward.
+
+### Phase 1 correction 2
+
+- Replaced first-chunk flashcard input with bounded passage selection distributed across extracted pages.
+- Added heuristic page-furniture filtering and required exact evidence quotations with batch duplicate/vague-question rejection.
+- Passed targeted synthetic tests and TypeScript/build checks. Live factual quality evaluation remains pending.
+- Full flashcard workflow (persistent citations, deck-wide duplicates, preview/edit), academic setup, quizzes and later phases remain open.
