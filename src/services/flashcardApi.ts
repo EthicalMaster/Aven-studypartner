@@ -226,6 +226,9 @@ export const flashcardApi = {
     success: boolean;
     cards: FlashcardItem[];
     totalGenerated: number;
+    rejectedCount?: number;
+    reused?: boolean;
+    warning?: string | null;
     message: string;
   }> {
     const res = await fetch(`/api/flashcards/generate-from-material/${materialId}`, {

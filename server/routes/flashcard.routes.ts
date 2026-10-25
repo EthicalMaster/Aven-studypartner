@@ -357,13 +357,17 @@ flashcardRouter.post(
 
       const parsed = req.body?.academicContext === undefined ? undefined : academicContextSchema.safeParse(req.body.academicContext);
       if (parsed && !parsed.success) { res.status(400).json({message:'Invalid academic details. Check the study level, authority, stage and subject.'}); return; }
-      const cards = await flashcardService.generateFromMaterial(materialId, profile.id, parsed?.data);
+      const result = await flashcardService.generateFromMaterial(materialId, profile.id, parsed?.data);
+      const {cards,rejectedCount,reused} = result;
 
       res.json({
         success: true,
         cards,
-        totalGenerated: cards.length,
-        message: `Your document deck is ready (${cards.length} cards returned). Existing cards are reused.`,
+        totalGenerated: reused ? 0 : cards.length,
+        rejectedCount,
+        reused,
+        warning: rejectedCount ? `${cards.length} cards saved. ${rejectedCount} additional cards did not pass validation and were omitted. No automatic regeneration was performed.` : null,
+        message: reused ? `Your saved deck is ready (${cards.length} cards returned).` : `${cards.length} validated flashcards saved.`,
       });
     } catch (err: any) {
       console.error(

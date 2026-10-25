@@ -10,7 +10,7 @@ setPoolForTesting({connect:async()=>client});
 try{
  materialRepository.getMaterialById=async()=>owned?({id:'m',title:'Test'} as any):null;
  flashcardRepository.getFlashcards=async()=>({cards:[{id:'saved',repetitions:5} as any],total:1});
- const cards=await flashcardService.generateFromMaterial('m','student');assert.equal(cards[0].id,'saved');assert.equal(cards[0].repetitions,5);assert.equal(released,1);assert(sql.some(s=>s.includes('pg_advisory_unlock')));
+ const {cards,reused}=await flashcardService.generateFromMaterial('m','student');assert.equal(reused,true);assert.equal(cards[0].id,'saved');assert.equal(cards[0].repetitions,5);assert.equal(released,1);assert(sql.some(s=>s.includes('pg_advisory_unlock')));
  available=false;await assert.rejects(()=>flashcardService.generateFromMaterial('m','student'),/already running/);assert.equal(released,2);
  owned=false;await assert.rejects(()=>flashcardService.generateFromMaterial('m','student'),/unauthorized/);assert.equal(released,2);
  sql.length=0;let count=0;flashcardRepository.createFlashcard=async(_card,connection)=>{assert.equal(connection,client);if(++count===2)throw new Error('insert failure');return {id:'new'} as any;};

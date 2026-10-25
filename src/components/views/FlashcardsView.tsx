@@ -49,6 +49,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
   // Active Review Session State
   const [isReviewing, setIsReviewing] = useState<boolean>(false);
   const [sessionTitle, setSessionTitle] = useState<string>('');
+  const [generationWarning,setGenerationWarning] = useState<string|null>(null);
   const [activeDeck, setActiveDeck] = useState<FlashcardItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
@@ -175,6 +176,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
         return;
       }
 
+      setGenerationWarning(null);
       setSessionTitle(title);
       setActiveDeck(res.cards);
       setCurrentIndex(0);
@@ -279,6 +281,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
     try {
       const res = await flashcardApi.generateFromMaterial(materialId, academicContext);
       if (!res.success || !res.cards?.length) throw new Error('The server returned no flashcards. Please try again; if this repeats, share this message.');
+      setGenerationWarning(res.warning || null);
       setSessionTitle(title);
       setActiveDeck(res.cards);
       setCurrentIndex(0);
@@ -346,6 +349,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
   if (isReviewing) {
     return (
       <div className="flex flex-col gap-6 pb-12 max-w-4xl mx-auto">
+        {generationWarning && <p role="status" className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">{generationWarning}</p>}
         {/* Session Top Bar */}
         <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-[var(--aven-border)]/30 shadow-xs">
           <div className="flex items-center gap-3">
