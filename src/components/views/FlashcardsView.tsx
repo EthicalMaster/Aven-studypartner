@@ -60,6 +60,8 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
 
   const [academicSetup,setAcademicSetup] = useState<{materialId:string;title:string;subject:string}|null>(null);
 
+  const [generationErrors,setGenerationErrors] = useState<Record<string,string>>({});
+
   // Material Generation State
   const [generatingMaterialId, setGeneratingMaterialId] = useState<string | null>(null);
   const [notificationMsg, setNotificationMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -270,24 +272,26 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isReviewing, deckCompleted, isFlipped, currentIndex, activeDeck]);
 
-  // Generate Flashcards from Document
+  // Keep failures at the document and use the actual saved response on success.
   const handleGenerateFromMaterial = async (materialId: string, title: string, academicContext?: AcademicContext) => {
+    setGeneratingMaterialId(materialId);
+    setGenerationErrors(prev => ({...prev,[materialId]:''}));
     try {
-      setGeneratingMaterialId(materialId);
       const res = await flashcardApi.generateFromMaterial(materialId, academicContext);
-      setNotificationMsg({
-        type: 'success',
-        text: res.message,
-      });
-      setTimeout(() => setNotificationMsg(null), 5000);
-      await loadDashboard();
+      if (!res.success || !res.cards?.length) throw new Error('The server returned no flashcards. Please try again; if this repeats, share this message.');
+      setSessionTitle(title);
+      setActiveDeck(res.cards);
+      setCurrentIndex(0);
+      setIsFlipped(false);
+      setShowHint(false);
+      setDeckCompleted(false);
+      setReviewedCounts({ again: 0, hard: 0, good: 0, easy: 0 });
+      setCardStartTime(Date.now());
+      setIsReviewing(true);
+      void loadDashboard();
     } catch (err: any) {
-      console.error('[FlashcardsView] Document flashcard generation failed:', err);
-      setNotificationMsg({
-        type: 'error',
-        text: err.message || 'Failed to synthesize flashcards from document.',
-      });
-      setTimeout(() => setNotificationMsg(null), 5000);
+      const message = err.message || 'Flashcard generation failed. Please try again later.';
+      setGenerationErrors(prev => ({...prev,[materialId]:message}));
     } finally {
       setGeneratingMaterialId(null);
     }
@@ -1141,6 +1145,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                       </div>
                     </div>
 
+                    {generationErrors[deck.materialId] && <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800 break-words">{generationErrors[deck.materialId]}</p>}
                     <div className="flex items-center gap-2 mt-5 pt-3 border-t border-[var(--aven-border)]/20">
                       {deck.totalCards > 0 ? (
                         <button
@@ -1160,7 +1165,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                       ) : (
                         <button
                           onClick={() => deck.totalCards > 0 ? handleGenerateFromMaterial(deck.materialId, deck.title) : setAcademicSetup({materialId:deck.materialId,title:deck.title,subject:deck.subject})}
-                          disabled={generatingMaterialId === deck.materialId}
+                          disabled={generatingMaterialId !== null}
                           className="flex-1 py-2 rounded-xl bg-[var(--aven-soft)] text-[var(--aven-action)] font-bold text-[12px] hover:bg-[var(--aven-blue-soft)] transition-colors border border-[var(--aven-blue-soft)] flex items-center justify-center gap-1.5"
                         >
                           {generatingMaterialId === deck.materialId ? (

@@ -1,3 +1,4 @@
+import { AIGatewayError } from '../services/ai/errors.js';
 import { academicContextSchema } from '../../shared/academic-context.js';
 /**
  * @license
@@ -369,6 +370,7 @@ flashcardRouter.post(
         '[Flashcard Routes] POST /api/flashcards/generate-from-material/:materialId error:',
         err
       );
+      if (err instanceof AIGatewayError) { res.status(err.statusCode).json(err.toResponse()); return; }
       res.status(400).json({
         error: 'GENERATION_FAILED',
         message: err.message || 'Failed to generate flashcards from material.',
