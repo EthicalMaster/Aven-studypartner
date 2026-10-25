@@ -244,8 +244,8 @@ export class FlashcardRepository {
     source_material_id?: string | null;
     curriculum_question_id?: string | null;
     tags?: string[];
-  }): Promise<FlashcardRecord> {
-    const pool = getRequiredPool();
+  }, connection?: Pick<import("pg").PoolClient, "query">): Promise<FlashcardRecord> {
+    const pool = connection || getRequiredPool();
     const res = await pool.query(
       `INSERT INTO flashcards (
         student_id, subject, topic, question, answer, key_concept, formula,
@@ -300,12 +300,17 @@ export class FlashcardRepository {
     if (cards.length === 0) return [];
     const pool = getRequiredPool();
 
-    const created: FlashcardRecord[] = [];
-    for (const card of cards) {
-      const res = await this.createFlashcard(card);
-      created.push(res);
-    }
-    return created;
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      const created: FlashcardRecord[] = [];
+      for (const card of cards) created.push(await this.createFlashcard(card, client));
+      await client.query('COMMIT');
+      return created;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally { client.release(); }
   }
 
   async updateFlashcardSM2(

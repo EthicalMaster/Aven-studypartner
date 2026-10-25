@@ -143,3 +143,10 @@ Acceptance: evidence-based schema/mapping review, tenant isolation and migration
 - Added heuristic page-furniture filtering and required exact evidence quotations with batch duplicate/vague-question rejection.
 - Passed targeted synthetic tests and TypeScript/build checks. Live factual quality evaluation remains pending.
 - Full flashcard workflow (persistent citations, deck-wide duplicates, preview/edit), academic setup, quizzes and later phases remain open.
+
+### Phase 1 correction 3
+
+- Existing document decks are reused before another provider call; simultaneous generation is guarded by a PostgreSQL advisory lock.
+- Batch insertion is now transactional to prevent partial decks after failures.
+- Existing review history is preserved. Semantic deduplication, source-version regeneration and preview/edit approval remain pending.
+- Targeted mocked service tests and passage-selection regressions pass; live quality evaluation remains required.

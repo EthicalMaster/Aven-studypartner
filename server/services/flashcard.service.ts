@@ -525,6 +525,15 @@ export class FlashcardService {
       throw new Error(`Study material not found or unauthorized: ${materialId}`);
     }
 
+    const lock = await getRequiredPool().connect();
+    let acquired = false;
+    const lockKey = `aven-flashcards:${studentId}:${materialId}`;
+    try {
+      const result = await lock.query('SELECT pg_try_advisory_lock(hashtextextended($1, 0)) AS acquired', [lockKey]);
+      acquired = result.rows[0].acquired;
+      if (!acquired) throw new Error('Flashcard generation is already running for this document. Reopen your deck shortly.');
+      const existing = await flashcardRepository.getFlashcards(studentId, { materialId, sourceType: 'study_material', limit: 100 });
+      if (existing.total > 0) return existing.cards;
     const chunks = await documentRepository.getChunksByMaterial(materialId, studentId);
     if (chunks.length === 0) {
       throw new Error('Document has not been processed into chunks yet. Please process the document first.');
@@ -562,6 +571,14 @@ export class FlashcardService {
     }));
 
     return await flashcardRepository.createFlashcardsBatch(cardsToInsert);
+    } finally {
+      let discard = false;
+      if (acquired) {
+        try { await lock.query('SELECT pg_advisory_unlock(hashtextextended($1, 0))', [lockKey]); }
+        catch { discard = true; }
+      }
+      lock.release(discard);
+    }
   }
 }
 

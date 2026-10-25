@@ -273,7 +273,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
       const res = await flashcardApi.generateFromMaterial(materialId);
       setNotificationMsg({
         type: 'success',
-        text: `Generated ${res.totalGenerated} active recall flashcards from "${title}".`,
+        text: res.message,
       });
       setTimeout(() => setNotificationMsg(null), 5000);
       await loadDashboard();
