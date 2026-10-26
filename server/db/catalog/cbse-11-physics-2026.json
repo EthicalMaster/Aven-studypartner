@@ -1,0 +1,72 @@
+{
+  "level": "school",
+  "authority": "CBSE",
+  "program": "",
+  "stage": "Class 11",
+  "curriculumVersion": "2026-27 \u00b7 Physics starter",
+  "sourceUrl": "https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+  "reviewNote": "Limited topic alignment to Class XI units I\u2013III, reviewed 2026-10-26. Ten existing practice questions; not official past papers or complete syllabus coverage. Answers checked by direct unit/calculus/Newton-law reasoning.",
+  "reviewedBy": "Aven assistant content review, 2026-10-26",
+  "placements": [
+    {
+      "questionId": "7cd1dc34-40e9-4e83-b856-45e4bfab0b1a",
+      "unit": "Kinematics",
+      "sourceUrl": "https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+      "reviewNote": "Reviewed question and answer for introductory Class XI topic alignment. Existing practice content, not an authentic PYQ."
+    },
+    {
+      "questionId": "856ed7c0-d7b3-4f0f-a1c0-4a1c7c63e6a5",
+      "unit": "Kinematics",
+      "sourceUrl": "https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+      "reviewNote": "Reviewed question and answer for introductory Class XI topic alignment. Existing practice content, not an authentic PYQ."
+    },
+    {
+      "questionId": "ac8878a7-07b5-47e4-aa22-33daf4e412c5",
+      "unit": "Kinematics",
+      "sourceUrl": "https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+      "reviewNote": "Reviewed question and answer for introductory Class XI topic alignment. Existing practice content, not an authentic PYQ."
+    },
+    {
+      "questionId": "0d232ece-c1c4-49be-ac02-5c37b7106ed4",
+      "unit": "Laws of Motion",
+      "sourceUrl": "https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+      "reviewNote": "Reviewed question and answer for introductory Class XI topic alignment. Existing practice content, not an authentic PYQ."
+    },
+    {
+      "questionId": "64138a74-9ec6-4ebd-b00a-70920cfc3c45",
+      "unit": "Laws of Motion",
+      "sourceUrl": "https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+      "reviewNote": "Reviewed question and answer for introductory Class XI topic alignment. Existing practice content, not an authentic PYQ."
+    },
+    {
+      "questionId": "9a93b09b-810f-4742-a94f-591541583218",
+      "unit": "Laws of Motion",
+      "sourceUrl": "https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+      "reviewNote": "Reviewed question and answer for introductory Class XI topic alignment. Existing practice content, not an authentic PYQ."
+    },
+    {
+      "questionId": "2bfd259a-212a-42d9-91f4-6eb0520c51b9",
+      "unit": "Units & Measurements",
+      "sourceUrl": "https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+      "reviewNote": "Reviewed question and answer for introductory Class XI topic alignment. Existing practice content, not an authentic PYQ."
+    },
+    {
+      "questionId": "67957145-b72f-4c54-8e34-8603d5804520",
+      "unit": "Units & Measurements",
+      "sourceUrl": "https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+      "reviewNote": "Reviewed question and answer for introductory Class XI topic alignment. Existing practice content, not an authentic PYQ."
+    },
+    {
+      "questionId": "8c046246-270e-4969-a7ce-fb623e8290f6",
+      "unit": "Units & Measurements",
+      "sourceUrl": "https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+      "reviewNote": "Reviewed question and answer for introductory Class XI topic alignment. Existing practice content, not an authentic PYQ."
+    },
+    {
+      "questionId": "99137ec2-52e7-410b-9832-b897399a3da4",
+      "unit": "Units & Measurements",
+      "sourceUrl": "https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Physics_SecP2_2026-27.pdf",
+      "reviewNote": "Reviewed question and answer for introductory Class XI topic alignment. Existing practice content, not an authentic PYQ."
+    }
+  ]
+}
