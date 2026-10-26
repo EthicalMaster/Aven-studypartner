@@ -261,7 +261,7 @@ export class CurriculumService {
     // Rule Set 1: School Students (Middle School & Secondary: Grades 1 - 10)
     // ------------------------------------------------------------------------
     const isSchool = level.toLowerCase() === 'school';
-    const gradeMatch = stage.match(/Grade\s+(\d+)/i);
+    const gradeMatch = stage.match(/(?:Grade|Class)\s+(\d+)/i);
     const gradeNum = gradeMatch ? parseInt(gradeMatch[1], 10) : null;
 
     if (isSchool && gradeNum !== null && gradeNum <= 8) {

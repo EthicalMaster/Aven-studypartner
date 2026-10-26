@@ -1,0 +1,141 @@
+{
+  "generatedAt": "2026-10-26T05:58:25.838Z",
+  "mode": "repository-seeds-only",
+  "seeds": {
+    "total": 554,
+    "subjects": [
+      {
+        "subject": "Biology",
+        "questions": 72,
+        "topics": [
+          "Biomolecules",
+          "Biotechnology",
+          "Cell Biology",
+          "Ecology",
+          "Evolution",
+          "Genetics",
+          "Human Physiology",
+          "Plant Physiology",
+          "Reproduction"
+        ]
+      },
+      {
+        "subject": "Chemistry",
+        "questions": 72,
+        "topics": [
+          "Atomic Structure",
+          "Chemical Bonding",
+          "Electrochemistry",
+          "Equilibrium",
+          "Hydrocarbons",
+          "Mole Concept",
+          "Organic Chemistry",
+          "Periodic Classification",
+          "Redox Reactions",
+          "Solutions",
+          "Thermodynamics"
+        ]
+      },
+      {
+        "subject": "Computer Science",
+        "questions": 72,
+        "topics": [
+          "Algorithms",
+          "Computer Architecture",
+          "Computer Networks",
+          "DBMS",
+          "Data Structures",
+          "Operating Systems",
+          "Programming Fundamentals",
+          "Python"
+        ]
+      },
+      {
+        "subject": "Data Science",
+        "questions": 70,
+        "topics": [
+          "Classification",
+          "Data Visualization",
+          "Descriptive Statistics",
+          "Linear Regression",
+          "Machine Learning Fundamentals",
+          "Model Evaluation",
+          "NumPy",
+          "Pandas",
+          "Probability",
+          "Python for Data Science"
+        ]
+      },
+      {
+        "subject": "English",
+        "questions": 60,
+        "topics": [
+          "Grammar",
+          "Reading Comprehension",
+          "Sentence Correction",
+          "Synonyms & Antonyms",
+          "Vocabulary",
+          "Writing Skills"
+        ]
+      },
+      {
+        "subject": "General Aptitude",
+        "questions": 64,
+        "topics": [
+          "Averages",
+          "Logical Reasoning",
+          "Number Systems",
+          "Percentages",
+          "Profit & Loss",
+          "Ratios",
+          "Time & Work",
+          "Time, Speed & Distance"
+        ]
+      },
+      {
+        "subject": "Mathematics",
+        "questions": 72,
+        "topics": [
+          "Complex Numbers",
+          "Coordinate Geometry",
+          "Differentiation",
+          "Integration",
+          "Limits",
+          "Probability",
+          "Quadratic Equations",
+          "Relations & Functions",
+          "Sequences & Series",
+          "Sets",
+          "Statistics",
+          "Trigonometry"
+        ]
+      },
+      {
+        "subject": "Physics",
+        "questions": 72,
+        "topics": [
+          "Current Electricity",
+          "Electrostatics",
+          "Gravitation",
+          "Kinematics",
+          "Laws of Motion",
+          "Magnetism",
+          "Optics",
+          "Oscillations",
+          "Thermodynamics",
+          "Units & Measurements",
+          "Waves",
+          "Work, Energy & Power"
+        ]
+      }
+    ],
+    "structuralIssues": [],
+    "optionIssues": [],
+    "limitations": [
+      "Structural validation does not verify factual answers.",
+      "Current bank rows have no exam-authority, curriculum-version, source URL or verified-review fields. Do not label them verified PYQs.",
+      "No authority or class mapping is inferred from a subject name."
+    ]
+  },
+  "live": null
+}

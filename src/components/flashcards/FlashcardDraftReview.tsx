@@ -1,9 +1,11 @@
+import {similarCardPairs} from '../../../shared/card-overlap';
 import React,{useRef,useState} from 'react';
 import { flashcardApi,type FlashcardItem } from '../../services/flashcardApi';
 import { saveFlashcardDraftSchema,type FlashcardDraft } from '../../../shared/flashcard-draft';
 export function FlashcardDraftReview({draft,onSaved,onBack}:{draft:FlashcardDraft;onSaved:(cards:FlashcardItem[])=>void;onBack:()=>void}) {
   const [cards,setCards]=useState(()=>draft.cards.map(card=>({...card,selected:true})));
   const [busy,setBusy]=useState(false),[error,setError]=useState('');const pending=useRef(false);
+  const similar=similarCardPairs(cards);
   const count=cards.filter(card=>card.selected).length;
   function update(index:number,field:string,value:string|boolean){setCards(previous=>previous.map((card,i)=>i===index?{...card,[field]:value}:card));}
   async function save(event:React.FormEvent){
@@ -21,6 +23,7 @@ export function FlashcardDraftReview({draft,onSaved,onBack}:{draft:FlashcardDraf
     <header><h1 className="aven-page-title text-3xl">Make these cards yours.</h1><p className="mt-2 text-[var(--aven-muted)] break-words">{draft.title} · {draft.subject}</p>
       <p className="mt-3 text-sm">Check each card against its source, edit where needed, and choose what to keep. Your generated draft is saved; edits are saved only when you add cards to the deck.</p></header>
     {draft.rejectedCount>0&&<p role="status" className="rounded-xl bg-amber-50 text-amber-900 p-3 text-sm">{draft.rejectedCount} generated {draft.rejectedCount===1?'card failed validation and was':'cards failed validation and were'} omitted. No extra AI request was made.</p>}
+    {similar.length>0&&<p role="status" className="rounded-xl bg-amber-50 text-amber-900 p-3 text-sm">Some cards use very similar wording: {similar.map(([a,b])=>`${a+1} & ${b+1}`).join(', ')}. Compare their meaning before keeping both. This is a wording check, not a factual check.</p>}
     <form onSubmit={save} className="space-y-5"><fieldset disabled={busy} className="space-y-5">
       {cards.map((card,index)=><article key={card.id} className="rounded-3xl border border-[var(--aven-border)] bg-white p-5 space-y-4">
         <label className="flex items-center gap-3 font-semibold"><input type="checkbox" checked={card.selected} onChange={e=>update(index,'selected',e.target.checked)}/>Keep card {index+1}</label>

@@ -1,3 +1,4 @@
+import {PasswordRecovery} from './PasswordRecovery';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -69,6 +70,7 @@ export const AuthView: React.FC<{ initialMode?: "login" | "register" }> = ({
   const { login, register, error, clearError, dbConnected } = useAuth();
 
   const [mode, setMode] = useState<"login" | "register">(initialMode);
+  const [recovering,setRecovering]=useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -206,15 +208,16 @@ export const AuthView: React.FC<{ initialMode?: "login" | "register" }> = ({
           </a>
           <p className="aven-auth-eyebrow">YOUR PERSONAL STUDY SPACE</p>
           <h1>
-            {mode === "login" ? "Welcome back." : "Begin your next chapter."}
+            {recovering?"Find your way back.":mode === "login" ? "Welcome back." : "Begin your next chapter."}
           </h1>
           <p>
-            {mode === "login"
+            {recovering?"Recover access to your study space.":mode === "login"
               ? "Pick up where your curiosity left off."
               : "A place for your material, practice, and progress."}
           </p>
         </div>
         <div className="aven-auth-card">
+          {recovering?<PasswordRecovery onBack={()=>setRecovering(false)}/>:<>
           {/* Mode Switcher Tabs */}
           <div className="flex bg-[var(--aven-canvas)] p-1 rounded-xl border border-[var(--aven-border)] mb-6">
             <button
@@ -472,6 +475,8 @@ export const AuthView: React.FC<{ initialMode?: "login" | "register" }> = ({
             </button>
           </form>
 
+          {mode==='login'&&<button type="button" className="mt-4 text-sm underline" onClick={()=>{clearError();setLocalValidationErr(null);setRecovering(true);}}>Forgot password?</button>}
+          </>}
           {/* Security details footnote */}
           <div className="mt-6 pt-4 border-t border-[var(--aven-border)] flex items-center justify-center gap-2 text-[11px] text-[var(--aven-muted)]">
             <span className="material-symbols-outlined text-[14px] text-emerald-700">

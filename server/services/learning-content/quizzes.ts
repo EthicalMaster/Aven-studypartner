@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { evidenceMatches, normalizeEvidence, type Passage } from './flashcards.js';
 
-export const quizBatchSchema = z.object({ questions: z.array(z.unknown()).min(1).max(5) }).strict();
+export const quizBatchSchema = z.object({ questions: z.array(z.unknown()).min(1).max(10) }).strict();
 const questionSchema = z.object({
   question: z.string().trim().min(3).max(500),
   options: z.array(z.string().trim().min(1).max(240)).length(4),

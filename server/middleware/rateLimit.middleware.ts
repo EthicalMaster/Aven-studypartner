@@ -11,7 +11,7 @@ interface RateLimitRecord {
 }
 
 /**
- * In-memory sliding window rate limiter.
+ * In-memory fixed window rate limiter.
  *
  * NOTE: This implementation is strictly in-memory and designed for local execution
  * and single-instance deployments. For horizontally scaled multi-instance clusters,
@@ -41,7 +41,7 @@ class InMemoryRateLimiter {
   middleware() {
     return (req: Request, res: Response, next: NextFunction): void => {
       const clientIp =
-        (req.headers['x-forwarded-for'] as string)?.split(',')[0].trim() ||
+        req.ip ||
         req.socket.remoteAddress ||
         'unknown_ip';
 

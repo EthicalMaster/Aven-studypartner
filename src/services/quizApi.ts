@@ -1,3 +1,4 @@
+import type {PdfQuizOptions} from '../../shared/pdf-quiz-options';
 import type { ExamResearchResult, ResearchSelection } from '../../shared/exam-research';
 import type { AcademicContext } from '../../shared/academic-context';
 /**
@@ -61,10 +62,10 @@ export const quizApi = {
     if(!res.ok) throw new Error(data.message || 'Could not search for sources.');
     return data;
   },
-  async generateFromMaterial(materialId: string, academicContext: AcademicContext, research?: ResearchSelection): Promise<{quiz: Quiz; reused: boolean; rejectedCount: number; warning: string | null}> {
+  async generateFromMaterial(materialId: string, academicContext: AcademicContext, research?: ResearchSelection, options?:PdfQuizOptions): Promise<{quiz: Quiz; reused: boolean; rejectedCount: number; warning: string | null}> {
     const res = await fetch('/api/quizzes/from-material', {
       method: 'POST', credentials: 'include', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({materialId, academicContext, research}),
+      body: JSON.stringify({materialId, academicContext, research, options}),
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.message || 'Could not generate the quiz. Check saved papers before retrying.');

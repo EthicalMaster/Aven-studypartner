@@ -1,3 +1,4 @@
+import {pdfQuizOptionsSchema} from '../../shared/pdf-quiz-options.js';
 import { questionReportService } from '../services/question-report.service.js';
 import { questionReportSchema } from '../../shared/question-report.js';
 import { examResearchService } from '../services/exam-research/research.service.js';
@@ -194,10 +195,10 @@ quizRouter.get('/:quizId/research', async (req: Request, res: Response) => {
 });
 
 quizRouter.post('/from-material', validateBody(z.object({
-  materialId: z.string().uuid(), academicContext: academicContextSchema, research: researchSelectionSchema.optional(),
+  materialId: z.string().uuid(), academicContext: academicContextSchema, research: researchSelectionSchema.optional(), options:pdfQuizOptionsSchema.optional(),
 }).strict()), async (req: Request, res: Response) => {
   try {
-    const result = await pdfQuizService.generate(getStudentProfileId(req), req.body.materialId, req.body.academicContext, req.body.research);
+    const result = await pdfQuizService.generate(getStudentProfileId(req), req.body.materialId, req.body.academicContext, req.body.research, req.body.options);
     res.status(result.reused ? 200 : 201).json(result);
   } catch (error) {
     if (error instanceof AIGatewayError) { res.status(error.statusCode).json(error.toResponse()); return; }

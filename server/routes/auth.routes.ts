@@ -1,3 +1,6 @@
+import {passwordRecoveryService,SecurityError} from '../services/password-recovery.service.js';
+import {securityMail} from '../services/security-mail.service.js';
+import {recoveryRequestSchema,recoveryCompleteSchema,passwordChangeSchema} from '../../shared/account-security.js';
 import { accountSessionsService } from '../services/account-sessions.service.js';
 import { hashSessionToken } from '../utils/crypto.js';
 import { academicPreferencesService } from '../services/academic-preferences.service.js';
@@ -317,3 +320,27 @@ authRouter.post('/sessions/revoke-others',requireAuth,async(req:Request,res:Resp
   res.json({revoked:await accountSessionsService.revokeOthers(req.user!.id,hashSessionToken(token))});
  }catch{res.status(503).json({message:'Could not sign out other sessions. Try again.'});}
 });
+
+// Recovery requests have a uniform response; delivery runs after the response to avoid account timing disclosure.
+authRouter.get('/recovery/status',(_req,res)=>res.json({available:securityMail.configured()}));
+authRouter.post('/recovery/request',validateBody(recoveryRequestSchema),async(req,res)=>{
+ try{
+  if(!securityMail.configured())throw new SecurityError(503,'Email recovery is not configured yet.');
+  if(!await passwordRecoveryService.admit(`request-ip:${req.ip||req.socket.remoteAddress}`,10,3600))throw new SecurityError(429,'Too many requests. Try again later.');
+  res.status(202).json({message:'If the account is eligible, a code will arrive shortly. Check spam too. Wait 60 seconds before requesting another.'});
+  void passwordRecoveryService.request(req.body.email).catch(()=>console.warn('[Security] Recovery request could not be delivered.'));
+ }catch(error){securityResponse(res,error);}
+});
+authRouter.post('/recovery/complete',validateBody(recoveryCompleteSchema),async(req,res)=>{
+ try{
+  if(!securityMail.configured())throw new SecurityError(503,'Email recovery is not configured yet.');
+  if(!await passwordRecoveryService.admit(`verify-ip:${req.ip||req.socket.remoteAddress}`,30,3600))throw new SecurityError(429,'Too many attempts. Try again later.');
+  await passwordRecoveryService.complete(req.body.email,req.body.code,req.body.password);
+  res.clearCookie(SESSION_COOKIE_NAME,{httpOnly:true,secure:isProduction,sameSite:'lax',path:'/'});res.json({message:'Password changed. Sign in with your new password.'});
+ }catch(error){securityResponse(res,error);}
+});
+authRouter.get('/password/allowance',requireAuth,async(req,res)=>{try{res.json(await passwordRecoveryService.allowance(req.user!.id));}catch(error){securityResponse(res,error);}});
+authRouter.post('/password/change',requireAuth,authRateLimiter,validateBody(passwordChangeSchema),async(req,res)=>{
+ try{await passwordRecoveryService.changeSignedIn(req.user!.id,req.body.currentPassword,req.body.password);res.clearCookie(SESSION_COOKIE_NAME,{httpOnly:true,secure:isProduction,sameSite:'lax',path:'/'});res.json({message:'Password changed. Sign in again.'});}catch(error){securityResponse(res,error);}
+});
+function securityResponse(res:Response,error:unknown){res.status(error instanceof SecurityError?error.status:503).json({message:error instanceof SecurityError?error.message:'Account security is temporarily unavailable. Try again later.'});}

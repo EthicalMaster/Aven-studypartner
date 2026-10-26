@@ -11,15 +11,15 @@ Keep the free-only budget. Do not enable paid billing, rotate keys to bypass quo
 
 ## Remaining release scope — 26 October 2026
 
-**Five substantial phases remain**, including two that are already underway:
+**The consolidated implementation batch is ready for local acceptance. Four release workstreams remain:** verified exam research, live content quality, live recovery delivery, and the curriculum migration. Settings is user-confirmed; email-address changes remain a separate enhancement.
 
 | Phase | Status | Remaining work |
 | --- | --- | --- |
-| 3 — Quizzes and exam research | PDF quizzes user-confirmed; discovery/review preview ready | Live search validation, full-paper/institution/year verification, syllabus mismatch handling, admin report review/correction and richer quiz controls |
-| 4 — Flashcards | Draft preview/edit/selection, source display and exact duplicate checks implemented | Live quality review, existing-card editing and semantic near-duplicate handling |
-| 5 — Account recovery | Not started | Email OTP, agreed two-successful-resets policy, session/security tests |
+| 3 — Quizzes and exam research | PDF quizzes, bounded length/difficulty/page controls, candidate source review and report review implemented | Live source/quality validation, full-paper/institution/year verification, syllabus mismatch handling; automatic regrading not implemented |
+| 4 — Flashcards | Draft review, saved-card editing, source display, exact duplicate checks and wording-overlap hints implemented | Live factual quality review and true semantic near-duplicate handling |
+| 5 — Account recovery | OTP and signed-in change flow implemented; successful-only rolling 30-day allowance tested | Email provider/sender activation, real inbox and production acceptance |
 | 6 — Settings and helping guide | Guide, persisted profile, study defaults, session controls and report history implemented | Live acceptance; verified email/password changes depend on phase 5 |
-| 7 — Curriculum data | Not started | Audit, proposed hierarchy, question review and tested migration preserving history |
+| 7 — Curriculum data | Repository audit and read-only live audit tool implemented; Class/Grade bug fixed | Live inventory, sourced hierarchy/mappings, factual question review and history-preserving migration |
 
 Phases 1–2 have working foundations but are not formally closed: representative quality/token measurements, remaining cache/version controls and normalized academic mappings still need review. Finish with an integrated live acceptance pass. This count describes the agreed release scope, not a promise that all future website work is finished.
 
@@ -217,3 +217,12 @@ Acceptance: evidence-based schema/mapping review, tenant isolation and migration
 - Migration 023 adds the report table. API tests use real Express routes, authentication and PGlite SQL. Profile/default privacy, session revocation, report eligibility, duplicate updates and unchanged scores pass. TypeScript, production build, PDF quiz and flashcard draft regressions pass.
 - Mocked-API browser checks cover phone/desktop layout, persisted reload, save failures/retries and report failures/retries. Live deployment and provider checks are not claimed.
 - Admin review/correction, notifications and automatic question correction are not implemented. OTP recovery remains next, subject to email setup and the reset-policy decisions recorded above.
+
+### Consolidated release batch — 26 October 2026
+
+- User confirmed Settings/reporting worked and requested all remaining implementation together. They selected a rolling 30-day password-change window; no email provider was known. Code inspection found no existing recovery mail sender.
+- Implemented OTP recovery and signed-in changes sharing two successful changes per 30 days, atomic writes/consumption/session revocation, independent throttles, best-effort notifications, and configurable Brevo/Resend adapters. Sending requires private operator configuration and a real inbox check.
+- Implemented saved-card editing without altering history/source snapshots; wording-overlap review hints; allowlisted report desk with student-visible responses/audit events and precise optimistic versioning. No automatic score changes.
+- Added PDF question count/difficulty/page scope with distinct cache keys and bounded single-call generation. Existing default paper keys remain compatible.
+- Audited 554 seed questions across eight subjects, found no structural/option issues, identified absent source/context mappings, fixed Class/Grade normalization, and corrected obsolete UI claims. Production credentials were unavailable; no live records were reorganized. See curriculum-audit.md and release-completion-batch.md.
+- Full-paper verification, live factual/token benchmarks, actual email delivery and approved production curriculum migration remain explicit release gates. Do not mark these complete based on mocked tests.
