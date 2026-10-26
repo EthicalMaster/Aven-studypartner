@@ -1,3 +1,4 @@
+import {curriculumCatalogService} from '../services/curriculum-catalog.service.js';
 import {pdfQuizOptionsSchema} from '../../shared/pdf-quiz-options.js';
 import { questionReportService } from '../services/question-report.service.js';
 import { questionReportSchema } from '../../shared/question-report.js';
@@ -68,11 +69,15 @@ quizRouter.get('/', async (req: Request, res: Response) => {
  * Retrieve subjects, topics, and question availability in the question bank,
  * strictly filtered to the authenticated student's academic curriculum eligibility.
  */
+quizRouter.get('/bank/catalog',async(_req,res)=>{try{res.json({contexts:await curriculumCatalogService.list()});}catch{res.status(503).json({message:'Curriculum catalog unavailable.'});}});
+
 quizRouter.get('/bank/meta', async (req: Request, res: Response) => {
   try {
-    const rawMeta = await quizRepository.getQuestionBankMetadata();
+    const contextId=req.query.curriculum_context_id;
+    if(contextId&&!z.string().uuid().safeParse(contextId).success){res.status(400).json({message:'Invalid curriculum context.'});return;}
+    const rawMeta = await quizRepository.getQuestionBankMetadata(contextId as string|undefined);
     const profile = req.user?.profile || {};
-    const filteredMeta = curriculumService.filterQuestionBankMeta(rawMeta, profile);
+    const filteredMeta = contextId?rawMeta:curriculumService.filterQuestionBankMeta(rawMeta, profile);
     res.json(filteredMeta);
   } catch (err: any) {
     console.error('[Quiz Routes] GET /api/quizzes/bank/meta error:', err);
@@ -99,10 +104,12 @@ quizRouter.get('/bank/count', async (req: Request, res: Response): Promise<void>
       return;
     }
 
+    const contextId=req.query.curriculum_context_id;
+    if(contextId&&!z.string().uuid().safeParse(contextId).success){res.status(400).json({message:'Invalid curriculum context.'});return;}
     // Server-Authoritative Academic Curriculum Check
     const profile = req.user?.profile || {};
     try {
-      curriculumService.assertCurriculumEligibility(profile, subject, topic);
+      if(!contextId)curriculumService.assertCurriculumEligibility(profile, subject, topic);
     } catch (ineligibleErr: any) {
       if (ineligibleErr instanceof CurriculumIneligibleError) {
         res.status(403).json({
@@ -114,7 +121,10 @@ quizRouter.get('/bank/count', async (req: Request, res: Response): Promise<void>
       throw ineligibleErr;
     }
 
+    const allowedTopics=contextId?undefined:curriculumService.filterQuestionBankMeta(await quizRepository.getQuestionBankMetadata(),profile).subjects.find(s=>s.name===subject)?.topics||[];
     const count = await quizRepository.countAvailableQuestions({
+      allowed_topics:allowedTopics,
+      curriculum_context_id:contextId as string|undefined,
       subject,
       topic,
       difficulty,
@@ -141,7 +151,7 @@ quizRouter.post('/', validateBody(createQuizSchema), async (req: Request, res: R
 
     // Strict Curriculum Authorization Check
     try {
-      curriculumService.assertCurriculumEligibility(profile, req.body.subject, req.body.topic);
+      if(!req.body.curriculum_context_id)curriculumService.assertCurriculumEligibility(profile, req.body.subject, req.body.topic);
     } catch (ineligibleErr: any) {
       if (ineligibleErr instanceof CurriculumIneligibleError) {
         res.status(403).json({
@@ -153,7 +163,8 @@ quizRouter.post('/', validateBody(createQuizSchema), async (req: Request, res: R
       throw ineligibleErr;
     }
 
-    const created = await quizRepository.createQuiz(studentId, req.body);
+    const allowedTopics=req.body.curriculum_context_id?undefined:curriculumService.filterQuestionBankMeta(await quizRepository.getQuestionBankMetadata(),profile).subjects.find(s=>s.name===req.body.subject)?.topics||[];
+    const created = await quizRepository.createQuiz(studentId, {...req.body,allowed_topics:allowedTopics});
     res.status(201).json(created);
   } catch (err: any) {
     if (err.message?.startsWith('INSUFFICIENT_QUESTIONS:')) {
@@ -182,6 +193,8 @@ quizRouter.post('/research', validateBody(z.object({academicContext: academicCon
   try {res.json(await examResearchService.discover(getStudentProfileId(req),req.body.academicContext));}
   catch {res.status(503).json({message:'Source search is temporarily unavailable. PDF-only practice is still available.'});}
 });
+
+quizRouter.get('/:quizId/curriculum',async(req,res)=>{if(!z.string().uuid().safeParse(req.params.quizId).success){res.status(400).json({message:'Invalid quiz ID.'});return;}try{const result=await getRequiredPool().query('SELECT curriculum_snapshot FROM quizzes WHERE id=$1 AND student_id=$2',[req.params.quizId,getStudentProfileId(req)]);if(!result.rows.length){res.status(404).json({message:'Quiz not found.'});return;}res.json({context:result.rows[0].curriculum_snapshot});}catch{res.status(503).json({message:'Could not load curriculum provenance.'});}});
 
 quizRouter.get('/:quizId/research', async (req: Request, res: Response) => {
   if (!z.string().uuid().safeParse(req.params.quizId).success) {res.status(400).json({message:'Invalid quiz ID.'});return;}

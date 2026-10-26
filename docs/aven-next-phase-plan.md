@@ -226,3 +226,11 @@ Acceptance: evidence-based schema/mapping review, tenant isolation and migration
 - Added PDF question count/difficulty/page scope with distinct cache keys and bounded single-call generation. Existing default paper keys remain compatible.
 - Audited 554 seed questions across eight subjects, found no structural/option issues, identified absent source/context mappings, fixed Class/Grade normalization, and corrected obsolete UI claims. Production credentials were unavailable; no live records were reorganized. See curriculum-audit.md and release-completion-batch.md.
 - Full-paper verification, live factual/token benchmarks, actual email delivery and approved production curriculum migration remain explicit release gates. Do not mark these complete based on mocked tests.
+
+### Curriculum organization — batch 1 of the remaining three
+
+- Added migration 025, school/university contexts, reviewed question placements and immutable paper provenance. Existing bank and history remain intact; no unverified initial mappings were fabricated.
+- User-provided live audit matches seed totals (554 questions/eight subjects), with no structural/option issues. This does not prove answer accuracy or source authenticity.
+- General practice retains profile filtering, including server-side topic filtering for All Topics counts and paper builds. Catalog publication is an operator-only CLI with validation-only default and explicit apply.
+- Added a read-only bank export for the next content review. School/university collections remain empty until reviewed manifests are published.
+- Catalog SQL/API, PDF quiz and Settings regressions, typecheck and production build pass. See curriculum-organization.md. Next: batch 2 sourced mappings/AI quality, then batch 3 deployed verification. No direct production changes were made here.

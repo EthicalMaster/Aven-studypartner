@@ -589,13 +589,13 @@ export class CurriculumService {
    */
   filterQuestionBankMeta(
     rawMeta: {
-      subjects: Array<{ name: string; topics: string[]; total_questions: number }>;
+      subjects: Array<{ name: string; topics: string[]; total_questions: number; topic_counts?:Record<string,number> }>;
       difficulties: string[];
       question_types: string[];
     },
     profile: AcademicProfileContext
   ): {
-    subjects: Array<{ name: string; topics: string[]; total_questions: number }>;
+    subjects: Array<{ name: string; topics: string[]; total_questions: number; topic_counts?:Record<string,number> }>;
     difficulties: string[];
     question_types: string[];
     curriculum_context: {
@@ -625,7 +625,7 @@ export class CurriculumService {
         filteredSubjects.push({
           name: sub.name,
           topics: eligibleTopics,
-          total_questions: sub.total_questions,
+          total_questions: sub.topic_counts?eligibleTopics.reduce((sum,topic)=>sum+(sub.topic_counts![topic]||0),0):sub.total_questions,
         });
       }
     }

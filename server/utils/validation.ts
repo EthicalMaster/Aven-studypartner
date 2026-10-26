@@ -304,6 +304,7 @@ export const QUIZ_QUESTION_TYPES = [
 export type QuizQuestionType = (typeof QUIZ_QUESTION_TYPES)[number];
 
 export const createQuizSchema = z.object({
+  curriculum_context_id:z.string().uuid().optional(),
   title: z
     .string()
     .trim()

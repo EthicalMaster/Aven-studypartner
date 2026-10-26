@@ -1,3 +1,5 @@
+import type {CurriculumContext} from '../../../shared/curriculum-catalog';
+import {settingsRequest,fieldClass} from '../settings/settingsApi';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -14,6 +16,10 @@ interface QuizSetupViewProps {
 }
 
 export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, onCancel }) => {
+  const [bankMode,setBankMode]=useState<'general'|'school'|'university'>('general');
+  const [catalog,setCatalog]=useState<CurriculumContext[]>([]),[catalogError,setCatalogError]=useState(''),[contextId,setContextId]=useState('');
+  const context=catalog.find(c=>c.id===contextId);
+  useEffect(()=>{let active=true;settingsRequest<{contexts:CurriculumContext[]}>('/api/quizzes/bank/catalog').then(data=>{if(active)setCatalog(data.contexts);}).catch(()=>{if(active)setCatalogError('Could not load curriculum mappings. General practice is still available.');});return()=>{active=false;};},[]);
   const [meta, setMeta] = useState<QuestionBankMeta | null>(null);
   const [loadingMeta, setLoadingMeta] = useState<boolean>(true);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -42,15 +48,19 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
 
   // Load question bank metadata and adaptive model on mount
   useEffect(() => {
+    let active=true;
+    if(bankMode!=='general'&&!contextId){setMeta(null);setSubject('');setLoadingMeta(false);return;}
     async function loadData() {
       try {
         setLoadingMeta(true);
         const [data, adaptiveData] = await Promise.all([
-          quizApi.getQuestionBankMeta(),
+          quizApi.getQuestionBankMeta(contextId||undefined),
           adaptiveApi.getTopics().catch(() => ({ topics: [] })),
         ]);
+        if(!active)return;
         setMeta(data);
         setAdaptiveTopics(adaptiveData?.topics || []);
+        if(!data.subjects.length){setSubject('');setTopic('');}
         if (data.subjects.length > 0) {
           const firstSub = data.subjects[0];
           setSubject(firstSub.name);
@@ -60,13 +70,14 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
           setTitle(`${firstSub.name} • ${firstSub.topics[0] || 'Paper'} Assessment`);
         }
       } catch (err: any) {
-        console.error('Failed to load question bank meta:', err);
+        if(active){setMeta(null);setSubject('');setErrorMessage('Could not load subjects. Try reopening the paper builder.');}
       } finally {
-        setLoadingMeta(false);
+        if(active)setLoadingMeta(false);
       }
     }
     loadData();
-  }, []);
+    return()=>{active=false;};
+  }, [contextId,bankMode]);
 
   // Update topics when subject changes
   const currentSubjectData = meta?.subjects.find((s) => s.name === subject);
@@ -98,6 +109,7 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
       try {
         const count = await quizApi.countAvailableQuestions({
           subject,
+          curriculum_context_id:contextId||undefined,
           topic: topic === 'All Topics' ? undefined : topic,
           difficulty: difficulty.toLowerCase() === 'mixed' ? undefined : difficulty,
           question_types: selectedTypes,
@@ -120,7 +132,7 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
       active = false;
       clearTimeout(timer);
     };
-  }, [subject, topic, difficulty, selectedTypes]);
+  }, [subject, topic, difficulty, selectedTypes,contextId]);
 
   const toggleQuestionType = (t: QuizQuestionType) => {
     if (selectedTypes.includes(t)) {
@@ -134,6 +146,7 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
+    if(!subject||loadingMeta||(bankMode!=='general'&&!contextId)){setErrorMessage('Choose an available curriculum and subject first.');return;}
 
     if (availableQuestionsCount !== null && availableQuestionsCount < questionCount) {
       setErrorMessage(
@@ -148,6 +161,7 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
         title: title.trim() || `${subject} Assessment`,
         mode,
         source: 'question_bank',
+        curriculum_context_id:contextId||undefined,
         subject,
         topic,
         question_count: questionCount,
@@ -193,7 +207,7 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
             Quiz Paper Builder
           </h2>
           <p className="text-[13px] text-[var(--aven-muted)] mt-0.5">
-            Configure an authoritative exam-grade or practice assessment backed by the PostgreSQL curriculum question bank.
+            Build a practice paper from the question bank. Choose a collection, subject and question format.
           </p>
         </div>
       </div>
@@ -279,6 +293,15 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
           </div>
         </div>
 
+        <section className="rounded-2xl border border-[var(--aven-border)] p-4 space-y-3">
+          <h2 className="font-semibold">Choose your practice collection</h2>
+          <label className="block text-sm">Collection<select aria-label="Practice collection" className={fieldClass} value={bankMode} onChange={e=>{setBankMode(e.target.value as typeof bankMode);setContextId('');setSubject('');setMeta(null);setAvailableQuestionsCount(null);}}><option value="general">General practice</option><option value="school">School curriculum</option><option value="university">University curriculum</option></select></label>
+          {bankMode==='general'?<p className="text-sm text-[var(--aven-muted)]">General practice questions, filtered using your profile. They are not verified past papers or a complete board/university syllabus.</p>:<>
+          <label className="block text-sm">Reviewed curriculum<select aria-label="Reviewed curriculum" className={fieldClass} value={contextId} onChange={e=>{setContextId(e.target.value);setSubject('');setMeta(null);setAvailableQuestionsCount(null);}}><option value="">Choose a curriculum</option>{catalog.filter(c=>c.level===bankMode).map(c=><option key={c.id} value={c.id}>{c.authority} · {c.program?c.program+' · ':''}{c.stage} · {c.curriculum_version} ({c.question_count} questions)</option>)}</select></label>
+          {!catalog.some(c=>c.level===bankMode)&&<p role="status" className="text-sm">No reviewed mappings are published for this collection yet. Use General practice, or return to Quizzes for PDF practice.</p>}
+          {context&&<p className="text-sm">Mapped practice for {context.authority}, {context.stage}. <a className="underline" href={context.source_url} target="_blank" rel="noopener noreferrer">Curriculum source</a>. Mapping review does not certify these as authentic PYQs or complete syllabus coverage.</p>}
+          </>}{catalogError&&<p role="alert" className="text-sm text-red-700">{catalogError}</p>}
+        </section>
         {/* Source Selection */}
         <div>
           <label className="block text-[12px] font-bold uppercase tracking-wider text-[var(--aven-muted)] mb-2">

@@ -19,6 +19,7 @@ import type {
 } from '../types';
 
 export interface CreateQuizParams {
+  curriculum_context_id?:string;
   title: string;
   description?: string;
   mode: QuizMode;
@@ -90,8 +91,8 @@ export const quizApi = {
   /**
    * Fetch subjects and metadata from question bank.
    */
-  async getQuestionBankMeta(): Promise<QuestionBankMeta> {
-    const res = await fetch('/api/quizzes/bank/meta', {
+  async getQuestionBankMeta(contextId?:string): Promise<QuestionBankMeta> {
+    const res = await fetch('/api/quizzes/bank/meta'+(contextId?'?curriculum_context_id='+encodeURIComponent(contextId):''), {
       headers: { Accept: 'application/json' },
       credentials: 'include',
     });
@@ -105,6 +106,7 @@ export const quizApi = {
    * Check how many questions match criteria before generation.
    */
   async countAvailableQuestions(params: {
+    curriculum_context_id?:string;
     subject: string;
     topic?: string;
     difficulty?: string;
@@ -112,6 +114,7 @@ export const quizApi = {
   }): Promise<number> {
     const query = new URLSearchParams();
     query.set('subject', params.subject);
+    if(params.curriculum_context_id)query.set('curriculum_context_id',params.curriculum_context_id);
     if (params.topic) query.set('topic', params.topic);
     if (params.difficulty) query.set('difficulty', params.difficulty);
     if (params.question_types && params.question_types.length > 0) {

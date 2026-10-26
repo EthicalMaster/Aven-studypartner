@@ -41,7 +41,10 @@
     "test:flashcard-drafts": "node --import tsx server/test/flashcard-drafts.test.ts",
     "test:settings-reports": "node --import tsx server/test/settings-reports.test.ts",
     "test:release-batch": "node --import tsx server/test/release-batch.test.ts",
-    "audit:curriculum": "node --import tsx server/db/audit-curriculum.ts"
+    "audit:curriculum": "node --import tsx server/db/audit-curriculum.ts",
+    "test:curriculum-catalog": "node --import tsx server/test/curriculum-catalog.test.ts",
+    "curriculum:publish": "node --import tsx server/db/publish-curriculum.ts",
+    "curriculum:export": "node --import tsx server/db/export-curriculum-bank.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
