@@ -1,3 +1,4 @@
+import { QuestionReportForm } from './QuestionReportForm';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -399,6 +400,7 @@ export const QuizResultsView: React.FC<QuizResultsViewProps> = ({
                 </div>
               )}
 
+              <QuestionReportForm sessionId={result.session_id} questionId={item.id}/>
               {/* Comprehensive Conceptual Explanation */}
               {item.explanation && (
                 <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl">

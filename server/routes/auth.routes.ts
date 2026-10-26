@@ -1,3 +1,5 @@
+import { accountSessionsService } from '../services/account-sessions.service.js';
+import { hashSessionToken } from '../utils/crypto.js';
 import { academicPreferencesService } from '../services/academic-preferences.service.js';
 import { academicPreferencesSchema } from '../../shared/academic-context.js';
 /**
@@ -302,4 +304,16 @@ authRouter.all('/academic-preferences', requireAuth, async (req: Request, res: R
     }
     res.setHeader('Allow','GET, PUT, DELETE');res.status(405).json({message:'Method not allowed.'});
   } catch { res.status(503).json({message:'Could not access saved academic preferences. Please try again later.'}); }
+});
+
+// Session tokens and hashes remain server-side; only browser labels/timestamps are returned.
+authRouter.get('/sessions',requireAuth,async(req:Request,res:Response)=>{
+ try {const token=req.cookies?.[SESSION_COOKIE_NAME] || req.headers.authorization?.slice(7).trim();
+  res.json({sessions:await accountSessionsService.list(req.user!.id,hashSessionToken(token))});
+ }catch{res.status(503).json({message:'Could not load active sessions.'});}
+});
+authRouter.post('/sessions/revoke-others',requireAuth,async(req:Request,res:Response)=>{
+ try {const token=req.cookies?.[SESSION_COOKIE_NAME] || req.headers.authorization?.slice(7).trim();
+  res.json({revoked:await accountSessionsService.revokeOthers(req.user!.id,hashSessionToken(token))});
+ }catch{res.status(503).json({message:'Could not sign out other sessions. Try again.'});}
 });
