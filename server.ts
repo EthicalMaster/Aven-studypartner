@@ -1,3 +1,5 @@
+import {publicUsage} from './server/services/public-usage.service.js';
+import {drainStorageDeletions} from './server/services/account-deletion.service.js';
 import {reportReviewRouter} from './server/routes/report-review.routes.js';
 /**
  * @license
@@ -72,6 +74,8 @@ async function startServer() {
   });
 
   // Mount Authentication Router
+  app.get('/api/public/usage',async(_req,res)=>{try{res.setHeader('Cache-Control','public, max-age=60');res.json(await publicUsage());}catch{res.status(503).json({message:'Usage totals temporarily unavailable.'});}});
+  const cleanupTimer=setInterval(()=>{void drainStorageDeletions().catch(()=>console.warn('[Cleanup] Storage cleanup unavailable.'));},60000);cleanupTimer.unref();
   app.use('/api/auth', authRouter);
   app.use('/api/report-review', reportReviewRouter);
 

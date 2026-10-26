@@ -1,3 +1,4 @@
+import {PublicUsage} from './PublicUsage';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -148,6 +149,7 @@ export function LandingPage({ onEnter, signedIn }: LandingPageProps) {
       </header>
 
       <main>
+        {new URLSearchParams(window.location.search).get("accountDeleted")==="1"&&<p role="status" className="aven-section">Your account and linked database records are deleted. Uploaded-file removal is queued and retries automatically. Anonymous totals remain.</p>}
         <section
           ref={story}
           className={`aven-story ${staticStory ? "is-static" : ""}`}
@@ -512,6 +514,7 @@ export function LandingPage({ onEnter, signedIn }: LandingPageProps) {
             </div>
           </motion.div>
         </section>
+        <PublicUsage/>
         <section className="aven-closing aven-section">
           <span className="aven-eyebrow">MAKE SPACE FOR UNDERSTANDING</span>
           <h2>

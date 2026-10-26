@@ -246,3 +246,10 @@ Acceptance: evidence-based schema/mapping review, tenant isolation and migration
 - Inventoried all 554 IDs and normalized question texts; no exact duplicates. Individually reviewed 18 introductory Physics entries; identified three wording/explanation defects and prepared guarded migration 026.
 - Prepared a ten-question CBSE Class XI Physics starter manifest using the official 2026-27 syllabus. No PYQ authenticity or complete coverage claim. Publication is a separate explicit CLI step.
 - Other 536 entries and university mappings still need individual review. See live-bank-review.md for exact scope and sources. No live database writes were performed here.
+
+### Account deletion public usage and expanded content review
+
+- Added password-confirmed account deletion, transactional cascade cleanup, durable uploaded-file retry queue and anonymous lifetime usage totals. Public landing page distinguishes registrations, accounts with successful AI responses and recent authenticated activity.
+- Added migration 028 with 20 content corrections plus matching fresh-seed corrections. Screened inventory question/answer pairs; full independent answer and distractor certification is not claimed. See content-review-expanded.md for unresolved flags.
+- SQL/API, browser and targeted regression checks completed locally. Production deletion and actual storage removal require a disposable-account acceptance test. Backups and provider logs retain their own lifecycle.
+- Preparing owner handbook and editable presentation grounded in current source. No direct GitHub push or deployment performed.

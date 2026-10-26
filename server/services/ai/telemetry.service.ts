@@ -49,7 +49,7 @@ export class AITelemetryService {
       this.errorCount++;
     }
 
-    this.entries.unshift(entry);
+    this.entries.unshift({...entry,studentId:''}); // Operational telemetry does not retain account identifiers.
     if (this.entries.length > this.maxEntries) {
       this.entries.pop();
     }
@@ -72,6 +72,8 @@ export class AITelemetryService {
       avgLatencyMs: this.totalRequests > 0 ? Math.round(this.totalLatencyMs / this.totalRequests) : 0,
     };
   }
+
+  public forgetStudent(studentId:string):void { this.entries=this.entries.filter(entry=>entry.studentId!==studentId); }
 
   public clear(): void {
     this.entries = [];

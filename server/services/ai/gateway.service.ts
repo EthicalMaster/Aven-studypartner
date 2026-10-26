@@ -1,3 +1,4 @@
+import {recordAiAccount} from '../public-usage.service.js';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -222,6 +223,7 @@ export class AIGatewayService {
         metadata: response.metadata,
       };
 
+      await recordAiAccount(studentId).catch(()=>console.warn('[Usage] AI account counter unavailable.'));
       // Record successful telemetry
       aiTelemetryService.record({
         requestId,

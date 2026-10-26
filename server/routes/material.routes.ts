@@ -1,3 +1,4 @@
+import {getRequiredPool} from '../db/connection.js';
 import { z } from 'zod';
 import { materialSummary } from '../services/summaries/summary.service.js';
 import { AIGatewayError } from '../services/ai/errors.js';
@@ -220,6 +221,9 @@ materialRouter.post(
         topic,
         processingStatus: 'uploaded',
         processingError: null,
+      }).catch(async(error)=>{
+        await getRequiredPool().query('INSERT INTO storage_deletion_queue(storage_key) VALUES($1) ON CONFLICT DO NOTHING',[saveResult.storageKey]);
+        throw error;
       });
 
       // Log study_material_uploaded event
