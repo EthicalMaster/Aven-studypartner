@@ -1,3 +1,4 @@
+import {reportReviewRouter} from './server/routes/report-review.routes.js';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -28,6 +29,8 @@ async function startServer() {
   const PORT = Number(process.env.PORT || 3000);
 
   // Global parsing middlewares
+  // Configure only when the host has exactly one trusted reverse proxy.
+  if (process.env.TRUST_PROXY_HOPS === '1') app.set('trust proxy', 1);
   app.use(express.json());
   app.use(cookieParser());
 
@@ -70,6 +73,7 @@ async function startServer() {
 
   // Mount Authentication Router
   app.use('/api/auth', authRouter);
+  app.use('/api/report-review', reportReviewRouter);
 
   // Mount Leaderboard Router
   app.use('/api/leaderboard', leaderboardRouter);

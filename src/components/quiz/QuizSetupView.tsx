@@ -292,7 +292,7 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
                 <span className="material-symbols-outlined text-[18px] text-[var(--aven-action)]">database</span>
                 <div>
                   <div className="text-[13px] font-bold text-[var(--aven-ink)]">Curriculum Question Bank</div>
-                  <div className="text-[11px] text-[var(--aven-muted)]">Standardized university syllabus database</div>
+                  <div className="text-[11px] text-[var(--aven-muted)]">General practice bank — check your syllabus</div>
                 </div>
               </div>
               <span className="text-[10px] bg-[var(--aven-action)] text-white font-bold px-2 py-0.5 rounded-full">
@@ -302,7 +302,7 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
 
             <div
               className="p-3.5 rounded-xl border border-[var(--aven-border)]/30 bg-slate-50/80 opacity-60 cursor-not-allowed text-left flex items-center justify-between"
-              title="AI quiz generation from uploaded materials will be enabled once a dedicated generation provider is provisioned."
+              title="Return to Quizzes and choose PDF practice to generate from your material."
             >
               <div className="flex items-center gap-2.5">
                 <span className="material-symbols-outlined text-[18px] text-slate-400">upload_file</span>
@@ -312,7 +312,7 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
                 </div>
               </div>
               <span className="text-[10px] bg-slate-200 text-slate-600 font-semibold px-2 py-0.5 rounded-full border border-slate-300">
-                Coming in AI generation phase
+                Available from Quizzes → PDF practice
               </span>
             </div>
           </div>
@@ -325,10 +325,10 @@ export const QuizSetupView: React.FC<QuizSetupViewProps> = ({ onPaperCreated, on
               <span className="material-symbols-outlined text-[20px] text-blue-600">verified</span>
               <div>
                 <span className="text-[12px] font-bold text-blue-950">
-                  Curriculum Context: {meta.curriculum_context.program} • {meta.curriculum_context.stream}
+                  Practice profile: {meta.curriculum_context.program} • {meta.curriculum_context.stream}
                 </span>
                 <p className="text-[11px] text-blue-700">
-                  {meta.curriculum_context.total_eligible_subjects} eligible subjects strictly grounded in your academic stage ({meta.curriculum_context.academic_stage}).
+                  {meta.curriculum_context.total_eligible_subjects} subjects suggested by your profile ({meta.curriculum_context.academic_stage}).
                 </p>
               </div>
             </div>

@@ -1,3 +1,4 @@
+import {SavedCardEditor} from '../flashcards/SavedCardEditor';
 import { FlashcardDraftReview } from '../flashcards/FlashcardDraftReview';
 import type { FlashcardDraft } from '../../../shared/flashcard-draft';
 import { AcademicSetupDialog } from '../AcademicSetupDialog';
@@ -1313,6 +1314,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                       )}
                     </div>
 
+                    <SavedCardEditor card={card} onSaved={updated=>{setLibraryCards(previous=>previous.map(item=>item.id===updated.id?updated:item));}}/>
                     <div className="flex items-center justify-between mt-4 pt-3 border-t border-[var(--aven-border)]/20 text-[11px] text-[var(--aven-muted)]">
                       <span>Next review: {new Date(card.next_review_due).toLocaleDateString()}</span>
                       <button

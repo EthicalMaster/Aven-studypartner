@@ -1,3 +1,4 @@
+import {quotaService} from '../services/governance/quota.service.js';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { PGlite } from '@electric-sql/pglite';
@@ -17,7 +18,7 @@ const card = {question:'What happens to total energy in a closed system?',option
 const passages=[{id:'p1',page:1,text:source}];
 assert.equal(validateQuizBatch({questions:[card,{...card,correctIndex:4},{...card,evidence:'Invented source'},card,{...card,options:['0','0','1','2']}]},passages).questions.length,1);
 assert.equal(validateQuizBatch({questions:[{...card,options:['0','1','2','3']}]},passages).questions.length,1);
-assert(!quizBatchSchema.safeParse({questions:Array(6).fill(card)}).success);
+assert(!quizBatchSchema.safeParse({questions:Array(11).fill(card)}).success);
 assert.equal(validateQuizBatch({questions:[{...card,evidence:'total energy is not conserved'}]},passages).questions.length,0);
 const db=await PGlite.create();
 const student='00000000-0000-4000-8000-000000000001',other='00000000-0000-4000-8000-000000000002',material='00000000-0000-4000-8000-000000000003';
@@ -75,7 +76,18 @@ try {
   const metadata=await db.query<{generation_metadata:any}>('SELECT generation_metadata FROM quizzes WHERE id=$1',[informed.quiz!.id]);
   assert.deepEqual(metadata.rows[0].generation_metadata.examSources,[examSource]);
   const countBefore=calls;const repeat=await pdfQuizService.generate(student,material,context,{reviewed:true});assert(repeat.reused);assert.equal(calls,countBefore);
-  await db.query('DELETE FROM study_materials WHERE id=$1',[material]);assert.equal((await db.query<{n:number}>('SELECT count(*)::int AS n FROM quizzes')).rows[0].n,3);
+  // Optional controls preserve the default cache and keep a single bounded model request.
+  documentRepository.getPagesByMaterial=async()=>[{page_number:1,text:'A title page without enough content.'},{page_number:2,text:source}] as any;
+  (aiGatewayService as any).executeStructured=async(input:any)=>{calls++;assert.equal(input.maxTokens,4500);assert.match(input.messages[0].content,/Target hard difficulty/);assert.deepEqual(JSON.parse(input.messages[1].content).passages.map((p:any)=>p.page),[2]);return {data:{questions:Array.from({length:10},(_,i)=>({...card,question:`How is total energy conserved in closed system example ${i+1}?`}))}};};
+  const options={count:10,difficulty:'hard',firstPage:2,lastPage:2};
+  quotaService.setConfig({maxOutputTokensPerRequest:1500});
+  await assert.rejects(()=>pdfQuizService.generate(student,material,context,undefined,options),/Longer quizzes/);
+  quotaService.setConfig({maxOutputTokensPerRequest:4500});
+  const longer=await pdfQuizService.generate(student,material,context,undefined,options);assert.equal(longer.quiz?.question_count,10);assert.equal(longer.quiz?.difficulty,'hard');assert.equal(longer.quiz?.time_limit_minutes,15);
+  const optionCalls=calls;assert((await pdfQuizService.generate(student,material,context,undefined,options)).reused);assert.equal(calls,optionCalls);
+  await assert.rejects(()=>pdfQuizService.generate(student,material,context,undefined,{...options,firstPage:3,lastPage:2}));
+  await assert.rejects(()=>pdfQuizService.generate(student,material,context,undefined,{...options,firstPage:99,lastPage:99}),/Not enough/);assert.equal(calls,optionCalls);
+  await db.query('DELETE FROM study_materials WHERE id=$1',[material]);assert.equal((await db.query<{n:number}>('SELECT count(*)::int AS n FROM quizzes')).rows[0].n,4);
   assert.equal((await db.query<{source_material_id:string|null}>('SELECT source_material_id FROM quizzes LIMIT 1')).rows[0].source_material_id,null);
   assert(releases>0);
   console.log('PASS: item validation, source checks, schema migration, private ownership, busy guard, one-call generation, safe active payload, saved reuse, context-keyed papers, partial counts, rollback, school/university, 120-character subject and history retention. Mock AI and advisory locks; real PGlite SQL.');

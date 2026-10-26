@@ -6,6 +6,7 @@ import type { AcademicContext } from '../../shared/academic-context';
  */
 
 export interface FlashcardItem {
+  edit_version?:number;
   source_evidence?: string | null;
   source_page?: number | null;
   user_edited?: boolean;

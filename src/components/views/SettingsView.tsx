@@ -1,3 +1,4 @@
+import {ReportReview} from '../settings/ReportReview';
 import React,{useState} from 'react';
 import {useAuth} from '../../context/AuthContext';
 import type {StudentUser} from '../../types';
@@ -39,6 +40,6 @@ function SettingsContent({user,onOpenOnboarding}:Props&{user:StudentUser}){
  {accountError&&<p role="alert" className="text-sm text-red-700">{accountError}</p>}</section>
  <AcademicDefaults/><AccountSecurity/>
  <section className={panelClass}><h2 className="text-xl font-semibold">Review preferences</h2><p className="text-sm text-[var(--aven-muted)]">Flashcard review uses the current SM-2 scheduling method. Your recall ratings determine when cards return. Alternative schedulers and custom daily targets are not configurable yet.</p></section>
- <MyQuestionReports/>
+ <MyQuestionReports/><ReportReview/>
  </div>;
 }

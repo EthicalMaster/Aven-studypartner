@@ -39,7 +39,9 @@
     "test:pdf-quizzes": "node --import tsx server/test/pdf-quizzes.test.ts",
     "test:exam-research": "node --import tsx server/test/exam-research.test.ts",
     "test:flashcard-drafts": "node --import tsx server/test/flashcard-drafts.test.ts",
-    "test:settings-reports": "node --import tsx server/test/settings-reports.test.ts"
+    "test:settings-reports": "node --import tsx server/test/settings-reports.test.ts",
+    "test:release-batch": "node --import tsx server/test/release-batch.test.ts",
+    "audit:curriculum": "node --import tsx server/db/audit-curriculum.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

@@ -1,3 +1,5 @@
+import {flashcardEditService,cardEditSchema} from '../services/flashcard-edit.service.js';
+import {SecurityError} from '../services/password-recovery.service.js';
 import { flashcardDraftService } from '../services/flashcard-draft.service.js';
 import { saveFlashcardDraftSchema } from '../../shared/flashcard-draft.js';
 import { AIGatewayError } from '../services/ai/errors.js';
@@ -485,4 +487,9 @@ flashcardRouter.delete('/:id', async (req: Request, res: Response): Promise<void
       message: err.message || 'Failed to delete flashcard.',
     });
   }
+});
+
+flashcardRouter.patch('/:id',async(req:Request,res:Response)=>{
+ const parsed=cardEditSchema.safeParse(req.body);if(!parsed.success||!z.string().uuid().safeParse(req.params.id).success){res.status(400).json({message:'Invalid flashcard edit.'});return;}
+ try{res.json({card:await flashcardEditService.update(getStudentProfile(req).id,req.params.id,parsed.data)});}catch(error){res.status(error instanceof SecurityError?error.status:503).json({message:error instanceof SecurityError?error.message:'Could not save this card. Try again.'});}
 });
