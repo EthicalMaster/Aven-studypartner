@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import {selectPassages,evidenceMatches,validateCardBatch} from '../services/learning-content/flashcards.js';
+import {validateQuizBatch} from '../services/learning-content/quizzes.js';
+
+const block=Array.from({length:360},(_,i)=>`concept${i} describes energy transfer`).join(' ');
+const passages=selectPassages([{page_number:7,text:`Unit 4\n${block}\nPage 7`}]);
+assert.ok(passages.length>0,'Long extracted paragraphs must not disappear');
+assert.ok(passages.every(p=>p.page===7&&p.text.length<=1200));
+assert.ok(passages.reduce((n,p)=>n+p.text.length,0)<=6000);
+assert.ok(passages.every(p=>evidenceMatches(block,p.text)),'Windows preserve original source text');
+assert.ok(!passages.some(p=>/Unit 4|Page 7/.test(p.text)));
+const scoped=selectPassages([{page_number:1,text:block},{page_number:2,text:block.replaceAll('energy','heat')}],1500);
+assert.ok(scoped.reduce((n,p)=>n+p.text.length,0)<=1500);
+const source=[{id:'p1',page:1,text:'The relationship is E = mc². Energy depends on mass and the square of the speed of light.'}];
+assert.equal(evidenceMatches(source[0].text,'E = mc²'),true);
+assert.equal(evidenceMatches(source[0].text,'e = mc²'),false);
+assert.equal(evidenceMatches(source[0].text,'E = mc2'),false);
+const card={question:'What relationship connects mass and energy?',answer:'E = mc²',keyConcept:'Mass and energy',formula:'E = mc²',difficulty:'medium',sourceId:'p1',evidence:'E = mc²'};
+assert.equal(validateCardBatch({flashcards:[card]},source).cards.length,1,'Short valid formula evidence must remain accepted');
+const question={question:'Which relationship connects mass and energy?',options:['E = mc²','E = mc','E = m/c','E = m + c'],correctIndex:0,explanation:'The source states this relationship.',sourceId:'p1',evidence:'E = mc²'};
+assert.equal(validateQuizBatch({questions:[question,{...question,evidence:'E = mc2'}]},source).questions.length,1);
+console.log('PASS: long PDF paragraphs retained, bounded prompt input, source/page preservation, furniture removal, exact mathematical evidence, short-formula acceptance. No AI calls.');
