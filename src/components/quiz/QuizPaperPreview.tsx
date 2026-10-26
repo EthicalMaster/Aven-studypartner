@@ -1,3 +1,4 @@
+import {QuizCurriculumLabel} from './QuizCurriculumLabel';
 import { QuizSourceLinks } from './QuizSourceLinks';
 /**
  * @license
@@ -100,6 +101,7 @@ export const QuizPaperPreview: React.FC<QuizPaperPreviewProps> = ({
           </p>
         </div>
 
+        {quiz.source !== 'uploaded_material' && <QuizCurriculumLabel quizId={quiz.id}/>}
         {quiz.source === 'uploaded_material' && <QuizSourceLinks quizId={quiz.id}/>}
         {/* Paper Specifications Grid */}
         <div className="p-6 sm:p-8 grid grid-cols-2 sm:grid-cols-4 gap-4 border-b border-[var(--aven-border)]/20 bg-[#fafbff]/50">

@@ -174,7 +174,7 @@ export class QuizRepository {
   /**
    * Question Bank metadata for paper builder dropdowns and dynamic availability check.
    */
-  async getQuestionBankMetadata(): Promise<QuestionBankMeta> {
+  async getQuestionBankMetadata(contextId?:string): Promise<QuestionBankMeta> {
     const pool = getRequiredPool();
     const res = await pool.query(`
       SELECT 
@@ -182,9 +182,10 @@ export class QuizRepository {
         topic,
         COUNT(*)::int AS count
       FROM question_bank
+      ${contextId?`WHERE EXISTS (SELECT 1 FROM curriculum_question_placements p JOIN curriculum_contexts c ON c.id=p.context_id WHERE p.question_id=question_bank.id AND c.id=$1 AND c.published)`:''}
       GROUP BY subject, topic
       ORDER BY subject, topic
-    `);
+    `,contextId?[contextId]:[]);
 
     const subjectsMap = new Map<string, { topics: Set<string>; total: number }>();
 
@@ -201,6 +202,7 @@ export class QuizRepository {
       name,
       topics: Array.from(data.topics),
       total_questions: data.total,
+      topic_counts:Object.fromEntries(res.rows.filter(row=>row.subject===name).map(row=>[row.topic,row.count])),
     }));
 
     return {
@@ -214,6 +216,8 @@ export class QuizRepository {
    * Count available questions in question bank matching criteria.
    */
   async countAvailableQuestions(filters: {
+    curriculum_context_id?:string;
+    allowed_topics?:string[];
     subject: string;
     topic?: string;
     difficulty?: string;
@@ -222,6 +226,8 @@ export class QuizRepository {
     const pool = getRequiredPool();
     const conditions: string[] = ['subject = $1'];
     const params: any[] = [filters.subject];
+    if(filters.allowed_topics){params.push(filters.allowed_topics);conditions.push(`topic=ANY($${params.length}::text[])`);}
+    if(filters.curriculum_context_id){params.push(filters.curriculum_context_id);conditions.push(`EXISTS (SELECT 1 FROM curriculum_question_placements p JOIN curriculum_contexts c ON c.id=p.context_id WHERE p.question_id=question_bank.id AND c.id=$${params.length} AND c.published)`);}
 
     if (filters.topic && filters.topic !== 'all' && filters.topic !== 'All Topics') {
       params.push(filters.topic);
@@ -250,12 +256,19 @@ export class QuizRepository {
    * Create a new Quiz using the Paper Builder.
    * Pulls from Question Bank or custom questions, validates available count, and calculates total marks.
    */
-  async createQuiz(studentId: string, input: CreateQuizInput, provenance?: { materialId: string; key: string; metadata: Record<string, unknown> }): Promise<{ quiz: QuizRecord; questions: SafeQuizQuestion[] }> {
+  async createQuiz(studentId: string, input: CreateQuizInput & {allowed_topics?:string[]}, provenance?: { materialId: string; key: string; metadata: Record<string, unknown> }): Promise<{ quiz: QuizRecord; questions: SafeQuizQuestion[] }> {
     const pool = getRequiredPool();
     const client = await pool.connect();
 
     try {
       await client.query('BEGIN');
+      let curriculumSnapshot=null;
+      if(input.curriculum_context_id){
+       if(input.custom_questions?.length)throw new Error('Custom questions cannot claim a catalog mapping.');
+       const catalog=await client.query('SELECT id,level,authority,program,stage,curriculum_version,source_url FROM curriculum_contexts WHERE id=$1 AND published FOR SHARE',[input.curriculum_context_id]);
+       if(!catalog.rows.length)throw new Error('Curriculum context is unavailable.');
+       curriculumSnapshot=catalog.rows[0];
+      }
 
       let questionsToInsert: Array<{
         question_text: string;
@@ -287,6 +300,8 @@ export class QuizRepository {
         // Query matching questions from question_bank
         const conditions: string[] = ['subject = $1'];
         const params: any[] = [input.subject];
+        if(input.allowed_topics){params.push(input.allowed_topics);conditions.push(`topic=ANY($${params.length}::text[])`);}
+        if(input.curriculum_context_id){params.push(input.curriculum_context_id);conditions.push(`EXISTS (SELECT 1 FROM curriculum_question_placements p WHERE p.question_id=question_bank.id AND p.context_id=$${params.length})`);}
 
         if (input.topic && input.topic !== 'all' && input.topic !== 'All Topics') {
           params.push(input.topic);
@@ -378,6 +393,7 @@ export class QuizRepository {
       );
 
       const quiz = quizRes.rows[0];
+      if(curriculumSnapshot)await client.query('UPDATE quizzes SET curriculum_snapshot=$2 WHERE id=$1',[quiz.id,JSON.stringify(curriculumSnapshot)]);
 
       if (provenance) {
         await client.query(`UPDATE quizzes SET source_material_id=$2, generation_key=$3, generation_metadata=$4 WHERE id=$1`,

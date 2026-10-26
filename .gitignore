@@ -12,3 +12,8 @@ coverage/
 .venv-*/
 __pycache__/
 *-benchmark.json
+
+# Local uploaded documents and curriculum review exports
+uploads/
+curriculum-bank-export.json
+curriculum-audit-live.json
