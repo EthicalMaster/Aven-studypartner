@@ -234,3 +234,9 @@ Acceptance: evidence-based schema/mapping review, tenant isolation and migration
 - General practice retains profile filtering, including server-side topic filtering for All Topics counts and paper builds. Catalog publication is an operator-only CLI with validation-only default and explicit apply.
 - Added a read-only bank export for the next content review. School/university collections remain empty until reviewed manifests are published.
 - Catalog SQL/API, PDF quiz and Settings regressions, typecheck and production build pass. See curriculum-organization.md. Next: batch 2 sourced mappings/AI quality, then batch 3 deployed verification. No direct production changes were made here.
+
+### Batch 2 — generation quality correction
+
+- Fixed silent removal of extracted paragraphs longer than 1,500 characters. Long blocks now produce bounded windows while retaining source text/page provenance. The existing 6,000-character passage budget and six-passage cap remain unchanged; no additional model calls are introduced.
+- Added deterministic checks for long paragraphs, source-preserving windows, page attribution, furniture removal, prompt budget and short mathematical evidence. These checks do not establish semantic answer correctness.
+- Actual live-bank mappings remain pending the question-bank export. Full-paper authenticity and representative live model quality remain unverified. Batch 2 is not complete until these content reviews are performed; batch 3 deployed checks also remain.

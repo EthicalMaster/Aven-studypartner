@@ -17,7 +17,20 @@ export function selectPassages(pages: {page_number:number;text:string}[], budget
     // Sentence boundaries preserve short definitions/formulas alongside surrounding context.
     const sentences=clean.split(/(?<=[.!?])\s+|\n\s*\n/);let group='';
     function push(){const text=group.trim();group='';const key=normalized(text);if(text.length<70||seen.has(key)||!/[a-zA-Z]{3}/.test(text))return;seen.add(key);candidates.push({id:`p${candidates.length+1}`,page:page.page_number,text});}
-    for(const sentence of sentences){if(sentence.length>1500){push();continue;}if(group.length+sentence.length>1200)push();group+=(group?' ':'')+sentence;}push();
+    for(const sentence of sentences){
+      // PDF extraction often yields long unpunctuated blocks. Preserve these
+      // in bounded whitespace-delimited windows instead of discarding them.
+      let remaining=sentence.trim();
+      while(remaining.length>1200){
+        push();
+        let boundary=remaining.lastIndexOf(' ',1200);
+        if(boundary<600)boundary=1200;
+        group=remaining.slice(0,boundary);push();
+        remaining=remaining.slice(boundary).trim();
+      }
+      if(group.length+remaining.length+1>1200)push();
+      group+=(group?' ':'')+remaining;
+    }push();
   }
   // Spread selection across document positions rather than only the introduction.
   const result:Passage[]=[];let used=0;const slots=Math.min(6,candidates.length);
