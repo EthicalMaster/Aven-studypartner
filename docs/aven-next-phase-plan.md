@@ -1,7 +1,7 @@
 # Aven: reliable AI learning and account improvements
 
 Prepared: 25 October 2026
-Updated: 26 October 2026. Status: token controls, brief academic setup, saved preferences, meaningful flashcard generation and PDF practice quizzes are implemented; the user reports the quiz flow works. Phase 3 source discovery/review is in preview. Full source verification and remaining release work are open.
+Updated: 26 October 2026. Status: token controls, brief academic setup, saved preferences, meaningful flashcard generation and PDF practice quizzes are implemented; the user reports the quiz flow works. Source discovery, flashcard draft review and the guide correction were delivered; Settings and student question reporting are now implemented for local acceptance. Full source verification and remaining release work are open.
 
 ## Goal and current baseline
 
@@ -15,10 +15,10 @@ Keep the free-only budget. Do not enable paid billing, rotate keys to bypass quo
 
 | Phase | Status | Remaining work |
 | --- | --- | --- |
-| 3 — Quizzes and exam research | PDF quizzes user-confirmed; discovery/review preview ready | Live search validation, full-paper/institution/year verification, syllabus mismatch handling, question reporting and richer quiz controls |
+| 3 — Quizzes and exam research | PDF quizzes user-confirmed; discovery/review preview ready | Live search validation, full-paper/institution/year verification, syllabus mismatch handling, admin report review/correction and richer quiz controls |
 | 4 — Flashcards | Draft preview/edit/selection, source display and exact duplicate checks implemented | Live quality review, existing-card editing and semantic near-duplicate handling |
 | 5 — Account recovery | Not started | Email OTP, agreed two-successful-resets policy, session/security tests |
-| 6 — Settings and helping guide | Helping-guide correction implemented | Persisted profile/account/security controls |
+| 6 — Settings and helping guide | Guide, persisted profile, study defaults, session controls and report history implemented | Live acceptance; verified email/password changes depend on phase 5 |
 | 7 — Curriculum data | Not started | Audit, proposed hierarchy, question review and tested migration preserving history |
 
 Phases 1–2 have working foundations but are not formally closed: representative quality/token measurements, remaining cache/version controls and normalized academic mappings still need review. Finish with an integrated live acceptance pass. This count describes the agreed release scope, not a promise that all future website work is finished.
@@ -209,3 +209,11 @@ Acceptance: evidence-based schema/mapping review, tenant isolation and migration
 - Migration 022 and real SQL/mocked-provider tests pass. Browser checks cover draft resumption, edit selection, failed-save retry, source display, all six guide steps and profile persistence. Screenshots inspected at phone/desktop sizes.
 - Phase 4 preview/edit/selection and new-card source display are implemented. Existing-card editing, semantic near-duplicate detection and representative live quality review remain open. Phases 3/5/6/7 retain the previously documented unfinished work.
 - Suggested next pair: useful Settings (larger) + question reporting (smaller). Password recovery still requires the reset-window decision and transactional-email setup before its final implementation.
+
+### Paired delivery — Settings + student question reporting
+
+- Replaced non-persisted Settings controls with saved profile fields, real account details, editable/forgettable academic defaults, active sessions, sign-out-other-sessions and private report history. Unavailable email/password and scheduling controls are labelled honestly.
+- Completed quiz results now accept validated question reports. The server verifies ownership and completion, stores its own question snapshot and updates duplicate reports without changing scores. No model calls are made.
+- Migration 023 adds the report table. API tests use real Express routes, authentication and PGlite SQL. Profile/default privacy, session revocation, report eligibility, duplicate updates and unchanged scores pass. TypeScript, production build, PDF quiz and flashcard draft regressions pass.
+- Mocked-API browser checks cover phone/desktop layout, persisted reload, save failures/retries and report failures/retries. Live deployment and provider checks are not claimed.
+- Admin review/correction, notifications and automatic question correction are not implemented. OTP recovery remains next, subject to email setup and the reset-policy decisions recorded above.

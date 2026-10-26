@@ -1,3 +1,5 @@
+import { questionReportService } from '../services/question-report.service.js';
+import { questionReportSchema } from '../../shared/question-report.js';
 import { examResearchService } from '../services/exam-research/research.service.js';
 import { researchSelectionSchema } from '../../shared/exam-research.js';
 import { getRequiredPool } from '../db/connection.js';
@@ -163,6 +165,16 @@ quizRouter.post('/', validateBody(createQuizSchema), async (req: Request, res: R
     console.error('[Quiz Routes] POST /api/quizzes error:', err);
     res.status(500).json({ error: 'INTERNAL_ERROR', message: err.message || 'Failed to create quiz paper.' });
   }
+});
+
+quizRouter.post('/question-reports',validateBody(questionReportSchema),async(req:Request,res:Response)=>{
+ try {res.json({report:await questionReportService.save(getStudentProfileId(req),req.body)});}
+ catch(error){if(error instanceof AIGatewayError){res.status(error.statusCode).json(error.toResponse());return;}
+ res.status(503).json({message:'Could not save your report. Please try again.'});}
+});
+quizRouter.get('/reports/mine',async(req:Request,res:Response)=>{
+ try {res.json({reports:await questionReportService.list(getStudentProfileId(req))});}
+ catch{res.status(503).json({message:'Could not load your reports.'});}
 });
 
 quizRouter.post('/research', validateBody(z.object({academicContext: academicContextSchema}).strict()), async (req: Request, res: Response) => {
