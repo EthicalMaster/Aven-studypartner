@@ -1,3 +1,4 @@
+import {applyReviewedCorrections} from './reviewed-corrections.js';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -47,3 +48,5 @@ export const CURRICULUM_BY_SUBJECT: Record<string, CurriculumQuestion[]> = {
   'General Aptitude': GENERAL_APTITUDE_QUESTIONS,
   English: ENGLISH_QUESTIONS,
 };
+
+applyReviewedCorrections(ALL_CURRICULUM_QUESTIONS);

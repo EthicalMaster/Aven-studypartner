@@ -1,3 +1,5 @@
+import {z} from 'zod';
+import {deleteAccount,drainStorageDeletions} from '../services/account-deletion.service.js';
 import {passwordRecoveryService,SecurityError} from '../services/password-recovery.service.js';
 import {securityMail} from '../services/security-mail.service.js';
 import {recoveryRequestSchema,recoveryCompleteSchema,passwordChangeSchema} from '../../shared/account-security.js';
@@ -344,3 +346,7 @@ authRouter.post('/password/change',requireAuth,authRateLimiter,validateBody(pass
  try{await passwordRecoveryService.changeSignedIn(req.user!.id,req.body.currentPassword,req.body.password);res.clearCookie(SESSION_COOKIE_NAME,{httpOnly:true,secure:isProduction,sameSite:'lax',path:'/'});res.json({message:'Password changed. Sign in again.'});}catch(error){securityResponse(res,error);}
 });
 function securityResponse(res:Response,error:unknown){res.status(error instanceof SecurityError?error.status:503).json({message:error instanceof SecurityError?error.message:'Account security is temporarily unavailable. Try again later.'});}
+
+authRouter.delete('/account',requireAuth,authRateLimiter,validateBody(z.object({password:z.string().min(1).max(256),confirmation:z.literal('DELETE')}).strict()),async(req,res)=>{
+ try{const result=await deleteAccount(req.user!.id,req.body.password);res.clearCookie(SESSION_COOKIE_NAME,{httpOnly:true,secure:isProduction,sameSite:'lax',path:'/'});res.json(result);void drainStorageDeletions().catch(()=>console.warn('[Cleanup] File removal will retry.'));}catch(error){securityResponse(res,error);}
+});

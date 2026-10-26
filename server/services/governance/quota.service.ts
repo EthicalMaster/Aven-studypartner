@@ -51,6 +51,8 @@ export class QuotaService {
     this.config = { ...DEFAULT_RESOURCE_QUOTAS, ...customConfig };
   }
 
+  public forgetStudent(studentId:string):void { this.inMemoryDailyAiCounts.delete(studentId); this.activeStudentAiRequests.delete(studentId); }
+
   public getConfig(): ResourceQuotaConfig {
     return { ...this.config };
   }

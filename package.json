@@ -45,7 +45,10 @@
     "test:curriculum-catalog": "node --import tsx server/test/curriculum-catalog.test.ts",
     "curriculum:publish": "node --import tsx server/db/publish-curriculum.ts",
     "curriculum:export": "node --import tsx server/db/export-curriculum-bank.ts",
-    "test:passage-quality": "node --import tsx server/test/passage-quality.test.ts"
+    "test:passage-quality": "node --import tsx server/test/passage-quality.test.ts",
+    "test:account-deletion": "node --import tsx server/test/account-deletion.test.ts",
+    "storage:cleanup": "node --import tsx server/db/cleanup-deleted-storage.ts",
+    "test:content-corrections": "node --import tsx server/test/content-corrections.test.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
